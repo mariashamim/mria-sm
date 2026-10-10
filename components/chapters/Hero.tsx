@@ -88,7 +88,7 @@ export default function Hero({ chapter }: Props) {
       </div>
       <Rooftop layers={['parapet']} size="hero" className="hero__rooftop hero__rooftop--front" />
       {hasPose('ginger-sit-up') && (
-        <div className="hero__cat" style={{ aspectRatio: poseRatio('ginger-sit-up') }}>
+        <div className="hero__cat" style={{ aspectRatio: poseRatio('ginger-sit-up') }} data-cursor="paw">
           <Avatar pose="ginger-sit-up" alt="Ginger the cat sitting on the parapet beside her, also looking up" blink priority sizes="(max-width: 900px) 22vw, 10vh" />
         </div>
       )}

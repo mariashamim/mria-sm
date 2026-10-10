@@ -308,6 +308,38 @@ html.cursor-hover .cursor--dot {
 html.cursor-out .cursor {
   opacity: 0;
 }
+/* Glyph cursors: a paper plane in the flying chapters, a paw over Ginger. */
+.cursor--ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: center / 62% no-repeat;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+html[data-chapter="karsaz"] .cursor--ring,
+html[data-chapter="sky"] .cursor--ring,
+html[data-glyph="paw"] .cursor--ring {
+  border-color: transparent;
+}
+html[data-chapter="karsaz"] .cursor--dot,
+html[data-chapter="sky"] .cursor--dot,
+html[data-glyph="paw"] .cursor--dot {
+  opacity: 0;
+}
+html[data-chapter="karsaz"] .cursor--ring::after,
+html[data-chapter="sky"] .cursor--ring::after {
+  opacity: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M2.5 12 21.5 3l-4 18-5.5-6.5L2.5 12z'/><path d='M12 14.5 21.5 3 8.6 12.3z' opacity='.5'/></svg>");
+}
+html[data-glyph="paw"] .cursor--ring::after {
+  opacity: 1;
+  background-size: 70%;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><circle cx='6.5' cy='8.5' r='2.3'/><circle cx='11.2' cy='5.4' r='2.3'/><circle cx='16.6' cy='6.4' r='2.2'/><circle cx='19.6' cy='11' r='2'/><path d='M12.3 10.6c-3.4 0-6.4 2.5-6.4 5.4 0 2 1.6 3 3.4 2.4 1-.3 2-.4 3-.4s2 .1 3 .4c1.8.6 3.4-.4 3.4-2.4 0-2.9-3-5.4-6.4-5.4z'/></svg>");
+}
+html[data-glyph="paw"] .cursor--ring {
+  transform: none !important;
+}
 
 /* ───────────────────────────── intro ───────────────────────────── */
 .intro {
@@ -582,12 +614,24 @@ html.cursor-out .cursor {
 .chapter__figure--pair .chapter__fig--large {
   height: 100%;
 }
+/* A landscape scene render (two people at the PC) gets a wider, lower slot. */
+.chapter__figure--wide {
+  width: 58vw;
+}
+.chapter__fig--wide {
+  height: 58%;
+}
 /* Ginger: small, tucked in against whoever she is next to. */
 .chapter__fig--cat,
 .chapter__figure--pair .chapter__fig--cat {
   height: 22%;
   margin-inline: -1.2vw;
   z-index: 1;
+  pointer-events: auto;
+}
+.chapter__figure--wide .chapter__fig--cat-small {
+  height: 12%;
+  margin-inline: 0 -2vw;
 }
 .chapter__fig--cat-small,
 .chapter__figure--pair .chapter__fig--cat-small {
@@ -613,6 +657,25 @@ html.cursor-out .cursor {
 .chapter__walker .avatar {
   height: 100%;
   width: 100%;
+  /* A little bob so the walk reads as walking, not sliding. */
+  animation: walk-bob 0.46s ease-in-out infinite alternate;
+  transform-origin: 50% 100%;
+}
+@keyframes walk-bob {
+  from {
+    transform: translateY(0) rotate(-1.5deg);
+  }
+  to {
+    transform: translateY(-7%) rotate(1.5deg);
+  }
+}
+.hero__cat {
+  pointer-events: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter__walker .avatar {
+    animation: none;
+  }
 }
 #sky .chapter__figure {
   right: auto;

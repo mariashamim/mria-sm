@@ -311,3 +311,29 @@ Only if you have generations to spare. It adds depth by letting her stand behind
 ```
 The top edge of a low concrete rooftop parapet wall seen from slightly above and behind, running across the full width of the frame in the bottom 15 percent only, with slightly peeling cream paint, one small potted plant and a steel cup of chai resting on it near the right. Stylised 3D render in the manner of a modern animated feature, soft matte materials, deep indigo ambient night light with a faint warm glow from below. Everything above the wall is a flat solid chroma green #00B140. No people, no text. Landscape 16:9.
 ```
+
+---
+
+## 4b · Sharjeel and Maria at the family PC (one render, replaces pose-peek + pose-sharjeel) → `pose-home.png`
+
+Upload `sheet-maria.png` as the reference. Adjust the two lines marked ADJUST for Sharjeel if you want him recognisable; by default we mostly see his back.
+
+```
+A single scene with two characters at a family desktop computer, around 2015, as a stylised 3D render in the manner of a modern animated feature. The camera is at a three-quarter angle from behind and to the right, so we look past the back of a dark padded office chair toward a computer monitor at the far left edge of the frame; the monitor is seen from its side and back and its screen is not visible, but its pale blue glow lights both faces.
+
+In the chair sits SHARJEEL, Maria's older brother, a teenage boy of about fifteen, seen mostly from behind in a dark hoodie with a gaming headset over his dark hair, one hand on a mouse on the desk, leaning slightly toward the screen. ADJUST hair: short dark hair. ADJUST build: slim. His face is turned toward the screen so we see only the edge of his profile.
+
+Standing behind the chair, at the right, is MARIA at age 8, peeking over the top of the chair back with her chin resting on her hands, which rest on the chair's top edge, eyes wide and fascinated, mouth slightly open, lit from the front-left by the screen glow. She wears a plain pale-yellow home t-shirt and grey trousers and is barefoot. Hair loose.
+
+REFERENCE: use the attached character sheet for Maria's face, hair and skin tone, with age-appropriate 8-year-old proportions.
+
+CHARACTER: Maria. Light warm brown skin with a wheatish tone. Oval face. Large dark brown almond-shaped eyes. Medium natural dark eyebrows. Soft nose with a rounded tip. No moles, marks or freckles. Thick straight dark hair. She never wears a head covering.
+
+Include only: the chair, the two characters, the edge of the desk with the mouse, and the monitor at the left edge. No walls, no floor pattern, no other furniture, no text. Everything else is a flat solid chroma green background #00B140 with no gradient.
+
+STYLE: stylised 3D character render in the manner of a modern animated feature, soft matte skin and fabric materials, gentle subsurface scattering, clean sculpted shapes, slightly oversized eyes but realistic proportions (not chibi), elegant and warm, the pale blue screen glow as the key light with a soft neutral fill, 50mm lens look, no text, no watermark.
+
+FORMAT: landscape 3:2, both characters fully visible with clear margin, the chair base and Maria's feet inside the frame.
+```
+
+If Gemini turns the chair to show Sharjeel's face, reply: "Keep everything, but rotate the view so we see Sharjeel from behind and only the edge of his profile; Maria stays peeking over the chair back at the right, facing the screen."

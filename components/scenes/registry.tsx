@@ -60,6 +60,12 @@ const karsaz: SceneDef = {
     tl.to(plane, { motionPath: { path: trail, align: trail, alignOrigin: [0.5, 0.5], autoRotate: true }, duration: dur, ease: 'power1.in' }, start)
     tl.to(reveal, { strokeDashoffset: 0, duration: dur, ease: 'power1.in' }, start)
     tl.to(plane, { opacity: 0, duration: 0.1 }, start + dur - 0.08)
+    // Ginger springs up at the plane the moment it leaves, then settles back down.
+    const paw = el.querySelector<HTMLElement>('.chapter__fig--cat .avatar > picture')
+    if (paw) {
+      tl.fromTo(paw, { yPercent: 4, rotate: 0 }, { yPercent: -16, rotate: -6, duration: 0.1 * total, ease: 'power2.out' }, start - 0.02 * total)
+      tl.to(paw, { yPercent: 0, rotate: 0, duration: 0.16 * total, ease: 'bounce.out' }, start + 0.08 * total)
+    }
   },
 }
 

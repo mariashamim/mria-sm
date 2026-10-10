@@ -118,5 +118,11 @@
     "height": 1100,
     "webp": 79,
     "avif": 48
+  },
+  "pose-home": {
+    "width": 1166,
+    "height": 792,
+    "webp": 112,
+    "avif": 64
   }
 }

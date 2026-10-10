@@ -22,6 +22,7 @@ export function activateChapter(chapter: Chapter) {
   useProgress.getState().setActive(chapter.index)
   if (typeof document !== 'undefined') {
     document.documentElement.dataset.ui = chapter.ui
+    document.documentElement.dataset.chapter = chapter.id
   }
 }
 

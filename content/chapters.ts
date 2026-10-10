@@ -5,8 +5,8 @@ export type Figure = {
   pose: string
   alt: string
   blink?: boolean
-  /** Relative size inside the figure slot. */
-  size?: 'small' | 'normal' | 'large'
+  /** Relative size inside the figure slot. 'wide' is for landscape scene renders. */
+  size?: 'small' | 'normal' | 'large' | 'wide'
   /** The chai render includes a real rooftop slab; fade its bottom edge. */
   mask?: 'floor'
   /** Ginger: rendered small, tucked against the figure beside her. */
@@ -103,10 +103,7 @@ export const chapters: Chapter[] = [
       'I remember the snow more than the school.',
       'Southall sounded like home with a different accent.',
     ],
-    figures: [
-      { pose: 'pose-london', alt: 'Maria at three, in a red puffer coat and a grey beanie, catching snow with mittened hands' },
-      { pose: 'ginger-sit-up', alt: 'Ginger, sitting in the snow, looking up', role: 'cat', blink: true },
-    ],
+    figures: [{ pose: 'pose-london', alt: 'Maria at three, in a red puffer coat and a grey beanie, catching snow with mittened hands' }],
   },
   {
     id: 'home',
@@ -129,9 +126,8 @@ export const chapters: Chapter[] = [
       "That's where the whole thing started, if I'm honest.",
     ],
     figures: [
-      { pose: 'pose-sharjeel', alt: 'Sharjeel from behind, in a hoodie and headset, at the family PC', size: 'large' },
-      { pose: 'ginger-asleep', alt: 'Ginger asleep beside the PC', role: 'cat', size: 'small' },
-      { pose: 'pose-peek', alt: 'Maria at eight, peeking over the back of an office chair at the glowing screen' },
+      { pose: 'ginger-asleep', alt: 'Ginger asleep beside the chair', role: 'cat', size: 'small' },
+      { pose: 'pose-home', alt: 'Sharjeel at the family PC in a headset, Maria at eight peeking over the back of his chair, both lit by the screen', size: 'wide' },
     ],
   },
   {

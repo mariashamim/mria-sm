@@ -130,23 +130,24 @@ export default function Chapter({ chapter }: Props) {
 function figuresFor(chapter: ChapterData) {
   const figs = (chapter.figures ?? []).filter((f) => hasPose(f.pose))
   if (figs.length === 0) return null
-  const people = figs.filter((f) => f.role !== 'cat').length
+  const people = figs.filter((f) => f.role !== 'cat')
+  const layout = people.some((f) => f.size === 'wide') ? 'wide' : people.length > 1 ? 'pair' : 'single'
   return (
-    <div className={`chapter__figure chapter__figure--${people > 1 ? 'pair' : 'single'}`}>
+    <div className={`chapter__figure chapter__figure--${layout}`}>
       {figs.map((f) => {
         const isCat = f.role === 'cat'
         const cls = isCat ? `chapter__fig chapter__fig--cat chapter__fig--cat-${f.size ?? 'normal'}` : `chapter__fig chapter__fig--${f.size ?? 'normal'}`
         return (
           // The wrapper takes GSAP's drift; the avatar inside keeps its own CSS breathing transform.
           // The wrapper carries the aspect ratio so its width is definite inside the flex row.
-          <div key={f.pose} className={cls} style={{ aspectRatio: poseRatio(f.pose) }}>
+          <div key={f.pose} className={cls} style={{ aspectRatio: poseRatio(f.pose) }} data-cursor={isCat ? 'paw' : undefined}>
             <Avatar
               pose={f.pose}
               alt={f.alt}
               blink={f.blink}
-              breathe={!isCat}
+              breathe
               className={f.mask ? `avatar--mask-${f.mask}` : undefined}
-              sizes={isCat ? '(max-width: 900px) 30vw, 12vw' : '(max-width: 900px) 70vw, 36vw'}
+              sizes={isCat ? '(max-width: 900px) 30vw, 12vw' : f.size === 'wide' ? '(max-width: 900px) 90vw, 56vw' : '(max-width: 900px) 70vw, 36vw'}
             />
           </div>
         )

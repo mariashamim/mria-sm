@@ -17,6 +17,8 @@ import sharp from 'sharp'
 const RAW = path.resolve('public/_raw')
 const OUT = path.resolve('public/avatar')
 const MAX_H = 1600
+// Ginger is never shown large; keep her light.
+const maxHeightFor = (name) => (name.startsWith('ginger-') ? 1100 : MAX_H)
 
 // Per-image overrides.
 const OVERRIDES = {
@@ -24,6 +26,8 @@ const OVERRIDES = {
   'pose-peek': { cropLeft: 0.16 },
   // The rooftop slab is real floor, not green; keep it (it is masked in CSS).
   'pose-loves': { keepFloor: true },
+  // The desk lamp spills warm light onto the green; keep that haze warm, not green.
+  'pose-letter': { warmGlow: true },
 }
 
 const argFilter = process.argv[2] || null
@@ -70,8 +74,9 @@ function estimateBackground(data, w, h) {
   return [med('r'), med('g'), med('b')]
 }
 
-function matte(data, w, h, bg, { keepFloor = false } = {}) {
+function matte(data, w, h, bg, { keepFloor = false, warmGlow = false } = {}) {
   const gBg = greenness(...bg)
+  const bgLum = 0.299 * bg[0] + 0.587 * bg[1] + 0.114 * bg[2]
   // Anything at least this green is background; anything below gFg is figure.
   const hi = gBg - 18
   const lo = Math.max(18, Math.min(40, gBg * 0.3))
@@ -82,9 +87,10 @@ function matte(data, w, h, bg, { keepFloor = false } = {}) {
     const b = data[i + 2]
     const gn = greenness(r, g, b)
     let a = 1 - Math.min(Math.max((gn - lo) / (hi - lo), 0), 1)
-    // Green that is much darker than the background is the floor shadow.
-    // Keep a little of it as a soft, neutral contact shadow, unless the floor is real.
-    const isShadow = !keepFloor && gn > lo && g < bg[1] * 0.85 && a > 0
+    // Green that is darker than the background is the floor shadow (or a soft
+    // edge over it). Keep a little as a neutral contact shadow, unless the floor is real.
+    const lum = 0.299 * r + 0.587 * g + 0.114 * b
+    const isShadow = !keepFloor && a > 0 && a < 0.9 && gn > lo * 0.5 && lum < bgLum * 0.9
     if (isShadow) a = Math.min(a, 0.28)
     let fr = r
     let fg = g
@@ -110,12 +116,54 @@ function matte(data, w, h, bg, { keepFloor = false } = {}) {
         fb = Math.min(255, fb + excess * 0.35)
       }
     }
+    if (warmGlow && a > 0) {
+      // Nothing in a lamp-lit scene is greener than its own red: the light
+      // haze over the green becomes amber, while pink, skin, wood and paper
+      // already satisfy the rule and are untouched.
+      fg = Math.min(fg, Math.max(fr * 0.85, (fr + fb) / 2))
+      if (a < 0.9) fb = Math.min(fb, fr * 0.5)
+    }
     out[i] = fr
     out[i + 1] = fg
     out[i + 2] = fb
     out[i + 3] = Math.round(a * 255)
   }
   return out
+}
+
+// Opaque pixels right at the matte edge still carry green contamination that
+// the greenness test cannot see (orange fur blended with green reads as olive,
+// not green). Within a few pixels of any translucent pixel, cap green at the
+// red/blue average, which leaves genuine oranges, skins, whites and blues alone.
+function despillEdges(rgba, w, h, radius = 4) {
+  const n = w * h
+  const edge = new Uint8Array(n)
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const p = y * w + x
+      const a = rgba[p * 4 + 3]
+      if (a === 0 || a >= 250) continue
+      // Mark the neighbourhood of every translucent pixel.
+      for (let dy = -radius; dy <= radius; dy++) {
+        const yy = y + dy
+        if (yy < 0 || yy >= h) continue
+        for (let dx = -radius; dx <= radius; dx++) {
+          const xx = x + dx
+          if (xx < 0 || xx >= w) continue
+          edge[yy * w + xx] = 1
+        }
+      }
+    }
+  }
+  for (let p = 0; p < n; p++) {
+    if (!edge[p] || rgba[p * 4 + 3] === 0) continue
+    const r = rgba[p * 4]
+    const g = rgba[p * 4 + 1]
+    const b = rgba[p * 4 + 2]
+    const cap = (r + b) / 2
+    if (g > cap) rgba[p * 4 + 1] = Math.round(cap)
+  }
+  return rgba
 }
 
 // Keep only the largest connected region of visible pixels (plus any region
@@ -265,6 +313,7 @@ async function processGroup(baseName, files) {
     }
     const bg = estimateBackground(data, width, height)
     let rgba = matte(data, width, height, bg, override)
+    rgba = despillEdges(rgba, width, height)
     rgba = keepMainComponents(rgba, width, height)
     rgba = softenLowAlpha(rgba, width, height)
     results[variant] = { rgba, width, height, bg, box: bbox(rgba, width, height) }
@@ -279,7 +328,7 @@ async function processGroup(baseName, files) {
     width: Math.min(base.width, base.box.x1 + pad + 1) - Math.max(0, base.box.x0 - pad),
     height: Math.min(base.height, base.box.y1 + pad + 1) - Math.max(0, base.box.y0 - pad),
   }
-  const scale = Math.min(1, MAX_H / crop.height)
+  const scale = Math.min(1, maxHeightFor(baseName) / crop.height)
   const outW = Math.round(crop.width * scale)
   const outH = Math.round(crop.height * scale)
 

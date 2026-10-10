@@ -3,61 +3,61 @@
     "width": 588,
     "height": 1189,
     "webp": 54,
-    "avif": 39
+    "avif": 38
   },
   "pose-desk-blink": {
     "width": 804,
     "height": 1187,
-    "webp": 64,
+    "webp": 65,
     "avif": 42
   },
   "pose-desk": {
     "width": 804,
     "height": 1187,
     "webp": 69,
-    "avif": 47
+    "avif": 46
   },
   "pose-hero-blink": {
     "width": 672,
     "height": 1218,
-    "webp": 63,
-    "avif": 40
+    "webp": 62,
+    "avif": 38
   },
   "pose-hero": {
     "width": 672,
     "height": 1218,
-    "webp": 63,
-    "avif": 40
+    "webp": 61,
+    "avif": 38
   },
   "pose-karsaz": {
     "width": 532,
     "height": 1195,
     "webp": 49,
-    "avif": 35
+    "avif": 33
   },
   "pose-london": {
     "width": 642,
     "height": 1128,
     "webp": 67,
-    "avif": 50
+    "avif": 49
   },
   "pose-loves": {
     "width": 848,
     "height": 1160,
-    "webp": 57,
+    "webp": 56,
     "avif": 37
   },
   "pose-peek": {
     "width": 573,
     "height": 1139,
     "webp": 95,
-    "avif": 55
+    "avif": 54
   },
   "pose-sharjeel": {
     "width": 910,
     "height": 1600,
-    "webp": 98,
-    "avif": 58
+    "webp": 96,
+    "avif": 55
   },
   "pose-sky-blink": {
     "width": 386,
@@ -69,6 +69,54 @@
     "width": 386,
     "height": 1171,
     "webp": 34,
-    "avif": 26
+    "avif": 25
+  },
+  "pose-letter": {
+    "width": 794,
+    "height": 998,
+    "webp": 67,
+    "avif": 45
+  },
+  "pose-letter-blink": {
+    "width": 794,
+    "height": 998,
+    "webp": 58,
+    "avif": 39
+  },
+  "ginger-sit-up": {
+    "width": 710,
+    "height": 1100,
+    "webp": 76,
+    "avif": 45
+  },
+  "ginger-sit-up-blink": {
+    "width": 710,
+    "height": 1100,
+    "webp": 78,
+    "avif": 48
+  },
+  "ginger-asleep": {
+    "width": 1328,
+    "height": 1100,
+    "webp": 158,
+    "avif": 88
+  },
+  "ginger-walk": {
+    "width": 1393,
+    "height": 1100,
+    "webp": 148,
+    "avif": 85
+  },
+  "ginger-bat": {
+    "width": 628,
+    "height": 1100,
+    "webp": 69,
+    "avif": 45
+  },
+  "ginger-sit-eyes-closed": {
+    "width": 703,
+    "height": 1100,
+    "webp": 79,
+    "avif": 48
   }
 }

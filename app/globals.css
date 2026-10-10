@@ -371,9 +371,20 @@ html.cursor-out .cursor {
   margin-bottom: 13vh;
   will-change: transform;
 }
-.hero__figure .avatar {
+.hero__figure > .avatar {
   height: 100%;
   width: auto;
+}
+.hero__cat {
+  position: absolute;
+  left: 92%;
+  bottom: 0;
+  height: 24%;
+  will-change: transform;
+}
+.hero__cat .avatar {
+  height: 100%;
+  width: 100%;
 }
 
 /* ───────────────────────────── avatar ───────────────────────────── */
@@ -500,6 +511,38 @@ html.cursor-out .cursor {
 }
 .chapter__figure--pair .chapter__fig--large {
   height: 100%;
+}
+/* Ginger: small, tucked in against whoever she is next to. */
+.chapter__fig--cat,
+.chapter__figure--pair .chapter__fig--cat {
+  height: 22%;
+  margin-inline: -1.2vw;
+  z-index: 1;
+}
+.chapter__fig--cat-small,
+.chapter__figure--pair .chapter__fig--cat-small {
+  height: 14%;
+}
+.chapter__fig--cat-large,
+.chapter__figure--pair .chapter__fig--cat-large {
+  height: 34%;
+}
+#sky .chapter__fig--cat-small {
+  height: 9%;
+  margin-inline: 0.5vw;
+}
+.chapter__walker {
+  position: absolute;
+  left: 0;
+  bottom: 5vh;
+  height: 9vh;
+  z-index: 2;
+  pointer-events: none;
+  will-change: transform;
+}
+.chapter__walker .avatar {
+  height: 100%;
+  width: 100%;
 }
 #sky .chapter__figure {
   right: auto;

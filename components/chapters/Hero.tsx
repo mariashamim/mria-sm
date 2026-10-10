@@ -7,7 +7,7 @@ import { gsap, isTouch, prefersReducedMotion } from '@/lib/gsap'
 import { activateChapter, useProgress } from '@/lib/progress'
 import { interpolateKeyframes } from '@/lib/sky'
 import Skyline from './Skyline'
-import Avatar from '@/components/avatar/Avatar'
+import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
 
 type Props = { chapter: ChapterData }
 
@@ -74,6 +74,11 @@ export default function Hero({ chapter }: Props) {
           priority
           sizes="(max-width: 900px) 60vw, 26vh"
         />
+        {hasPose('ginger-sit-up') && (
+          <div className="hero__cat" style={{ aspectRatio: poseRatio('ginger-sit-up') }}>
+            <Avatar pose="ginger-sit-up" alt="Ginger the cat sitting beside her, also looking up" blink priority sizes="(max-width: 900px) 22vw, 10vh" />
+          </div>
+        )}
       </div>
       <Skyline className="hero__skyline" />
       <p className="hero__cue" aria-hidden="true">

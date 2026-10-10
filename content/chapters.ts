@@ -35,6 +35,8 @@ export type Chapter = {
   figures?: Figure[]
   /** A pose that walks across the bottom of the chapter as it plays. */
   walker?: string
+  /** Show the Karachi skyline along the bottom of this chapter. */
+  rooftop?: boolean
 }
 
 export const RAIL_YEARS = ['2007', '2010', '2011', '2017', '2023', 'NOW'] as const
@@ -78,6 +80,7 @@ export const chapters: Chapter[] = [
       '(Ginger came much later. She insists on being in every scene anyway.)',
     ],
     walker: 'ginger-walk',
+    rooftop: true,
   },
   {
     id: 'london',
@@ -232,6 +235,7 @@ export const chapters: Chapter[] = [
       { pose: 'ginger-asleep', alt: 'Ginger asleep beside her', role: 'cat' },
       { pose: 'pose-loves', alt: 'Maria cross-legged on the rooftop at night with a cup of chai, headphones around her neck, a stickered laptop beside her', size: 'large', mask: 'floor' },
     ],
+    rooftop: true,
   },
   {
     id: 'letter',
@@ -262,5 +266,6 @@ export const chapters: Chapter[] = [
       { pose: 'ginger-asleep', alt: 'Ginger curled up in the lamp light', role: 'cat', size: 'small' },
       { pose: 'pose-letter', alt: 'Maria at the desk under a lamp, writing a letter by hand', blink: true, size: 'large' },
     ],
+    rooftop: true,
   },
 ]

@@ -1,0 +1,32 @@
+{
+  "city-skyline": {
+    "width": 2200,
+    "height": 903,
+    "webp": 174,
+    "avif": 95
+  },
+  "city-skyline-day": {
+    "width": 2200,
+    "height": 903,
+    "webp": 211,
+    "avif": 122
+  },
+  "parapet-front": {
+    "width": 2200,
+    "height": 490,
+    "webp": 59,
+    "avif": 40
+  },
+  "rooftop-fore": {
+    "width": 2200,
+    "height": 897,
+    "webp": 114,
+    "avif": 66
+  },
+  "rooftop-fore-day": {
+    "width": 2200,
+    "height": 897,
+    "webp": 146,
+    "avif": 79
+  }
+}

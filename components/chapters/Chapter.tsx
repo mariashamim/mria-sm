@@ -7,6 +7,7 @@ import { gsap, isTouch, prefersReducedMotion } from '@/lib/gsap'
 import { activateChapter, useProgress } from '@/lib/progress'
 import { interpolateKeyframes } from '@/lib/sky'
 import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
+import Rooftop from '@/components/scene/Rooftop'
 
 type Props = { chapter: ChapterData }
 
@@ -30,6 +31,7 @@ export default function Chapter({ chapter }: Props) {
       const lines = Array.from(el.querySelectorAll<HTMLElement>('.chapter__lines p'))
       const figures = Array.from(el.querySelectorAll<HTMLElement>('.chapter__figure > *'))
       const walker = el.querySelector<HTMLElement>('.chapter__walker')
+      const layers = Array.from(el.querySelectorAll<HTMLElement>('.rooftop__layer'))
       const setSky = useProgress.getState().setSky
 
       const tl = gsap.timeline({
@@ -66,6 +68,11 @@ export default function Chapter({ chapter }: Props) {
         // Ginger crosses the whole chapter, left to right, with a little bob.
         tl.fromTo(walker, { x: () => -walker.offsetWidth - 40 }, { x: () => window.innerWidth + 40, duration: total + 1.2 }, 0)
       }
+      layers.forEach((layer) => {
+        const depth = Number(layer.dataset.depth || 0)
+        tl.fromTo(layer, { yPercent: 6 * depth, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
+        tl.to(layer, { yPercent: -10 * depth, duration: total + 0.4 }, 0.8)
+      })
       tl.to({}, { duration: 1.2 })
     },
     { scope: ref, dependencies: [chapter.id] },
@@ -100,6 +107,7 @@ export default function Chapter({ chapter }: Props) {
           </div>
         )}
       </div>
+      {chapter.rooftop && <Rooftop layers={['city']} size="chapter" />}
       {figuresFor(chapter)}
       {chapter.walker && hasPose(chapter.walker) && (
         <div className="chapter__walker" style={{ aspectRatio: poseRatio(chapter.walker) }} aria-hidden="true">

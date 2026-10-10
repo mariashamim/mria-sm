@@ -17,6 +17,8 @@ export type SkyStop = {
   snow: number
   /** warm amber band at the horizon: the city, lit */
   city: number
+  /** how much the rooftop layers show their daylight render (0 night, 1 full day) */
+  day: number
 }
 
 const PREDAWN: SkyStop = {
@@ -29,18 +31,19 @@ const PREDAWN: SkyStop = {
   stars: 0.8,
   snow: 0,
   city: 0.55,
+  day: 0,
 }
 
 export const SKY_STOPS: SkyStop[] = [
   PREDAWN,
-  { name: 'dawn', top: '#F6E7D2', mid: '#F4B183', hor: '#E58A5A', sun: [0.5, 0.06, 0.9], sunCol: '#FFD9A0', stars: 0, snow: 0, city: 0 },
-  { name: 'grey', top: '#E8EBEF', mid: '#C9CED6', hor: '#9FA8B3', sun: [0.5, 0.55, 0.12], sunCol: '#FFFFFF', stars: 0, snow: 1, city: 0 },
-  { name: 'noon', top: '#5DB9F2', mid: '#8ED0F8', hor: '#FFFFFF', sun: [0.72, 0.92, 0.75], sunCol: '#FFF4C2', stars: 0, snow: 0, city: 0 },
-  { name: 'golden', top: '#F7B74A', mid: '#E8822E', hor: '#FFF1D6', sun: [0.8, 0.14, 1.0], sunCol: '#FFD27A', stars: 0, snow: 0, city: 0 },
-  { name: 'dusk', top: '#6B4A7A', mid: '#3B2F57', hor: '#1B1730', sun: [0.5, 0.04, 0.5], sunCol: '#FF8A5C', stars: 0.2, snow: 0, city: 0.15 },
-  { name: 'storm', top: '#08060D', mid: '#0B0912', hor: '#120E1A', sun: [0.5, 0.0, 0.0], sunCol: '#000000', stars: 0.25, snow: 0, city: 0 },
-  { name: 'bluehour', top: '#0E1B3F', mid: '#15306B', hor: '#1F3F7A', sun: [0.2, 0.82, 0.3], sunCol: '#CFE3FF', stars: 0.7, snow: 0, city: 0.5 },
-  { name: 'night', top: '#0A1230', mid: '#101C45', hor: '#2A2250', sun: [0.25, 0.86, 0.35], sunCol: '#DCE8FF', stars: 0.9, snow: 0, city: 1.0 },
+  { name: 'dawn', top: '#F6E7D2', mid: '#F4B183', hor: '#E58A5A', sun: [0.5, 0.06, 0.9], sunCol: '#FFD9A0', stars: 0, snow: 0, city: 0, day: 0.55 },
+  { name: 'grey', top: '#E8EBEF', mid: '#C9CED6', hor: '#9FA8B3', sun: [0.5, 0.55, 0.12], sunCol: '#FFFFFF', stars: 0, snow: 1, city: 0, day: 0.85 },
+  { name: 'noon', top: '#5DB9F2', mid: '#8ED0F8', hor: '#FFFFFF', sun: [0.72, 0.92, 0.75], sunCol: '#FFF4C2', stars: 0, snow: 0, city: 0, day: 1 },
+  { name: 'golden', top: '#F7B74A', mid: '#E8822E', hor: '#FFF1D6', sun: [0.8, 0.14, 1.0], sunCol: '#FFD27A', stars: 0, snow: 0, city: 0, day: 0.9 },
+  { name: 'dusk', top: '#6B4A7A', mid: '#3B2F57', hor: '#1B1730', sun: [0.5, 0.04, 0.5], sunCol: '#FF8A5C', stars: 0.2, snow: 0, city: 0.15, day: 0.3 },
+  { name: 'storm', top: '#08060D', mid: '#0B0912', hor: '#120E1A', sun: [0.5, 0.0, 0.0], sunCol: '#000000', stars: 0.25, snow: 0, city: 0, day: 0 },
+  { name: 'bluehour', top: '#0E1B3F', mid: '#15306B', hor: '#1F3F7A', sun: [0.2, 0.82, 0.3], sunCol: '#CFE3FF', stars: 0.7, snow: 0, city: 0.5, day: 0.08 },
+  { name: 'night', top: '#0A1230', mid: '#101C45', hor: '#2A2250', sun: [0.25, 0.86, 0.35], sunCol: '#DCE8FF', stars: 0.9, snow: 0, city: 1.0, day: 0 },
   { ...PREDAWN, name: 'predawn-return' },
 ]
 
@@ -68,6 +71,7 @@ export type SkyUniforms = {
   stars: number
   snow: number
   city: number
+  day: number
 }
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
@@ -92,6 +96,7 @@ export function blendSky(s: number): SkyUniforms {
     stars: lerp(a.stars, b.stars, t),
     snow: lerp(a.snow, b.snow, t),
     city: lerp(a.city, b.city, t),
+    day: lerp(a.day, b.day, t),
   }
 }
 

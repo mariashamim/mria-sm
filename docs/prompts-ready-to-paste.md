@@ -265,3 +265,49 @@ STYLE: stylised 3D character render in the manner of a modern animated feature, 
 
 FORMAT: portrait, 2:3, clear margin around the cat.
 ```
+
+---
+
+## Rooftop and skyline (4 renders, 2 matched pairs)
+
+Save these in `public/_raw/scene/`. Use the largest size Gemini offers and ask for landscape 16:9. The night version of each is generated first; the day version is an **edit in the same chat**, so the geometry stays identical and the site can crossfade them as the sky changes.
+
+### `city-skyline.png` — far Karachi skyline, night (no upload)
+
+```
+Wide cinematic view of the Karachi city skyline at night, seen from a rooftop at eye level, as a stylised 3D render in the manner of a modern animated feature. Dense flat-roofed concrete apartment blocks of four to eight storeys fill the middle distance, each with black round plastic water tanks, satellite dishes, TV antennas and low parapet walls; a few taller towers and two slender minarets stand further back; a faint sea haze softens the far distance. Everything is in deep indigo and charcoal with hundreds of small warm amber and pale yellow lit windows. No people, no text, no vehicles, no lamp posts in front. The buildings occupy only the lower half of the frame, and the entire sky area above the skyline is a flat solid chroma green #00B140 with no gradient, no stars and no clouds, so the sky can be replaced later.
+
+STYLE: stylised 3D render in the manner of a modern animated feature, soft matte materials, clean sculpted shapes, gentle ambient light, no harsh directional sun, 35mm lens look, no text, no watermark.
+
+FORMAT: landscape 16:9, skyline centred, buildings reaching the left and right edges.
+```
+
+Then, in the same chat, for `city-skyline-day.png`:
+
+```
+Edit this image: keep every building, water tank, dish, antenna and minaret exactly where it is. Change the lighting to bright daytime: concrete in warm sand, cream and pale terracotta tones with soft shadows from a high sun, all windows unlit and dark, a light sea haze toward the back. The sky area stays flat solid chroma green #00B140 with no gradient.
+```
+
+### `rooftop-fore.png` — the foreground rooftop, night (no upload)
+
+```
+A flat Karachi rooftop seen at eye level from on the roof itself, as the foreground of a scene, stylised 3D render in the manner of a modern animated feature. A low concrete parapet wall with slightly peeling paint runs along the far edge of the roof. On the roof: one large black round plastic water tank on a short brick plinth at the far left, a clothesline with two kurtas and a dupatta drifting gently at the far right, a white plastic garden chair, a small potted plant, a paper kite resting against the parapet with a coil of string, and a satellite dish on a pole. The centre of the roof is kept completely clear and empty so a character can stand there later. Night lighting: deep indigo ambient light with a faint warm amber glow rising from below the parapet as if from streetlights. The roof surface is a flat dark grey concrete slab filling the bottom quarter of the frame. Everything above the parapet line is a flat solid chroma green #00B140 with no gradient. No people, no animals, no text.
+
+STYLE: stylised 3D render in the manner of a modern animated feature, soft matte materials, clean sculpted shapes, gentle ambient light, 35mm lens look, no text, no watermark.
+
+FORMAT: landscape 16:9, the parapet line roughly one third up from the bottom edge, objects at the left and right thirds only.
+```
+
+Then, in the same chat, for `rooftop-fore-day.png`:
+
+```
+Edit this image: keep every object exactly where it is. Change the lighting to bright daytime: the concrete slab and parapet in warm pale grey and sand tones with soft shadows from a high sun, the clothes in brighter colours, no amber glow. Everything above the parapet line stays flat solid chroma green #00B140 with no gradient.
+```
+
+### Optional: `parapet-front.png` — a low wall in front of Maria (no upload)
+
+Only if you have generations to spare. It adds depth by letting her stand behind a wall edge.
+
+```
+The top edge of a low concrete rooftop parapet wall seen from slightly above and behind, running across the full width of the frame in the bottom 15 percent only, with slightly peeling cream paint, one small potted plant and a steel cup of chai resting on it near the right. Stylised 3D render in the manner of a modern animated feature, soft matte materials, deep indigo ambient night light with a faint warm glow from below. Everything above the wall is a flat solid chroma green #00B140. No people, no text. Landscape 16:9.
+```

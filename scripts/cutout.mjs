@@ -14,9 +14,18 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import sharp from 'sharp'
 
-const RAW = path.resolve('public/_raw')
-const OUT = path.resolve('public/avatar')
-const MAX_H = 1600
+//   node scripts/cutout.mjs --in public/_raw/scene --out public/scene --max-w 2400
+//                                      process a different folder (the rooftop layers)
+
+const args = process.argv.slice(2)
+const opt = (name, def) => {
+  const i = args.indexOf(name)
+  return i >= 0 ? args[i + 1] : def
+}
+const RAW = path.resolve(opt('--in', 'public/_raw'))
+const OUT = path.resolve(opt('--out', 'public/avatar'))
+const MAX_H = Number(opt('--max-h', 1600))
+const MAX_W = Number(opt('--max-w', 0)) || Infinity
 // Ginger is never shown large; keep her light.
 const maxHeightFor = (name) => (name.startsWith('ginger-') ? 1100 : MAX_H)
 
@@ -28,9 +37,15 @@ const OVERRIDES = {
   'pose-loves': { keepFloor: true },
   // The desk lamp spills warm light onto the green; keep that haze warm, not green.
   'pose-letter': { warmGlow: true },
+  // The skyline fades into a grey-green haze at the horizon: key more
+  // aggressively and strip green from every pixel (nothing in a city is green).
+  'city-skyline': { keyLo: 10, keyHi: 60, despillAll: true, noUnmix: true },
+  // Gemini's day edit of the skyline pasted a ghost copy across the top 30%;
+  // paint that band background-green before keying so it disappears.
+  'city-skyline-day': { fillTop: 0.297 },
 }
 
-const argFilter = process.argv[2] || null
+const argFilter = args.find((a, i) => !a.startsWith('--') && (i === 0 || !args[i - 1].startsWith('--'))) || null
 
 function greenness(r, g, b) {
   return g - Math.max(r, b)
@@ -74,12 +89,12 @@ function estimateBackground(data, w, h) {
   return [med('r'), med('g'), med('b')]
 }
 
-function matte(data, w, h, bg, { keepFloor = false, warmGlow = false } = {}) {
+function matte(data, w, h, bg, { keepFloor = false, warmGlow = false, keyLo, keyHi, despillAll = false, noUnmix = false } = {}) {
   const gBg = greenness(...bg)
   const bgLum = 0.299 * bg[0] + 0.587 * bg[1] + 0.114 * bg[2]
   // Anything at least this green is background; anything below gFg is figure.
-  const hi = gBg - 18
-  const lo = Math.max(18, Math.min(40, gBg * 0.3))
+  const hi = keyHi ?? gBg - 18
+  const lo = keyLo ?? Math.max(18, Math.min(40, gBg * 0.3))
   const out = Buffer.alloc(w * h * 4)
   for (let i = 0; i < w * h * 4; i += 4) {
     const r = data[i]
@@ -95,8 +110,9 @@ function matte(data, w, h, bg, { keepFloor = false, warmGlow = false } = {}) {
     let fr = r
     let fg = g
     let fb = b
-    if (a > 0 && a < 1) {
-      // Un-premultiply against the background colour.
+    if (a > 0 && a < 1 && !noUnmix) {
+      // Un-premultiply against the background colour. (Skipped for hazy
+      // skylines, where a translucent grey veil is the truthful result.)
       fr = Math.min(255, Math.max(0, (r - (1 - a) * bg[0]) / a))
       fg = Math.min(255, Math.max(0, (g - (1 - a) * bg[1]) / a))
       fb = Math.min(255, Math.max(0, (b - (1 - a) * bg[2]) / a))
@@ -115,6 +131,10 @@ function matte(data, w, h, bg, { keepFloor = false, warmGlow = false } = {}) {
         fr = Math.min(255, fr + excess * 0.35)
         fb = Math.min(255, fb + excess * 0.35)
       }
+    }
+    if (despillAll && a > 0 && fg > (fr + fb) / 2) {
+      // Cap green at the red/blue average so haze reads blue-grey, not green-grey.
+      fg = (fr + fb) / 2
     }
     if (warmGlow && a > 0) {
       // Nothing in a lamp-lit scene is greener than its own red: the light
@@ -290,7 +310,7 @@ function bbox(rgba, w, h, threshold = 8) {
 }
 
 async function processGroup(baseName, files) {
-  const override = OVERRIDES[baseName] || {}
+  const baseOverride = OVERRIDES[baseName] || {}
   const results = {}
   let rawDims = null
   // The base pose first; variants (blink) are resampled to the base's raw size,
@@ -299,8 +319,24 @@ async function processGroup(baseName, files) {
   for (const variant of order) {
     const file = files[variant]
     if (!file) continue
+    // Variant-specific overrides (e.g. "city-skyline-day") layer on top of the base's.
+    const override = { ...baseOverride, ...(variant === 'base' ? {} : OVERRIDES[`${baseName}-${variant}`] || {}) }
     let { data, width, height } = await loadRaw(file, variant === 'base' ? null : rawDims)
     if (variant === 'base') rawDims = { width, height }
+    if (override.fillTop) {
+      // Replace the top band with the background green so it keys out, without
+      // changing the image size (variants must stay aligned to their base).
+      const bgTop = estimateBackground(data, width, height)
+      const rows = Math.floor(height * override.fillTop)
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < width; x++) {
+          const i = (y * width + x) * 4
+          data[i] = bgTop[0]
+          data[i + 1] = bgTop[1]
+          data[i + 2] = bgTop[2]
+        }
+      }
+    }
     if (override.cropLeft) {
       const cut = Math.floor(width * override.cropLeft)
       const nw = width - cut
@@ -328,7 +364,7 @@ async function processGroup(baseName, files) {
     width: Math.min(base.width, base.box.x1 + pad + 1) - Math.max(0, base.box.x0 - pad),
     height: Math.min(base.height, base.box.y1 + pad + 1) - Math.max(0, base.box.y0 - pad),
   }
-  const scale = Math.min(1, maxHeightFor(baseName) / crop.height)
+  const scale = Math.min(1, maxHeightFor(baseName) / crop.height, MAX_W / crop.width)
   const outW = Math.round(crop.width * scale)
   const outH = Math.round(crop.height * scale)
 
@@ -381,11 +417,12 @@ async function main() {
   for (const f of entries) {
     const stem = f.replace(/\.(jpe?g|png|webp)$/i, '')
     if (stem.startsWith('sheet-') || stem.startsWith('uniform') || stem.startsWith('outfit')) continue
-    const m = stem.match(/^(.*)-blink$/)
+    // "<base>-blink" and "<base>-day" are variants aligned to their base render.
+    const m = stem.match(/^(.*)-(blink|day)$/)
     const base = m ? m[1] : stem
     if (argFilter && base !== argFilter) continue
     groups[base] ||= {}
-    groups[base][m ? 'blink' : 'base'] = path.join(RAW, f)
+    groups[base][m ? m[2] : 'base'] = path.join(RAW, f)
   }
   const manifestPath = path.join(OUT, 'manifest.json')
   let manifest = {}
@@ -394,7 +431,7 @@ async function main() {
   } catch {}
   for (const [base, files] of Object.entries(groups)) {
     if (!files.base) {
-      console.warn(`skipping ${base}: blink without a base`)
+      console.warn(`skipping ${base}: variant without a base`)
       continue
     }
     console.log(base)

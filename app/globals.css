@@ -350,8 +350,8 @@ html.cursor-out .cursor {
 .hero__name {
   position: absolute;
   left: 50%;
-  bottom: 16vh;
-  z-index: 1;
+  bottom: 38vh;
+  z-index: 0;
   margin: 0;
   transform: translateX(-50%);
   font-family: var(--font-display-stack);
@@ -367,24 +367,94 @@ html.cursor-out .cursor {
 .hero__figure {
   position: relative;
   z-index: 2;
-  height: clamp(280px, 62vh, 760px);
-  margin-bottom: 13vh;
+  height: clamp(280px, 60vh, 760px);
+  margin-bottom: 9vh;
   will-change: transform;
 }
 .hero__figure > .avatar {
   height: 100%;
   width: auto;
 }
+/* Ginger sits on the near parapet, in front of everything. */
 .hero__cat {
   position: absolute;
-  left: 92%;
-  bottom: 0;
-  height: 24%;
+  left: 58%;
+  bottom: 12.5vh;
+  height: 15vh;
+  z-index: 4;
   will-change: transform;
 }
 .hero__cat .avatar {
   height: 100%;
   width: 100%;
+}
+
+/* ───────────────────────────── rooftop set ───────────────────────────── */
+.rooftop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  --day: 0;
+}
+.rooftop--hero {
+  height: 80vh;
+}
+.rooftop--chapter {
+  height: 40vh;
+  z-index: 0;
+}
+.hero__rooftop--front {
+  z-index: 3;
+}
+.rooftop__layer {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 100vw;
+  will-change: transform, opacity;
+}
+.rooftop__layer picture,
+.rooftop__layer img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: 50% 100%;
+}
+.rooftop__night {
+  position: relative;
+}
+.rooftop__day {
+  position: absolute;
+  inset: 0;
+  opacity: var(--day);
+  transition: opacity 0.5s linear;
+}
+/* Far city: wide and low, pushed down so its own foreground roof hides behind ours. */
+.rooftop--hero .rooftop__layer--city {
+  bottom: -12vh;
+}
+.rooftop--hero .rooftop__layer--city img {
+  max-height: 72vh;
+}
+.rooftop--hero .rooftop__layer--fore img {
+  max-height: 64vh;
+}
+.rooftop--hero .rooftop__layer--parapet img {
+  max-height: 28vh;
+}
+.rooftop--chapter .rooftop__layer--city {
+  bottom: -10vh;
+}
+.rooftop--chapter .rooftop__layer--city img {
+  max-height: 36vh;
+}
+#karachi .chapter__inner {
+  align-self: start;
 }
 
 /* ───────────────────────────── avatar ───────────────────────────── */
@@ -423,16 +493,6 @@ html.cursor-out .cursor {
 .avatar--mask-floor {
   -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 78%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0, #000 78%, transparent 100%);
-}
-.hero__skyline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 16vh;
-  z-index: 1;
-  color: #06091c;
 }
 .hero__cue {
   position: absolute;

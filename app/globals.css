@@ -356,7 +356,7 @@ html.cursor-out .cursor {
   transform: translateX(-50%);
   font-family: var(--font-display-stack);
   font-weight: 900;
-  font-size: clamp(120px, 34vw, 560px);
+  font-size: clamp(96px, 23vw, 420px);
   line-height: 0.8;
   letter-spacing: -0.02em;
   text-transform: uppercase;

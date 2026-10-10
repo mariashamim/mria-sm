@@ -53,7 +53,7 @@ void main() {
   vec2 sp = uv * vec2(aspect, 1.0) * 160.0;
   vec2 cell = floor(sp);
   float h = hash(cell);
-  float star = step(0.985, h) * smoothstep(0.6, 0.0, length(fract(sp) - 0.5));
+  float star = step(0.985, h) * (1.0 - smoothstep(0.0, 0.6, length(fract(sp) - 0.5)));
   float tw = 0.6 + 0.4 * sin(uTime * 2.0 + h * 50.0);
   col += vec3(1.0) * star * tw * uStars * smoothstep(0.15, 0.6, uv.y);
 
@@ -71,7 +71,7 @@ void main() {
     float hh = hash(c + fk * 7.0);
     vec2 center = vec2(hash(c + 1.3), hash(c + 2.7));
     float dd = length(f - center);
-    snow += smoothstep(0.08, 0.0, dd) * step(0.7, hh);
+    snow += (1.0 - smoothstep(0.0, 0.08, dd)) * step(0.7, hh);
   }
   col += vec3(1.0) * snow * uSnow * 0.9;
 

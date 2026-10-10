@@ -32,16 +32,24 @@ export default function SkyCanvas() {
       renderer = null
     }
 
-    if (!renderer || !renderer.gl) {
-      // CSS fallback: keep the body gradient in step with the store.
+    // CSS fallback: keep the body gradient in step with the store.
+    let unsubFallback: (() => void) | null = null
+    const useFallback = () => {
+      if (unsubFallback) return
       document.documentElement.classList.add('no-webgl')
       const apply = (s: number) => document.documentElement.style.setProperty('--sky-fallback', skyToCss(s))
       apply(useProgress.getState().sky)
-      const unsub = useProgress.subscribe((st) => apply(st.sky))
-      return () => {
-        unsub()
-        document.documentElement.classList.remove('no-webgl')
-      }
+      unsubFallback = useProgress.subscribe((st) => apply(st.sky))
+    }
+    const stopFallback = () => {
+      unsubFallback?.()
+      unsubFallback = null
+      document.documentElement.classList.remove('no-webgl')
+    }
+
+    if (!renderer || !renderer.gl || renderer.gl.isContextLost()) {
+      useFallback()
+      return stopFallback
     }
 
     const gl = renderer.gl
@@ -60,6 +68,10 @@ export default function SkyCanvas() {
       uGrain: { value: 0.045 },
     }
     const program = new Program(gl, { vertex: VERT, fragment: FRAG, uniforms })
+    if (!gl.getProgramParameter(program.program, gl.LINK_STATUS)) {
+      useFallback()
+      return stopFallback
+    }
     const mesh = new Mesh(gl, { geometry, program })
 
     const r = renderer
@@ -99,11 +111,22 @@ export default function SkyCanvas() {
     }
     document.addEventListener('visibilitychange', onVisibility)
 
+    // A real context loss (GPU reset, tab eviction) degrades to the CSS sky.
+    const onLost = (e: Event) => {
+      e.preventDefault()
+      cancelAnimationFrame(raf)
+      useFallback()
+    }
+    canvas.addEventListener('webglcontextlost', onLost)
+
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
       document.removeEventListener('visibilitychange', onVisibility)
-      gl.getExtension('WEBGL_lose_context')?.loseContext()
+      canvas.removeEventListener('webglcontextlost', onLost)
+      stopFallback()
+      // The context is deliberately kept alive: React Strict Mode remounts on
+      // the same canvas, and a lost context cannot be reacquired from it.
     }
   }, [])
 

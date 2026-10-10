@@ -21,7 +21,9 @@ export default function Intro() {
       seen = sessionStorage.getItem(KEY) === '1'
     } catch {}
     if (seen || prefersReducedMotion()) return
-    setDone(false)
+    // Defer one frame so the state change isn't synchronous inside the effect.
+    const id = requestAnimationFrame(() => setDone(false))
+    return () => cancelAnimationFrame(id)
   }, [])
 
   useEffect(() => {

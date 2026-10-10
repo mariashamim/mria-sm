@@ -470,6 +470,14 @@ html[data-chapter="sky"] .cursor--ring::after {
   .rooftop--chapter .rooftop__layer--city {
     top: 76vh;
   }
+  /* The wordmark rises above her head on a phone instead of behind her torso. */
+  .hero__name {
+    bottom: 67vh;
+    font-size: 31vw;
+  }
+  .hero__figure {
+    height: clamp(260px, 58vh, 640px);
+  }
 }
 #karachi .chapter__inner {
   align-self: start;
@@ -609,25 +617,64 @@ html[data-chapter="sky"] .cursor--ring::after {
   align-self: start;
 }
 @media (max-width: 900px) {
+  /* Phones: text first, then any scene element, then the figure in the room left. */
   .chapter {
     align-content: start;
-    padding-top: 14vh;
+    padding-top: 12vh;
+    padding-bottom: 3vh;
+    --m-fig: 40vh;
+  }
+  #sky {
+    --m-fig: 30vh;
+  }
+  #hello {
+    --m-fig: 24vh;
+  }
+  #loves {
+    --m-fig: 30vh;
+  }
+  #letter {
+    --m-fig: 26vh;
   }
   .chapter__figure,
-  .chapter__figure--pair {
+  .chapter__figure--pair,
+  .chapter__figure--wide {
     position: relative;
     right: auto;
     bottom: auto;
-    margin-top: 4vh;
-    height: 44vh;
+    left: auto;
+    transform: none;
+    order: 2;
+    margin-top: 3vh;
+    height: var(--m-fig);
     width: 100%;
     justify-content: center;
   }
-  #sky .chapter__figure {
-    left: auto;
-    transform: none;
-    height: 36vh;
+  .chapter__fig--large,
+  .chapter__fig--normal,
+  .chapter__figure--pair .chapter__fig {
+    height: 100%;
+  }
+  .chapter__fig--small {
+    height: 70%;
+  }
+  .chapter__fig--wide {
+    height: auto;
     width: 100%;
+  }
+  .chapter__lines {
+    margin-top: 16px;
+    gap: 0.3em;
+    font-size: 15px;
+  }
+  #sky .chapter__lines {
+    font-size: 20px;
+    gap: 0.4em;
+  }
+  #letter .chapter__lines {
+    font-size: 16px;
+    gap: 0.15em;
+    line-height: 1.3;
   }
 }
 .chapter__meta {
@@ -900,12 +947,23 @@ html[data-chapter="sky"] .cursor--ring::after {
   color: color-mix(in oklab, var(--paper) 55%, transparent);
 }
 @media (max-width: 900px) {
+  /* On phones the terminal sits in the flow between the text and the figure. */
   .terminal {
-    left: var(--gutter);
-    right: var(--gutter);
-    top: auto;
-    bottom: 46vh;
-    width: auto;
+    position: static;
+    order: 1;
+    width: 100%;
+    margin-top: 12px;
+    font-size: 12px;
+  }
+  .terminal__bar {
+    padding: 7px 12px;
+  }
+  .terminal__body {
+    padding: 10px 12px 6px;
+    min-height: 0;
+  }
+  .terminal__sudoku {
+    padding: 8px 12px 10px;
   }
 }
 

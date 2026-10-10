@@ -5,6 +5,9 @@ import { SplitText } from 'gsap/SplitText'
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, SplitText)
   ScrollTrigger.config({ ignoreMobileResize: true })
+  if (process.env.NODE_ENV !== 'production') {
+    ;(window as unknown as { __st?: typeof ScrollTrigger }).__st = ScrollTrigger
+  }
 }
 
 export { gsap, ScrollTrigger, SplitText }

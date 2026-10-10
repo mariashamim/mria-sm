@@ -23,6 +23,9 @@ export default function SmoothScroll() {
     })
     setLenis(lenis)
     lenis.on('scroll', ScrollTrigger.update)
+    if (process.env.NODE_ENV !== 'production') {
+      ;(window as unknown as { __lenis?: Lenis }).__lenis = lenis
+    }
 
     const tick = (time: number) => lenis.raf(time * 1000)
     gsap.ticker.add(tick)

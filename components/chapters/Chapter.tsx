@@ -6,6 +6,7 @@ import type { Chapter as ChapterData } from '@/content/chapters'
 import { gsap, isTouch, prefersReducedMotion } from '@/lib/gsap'
 import { activateChapter, useProgress } from '@/lib/progress'
 import { interpolateKeyframes } from '@/lib/sky'
+import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
 
 type Props = { chapter: ChapterData }
 
@@ -27,6 +28,7 @@ export default function Chapter({ chapter }: Props) {
       const urdu = el.querySelector<HTMLElement>('.chapter__urdu')
       const title = el.querySelector<HTMLElement>('.chapter__title')
       const lines = Array.from(el.querySelectorAll<HTMLElement>('.chapter__lines p'))
+      const figures = Array.from(el.querySelectorAll<HTMLElement>('.chapter__figure > *'))
       const setSky = useProgress.getState().setSky
 
       const tl = gsap.timeline({
@@ -53,6 +55,11 @@ export default function Chapter({ chapter }: Props) {
       if (title) tl.fromTo(title, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.1)
       if (lines.length) {
         tl.from(lines, { yPercent: 110, opacity: 0, duration: 0.7, ease: 'power2.out', stagger: 0.55 }, 0.5)
+      }
+      if (figures.length) {
+        // Arrive a little after the title, then drift upward more slowly than the text.
+        tl.fromTo(figures, { yPercent: 10, opacity: 0 }, { yPercent: 4, opacity: 1, duration: 0.8, ease: 'power2.out', stagger: 0.15 }, 0.25)
+        tl.to(figures, { yPercent: -5, duration: total - 1.1 }, 1.1)
       }
       tl.to({}, { duration: 1.2 })
     },
@@ -88,6 +95,30 @@ export default function Chapter({ chapter }: Props) {
           </div>
         )}
       </div>
+      {figuresFor(chapter)}
     </section>
+  )
+}
+
+function figuresFor(chapter: ChapterData) {
+  const figs = (chapter.figures ?? []).filter((f) => hasPose(f.pose))
+  if (figs.length === 0) return null
+  return (
+    <div className={`chapter__figure chapter__figure--${figs.length > 1 ? 'pair' : 'single'}`}>
+      {figs.map((f) => (
+        // The wrapper takes GSAP's drift; the avatar inside keeps its own CSS breathing transform.
+        // The wrapper carries the aspect ratio so its width is definite inside the flex row.
+        <div key={f.pose} className={`chapter__fig chapter__fig--${f.size ?? 'normal'}`} style={{ aspectRatio: poseRatio(f.pose) }}>
+          <Avatar
+            pose={f.pose}
+            alt={f.alt}
+            blink={f.blink}
+            breathe
+            className={f.mask ? `avatar--mask-${f.mask}` : undefined}
+            sizes="(max-width: 900px) 70vw, 36vw"
+          />
+        </div>
+      ))}
+    </div>
   )
 }

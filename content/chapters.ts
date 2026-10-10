@@ -1,5 +1,16 @@
 export type SkyKeyframe = { at: number; stop: number }
 
+export type Figure = {
+  /** Base name in public/avatar. */
+  pose: string
+  alt: string
+  blink?: boolean
+  /** Relative size inside the figure slot. */
+  size?: 'small' | 'normal' | 'large'
+  /** The chai render includes a real rooftop slab; fade its bottom edge. */
+  mask?: 'floor'
+}
+
 export type Chapter = {
   id: string
   index: number
@@ -18,6 +29,8 @@ export type Chapter = {
   sky: SkyKeyframe[]
   /** Draft copy, one entry per revealed line. Maria rewrites what isn't hers. */
   lines: string[]
+  /** Renders placed in the chapter's figure slot, left to right. */
+  figures?: Figure[]
 }
 
 export const RAIL_YEARS = ['2007', '2010', '2011', '2017', '2023', 'NOW'] as const
@@ -82,6 +95,7 @@ export const chapters: Chapter[] = [
       'I remember the snow more than the school.',
       'Southall sounded like home with a different accent.',
     ],
+    figures: [{ pose: 'pose-london', alt: 'Maria at three, in a red puffer coat and a grey beanie, catching snow with mittened hands' }],
   },
   {
     id: 'home',
@@ -103,6 +117,10 @@ export const chapters: Chapter[] = [
       'Sharjeel had the PC first. I had the chair behind him.',
       "That's where the whole thing started, if I'm honest.",
     ],
+    figures: [
+      { pose: 'pose-sharjeel', alt: 'Sharjeel from behind, in a hoodie and headset, at the family PC', size: 'large' },
+      { pose: 'pose-peek', alt: 'Maria at eight, peeking over the back of an office chair at the glowing screen' },
+    ],
   },
   {
     id: 'karsaz',
@@ -120,6 +138,7 @@ export const chapters: Chapter[] = [
       { at: 1, stop: 5 },
     ],
     lines: ['Bahria College Karsaz. Pre-engineering.', 'Maths, physics, and a plan:', 'I was going to fly.'],
+    figures: [{ pose: 'pose-karsaz', alt: 'Maria at sixteen in the Karsaz uniform, a physics notebook under one arm and a paper plane raised in the other hand' }],
   },
   {
     id: 'sky',
@@ -144,6 +163,7 @@ export const chapters: Chapter[] = [
       'The sky said no.',
       "I didn't have a plan B. I had a laptop.",
     ],
+    figures: [{ pose: 'pose-sky', alt: 'Maria at eighteen in a white shirt and black trousers, seen from behind, looking up at the sky', blink: true, size: 'small' }],
   },
   {
     id: 'hello',
@@ -166,6 +186,7 @@ export const chapters: Chapter[] = [
       'something clicked that the sky never did.',
       'Then I built Kafeel, because Karachi has no real system for its elderly, and that felt like a gap someone should fill.',
     ],
+    figures: [{ pose: 'pose-desk', alt: 'Maria at nineteen at a small wooden desk, round glasses catching the laptop light, typing', blink: true, size: 'large' }],
   },
   {
     id: 'loves',
@@ -189,6 +210,7 @@ export const chapters: Chapter[] = [
       'Not cricket. Badminton and table tennis. I will not be taking questions.',
       'Ginger. Orange. In charge.',
     ],
+    figures: [{ pose: 'pose-loves', alt: 'Maria cross-legged on the rooftop at night with a cup of chai, headphones around her neck, a stickered laptop beside her', size: 'large', mask: 'floor' }],
   },
   {
     id: 'letter',

@@ -7,6 +7,7 @@ import { gsap, isTouch, prefersReducedMotion } from '@/lib/gsap'
 import { activateChapter, useProgress } from '@/lib/progress'
 import { interpolateKeyframes } from '@/lib/sky'
 import Skyline from './Skyline'
+import Avatar from '@/components/avatar/Avatar'
 
 type Props = { chapter: ChapterData }
 
@@ -64,12 +65,15 @@ export default function Hero({ chapter }: Props) {
       <h1 className="hero__name" aria-hidden="true">
         Maria
       </h1>
-      <div className="hero__figure" role="img" aria-label="Maria looking up at the sky, with Ginger the cat beside her">
-        <svg viewBox="0 0 200 420" className="hero__silhouette" aria-hidden="true">
-          <circle cx="100" cy="52" r="34" />
-          <path d="M66 96 C 60 130, 58 170, 60 230 L 60 300 C 62 318, 70 320, 84 322 L 84 404 L 70 414 L 118 414 L 112 404 L 112 322 C 128 320, 138 318, 140 300 L 140 230 C 142 170, 140 130, 134 96 C 122 88, 78 88, 66 96 Z" />
-          <path d="M150 350 c 12 -10, 28 -6, 30 10 c 2 14, -8 28, -22 28 c -14 0, -22 -14, -18 -26 l 2 -4 l -4 -6 l 8 2 z" opacity="0.9" />
-        </svg>
+      <div className="hero__figure">
+        <Avatar
+          pose="pose-hero"
+          alt="Maria on a Karachi rooftop before dawn, hair loose in the breeze, looking up at the sky"
+          blink
+          breathe
+          priority
+          sizes="(max-width: 900px) 60vw, 26vh"
+        />
       </div>
       <Skyline className="hero__skyline" />
       <p className="hero__cue" aria-hidden="true">

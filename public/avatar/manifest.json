@@ -1,0 +1,74 @@
+{
+  "pose-cityschool": {
+    "width": 588,
+    "height": 1189,
+    "webp": 54,
+    "avif": 39
+  },
+  "pose-desk-blink": {
+    "width": 804,
+    "height": 1187,
+    "webp": 64,
+    "avif": 42
+  },
+  "pose-desk": {
+    "width": 804,
+    "height": 1187,
+    "webp": 69,
+    "avif": 47
+  },
+  "pose-hero-blink": {
+    "width": 672,
+    "height": 1218,
+    "webp": 63,
+    "avif": 40
+  },
+  "pose-hero": {
+    "width": 672,
+    "height": 1218,
+    "webp": 63,
+    "avif": 40
+  },
+  "pose-karsaz": {
+    "width": 532,
+    "height": 1195,
+    "webp": 49,
+    "avif": 35
+  },
+  "pose-london": {
+    "width": 642,
+    "height": 1128,
+    "webp": 67,
+    "avif": 50
+  },
+  "pose-loves": {
+    "width": 848,
+    "height": 1160,
+    "webp": 57,
+    "avif": 37
+  },
+  "pose-peek": {
+    "width": 573,
+    "height": 1139,
+    "webp": 95,
+    "avif": 55
+  },
+  "pose-sharjeel": {
+    "width": 910,
+    "height": 1600,
+    "webp": 98,
+    "avif": 58
+  },
+  "pose-sky-blink": {
+    "width": 386,
+    "height": 1171,
+    "webp": 29,
+    "avif": 22
+  },
+  "pose-sky": {
+    "width": 386,
+    "height": 1171,
+    "webp": 34,
+    "avif": 26
+  }
+}

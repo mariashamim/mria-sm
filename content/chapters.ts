@@ -206,7 +206,7 @@ export const chapters: Chapter[] = [
     ],
     figures: [
       { pose: 'ginger-sit-up', alt: 'Ginger beside the desk, staring at the cursor', role: 'cat', blink: true },
-      { pose: 'pose-desk', alt: 'Maria at nineteen at a small wooden desk, round glasses catching the laptop light, typing', blink: true, size: 'large' },
+      { pose: 'pose-desk', alt: 'Maria at nineteen at a small wooden desk, round glasses catching the laptop light, typing', blink: true, size: 'normal' },
     ],
   },
   {

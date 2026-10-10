@@ -7,6 +7,7 @@ import Intro from '@/components/ui/Intro'
 import Cursor from '@/components/ui/Cursor'
 import Rail from '@/components/ui/Rail'
 import Menu from '@/components/ui/Menu'
+import SudokuTerminal from '@/components/sudoku/SudokuTerminal'
 
 const display = Big_Shoulders({
   subsets: ['latin'],
@@ -70,6 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Menu />
         <Rail />
         <main>{children}</main>
+        <SudokuTerminal />
       </body>
     </html>
   )

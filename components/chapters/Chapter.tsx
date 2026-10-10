@@ -8,6 +8,7 @@ import { activateChapter, useProgress } from '@/lib/progress'
 import { interpolateKeyframes } from '@/lib/sky'
 import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
 import Rooftop from '@/components/scene/Rooftop'
+import { SCENES } from '@/components/scenes/registry'
 
 type Props = { chapter: ChapterData }
 
@@ -50,9 +51,13 @@ export default function Chapter({ chapter }: Props) {
         },
       })
 
-      if (reduced) return
-
       const total = 1.2 + lines.length * 0.55 + 1.2
+      const scene = SCENES[chapter.id]
+
+      if (reduced) {
+        scene?.build({ tl, el, total, reduced })
+        return
+      }
       if (year) tl.fromTo(year, { yPercent: 10, opacity: 0.6 }, { yPercent: -10, opacity: 1, duration: total }, 0)
       if (urdu) tl.fromTo(urdu, { xPercent: 4, opacity: 0 }, { xPercent: -4, opacity: 0.3, duration: total }, 0)
       if (title) tl.fromTo(title, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.1)
@@ -73,13 +78,17 @@ export default function Chapter({ chapter }: Props) {
         tl.fromTo(layer, { yPercent: 6 * depth, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
         tl.to(layer, { yPercent: -10 * depth, duration: total + 0.4 }, 0.8)
       })
+      scene?.build({ tl, el, total, reduced })
       tl.to({}, { duration: 1.2 })
     },
     { scope: ref, dependencies: [chapter.id] },
   )
 
+  const Scene = SCENES[chapter.id]?.Scene
+
   return (
     <section ref={ref} id={chapter.id} className="chapter" data-ui={chapter.ui} aria-labelledby={`${chapter.id}-title`}>
+      {Scene && <Scene />}
       <div className="chapter__urdu" aria-hidden="true" lang="ur">
         {chapter.urdu}
       </div>

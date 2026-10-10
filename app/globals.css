@@ -735,6 +735,347 @@ html.cursor-out .cursor {
   font-size: clamp(90px, min(18vw, 30vh), 260px);
 }
 
+/* ───────────────────────────── chapter scenes ───────────────────────────── */
+.scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+.scene--karsaz .scene__trail {
+  stroke: var(--fg);
+  opacity: 0.45;
+}
+.scene--karsaz .scene__plane path {
+  fill: #fff;
+}
+.scene--sky .scene__contrail {
+  stroke: color-mix(in oklab, var(--paper) 70%, transparent);
+}
+.scene--sky .scene__jet path {
+  fill: var(--paper);
+}
+.scene-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 70% 60% at 50% 72%, rgba(0, 0, 0, 0) 0%, rgba(3, 2, 8, 0.85) 75%, rgba(3, 2, 8, 0.95) 100%);
+  opacity: 0;
+  will-change: opacity;
+}
+.scene-screen {
+  position: absolute;
+  left: 50%;
+  bottom: 9vh;
+  z-index: 1;
+  width: clamp(72px, 8vw, 120px);
+  aspect-ratio: 16 / 10;
+  margin-left: calc(clamp(72px, 8vw, 120px) * -0.5);
+  border-radius: 4px;
+  background: linear-gradient(180deg, #d9fff0, #7df5b3);
+  box-shadow:
+    0 0 24px 6px rgba(125, 245, 179, 0.45),
+    0 0 90px 30px rgba(125, 245, 179, 0.18);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.scene-screen span {
+  position: absolute;
+  left: 10%;
+  top: 22%;
+  width: 46%;
+  height: 10%;
+  background: rgba(10, 15, 44, 0.55);
+  border-radius: 2px;
+}
+#sky .chapter__figure,
+#sky .chapter__inner {
+  z-index: 2;
+}
+
+/* The terminal in Hello, World */
+.terminal {
+  position: absolute;
+  left: 56vw;
+  top: 11vh;
+  z-index: 3;
+  width: clamp(300px, 24vw, 420px);
+  pointer-events: auto;
+  background: rgba(8, 11, 24, 0.9);
+  border: 1px solid rgba(247, 243, 236, 0.14);
+  border-radius: 10px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 0 48px rgba(125, 245, 179, 0.08);
+  font-family: var(--font-mono-stack);
+  font-size: 13px;
+  color: var(--accent-2);
+  backdrop-filter: blur(6px);
+  will-change: transform, opacity;
+}
+.terminal__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(247, 243, 236, 0.08);
+  color: color-mix(in oklab, var(--paper) 55%, transparent);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.terminal__bar i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(247, 243, 236, 0.18);
+}
+.terminal__bar i:first-child {
+  background: #ff6b5c;
+}
+.terminal__bar i:nth-child(2) {
+  background: #ffc46b;
+}
+.terminal__bar i:nth-child(3) {
+  background: #7df5b3;
+}
+.terminal__bar span {
+  margin-left: 6px;
+}
+.terminal__body {
+  padding: 14px 14px 10px;
+  display: grid;
+  gap: 6px;
+  min-height: 64px;
+}
+.terminal__line {
+  white-space: pre;
+  line-height: 1.5;
+}
+.terminal__prompt {
+  color: color-mix(in oklab, var(--paper) 60%, transparent);
+}
+.terminal__typed {
+  color: var(--paper);
+}
+.terminal__caret {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: var(--accent-2);
+  animation: caret 1s steps(1) infinite;
+}
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+.terminal__out {
+  color: var(--accent-2);
+}
+.terminal__sudoku {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px 12px;
+  border: 0;
+  border-top: 1px dashed rgba(247, 243, 236, 0.12);
+  background: none;
+  color: var(--paper);
+  font: inherit;
+  text-align: left;
+  border-radius: 0 0 10px 10px;
+  transition: background 0.3s ease;
+}
+.terminal__sudoku:hover {
+  background: rgba(125, 245, 179, 0.06);
+}
+.terminal__grid {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--accent-2);
+  background-image:
+    linear-gradient(to right, rgba(125, 245, 179, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(125, 245, 179, 0.5) 1px, transparent 1px);
+  background-size: 33.33% 33.33%;
+  opacity: 0.9;
+}
+.terminal__sudoku-label {
+  display: grid;
+  gap: 2px;
+}
+.terminal__sudoku-label small {
+  font-size: 11px;
+  color: color-mix(in oklab, var(--paper) 55%, transparent);
+}
+@media (max-width: 900px) {
+  .terminal {
+    left: var(--gutter);
+    right: var(--gutter);
+    top: auto;
+    bottom: 46vh;
+    width: auto;
+  }
+}
+
+/* ───────────────────────────── sudoku window ───────────────────────────── */
+.sudoku {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: rgba(4, 5, 12, 0.78);
+  backdrop-filter: blur(8px);
+  overflow-y: auto;
+}
+.sudoku__window {
+  width: min(100%, 520px);
+  background: #07090f;
+  color: var(--accent-2);
+  border: 1px solid rgba(125, 245, 179, 0.35);
+  border-radius: 8px;
+  box-shadow:
+    0 0 0 1px #000,
+    0 30px 80px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(125, 245, 179, 0.12);
+  font-family: var(--font-mono-stack);
+  font-size: 13px;
+  padding: 0 0 14px;
+}
+.sudoku__bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(125, 245, 179, 0.25);
+  letter-spacing: 0.08em;
+  font-size: 12px;
+}
+.sudoku__close {
+  background: none;
+  border: 1px solid rgba(125, 245, 179, 0.4);
+  color: inherit;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+}
+.sudoku__intro {
+  margin: 0;
+  padding: 12px 14px 10px;
+  color: color-mix(in oklab, var(--paper) 70%, transparent);
+  line-height: 1.5;
+  max-width: 60ch;
+}
+.sudoku__grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  width: min(100%, 396px);
+  margin: 0 auto;
+  border: 2px solid var(--accent-2);
+  outline: none;
+}
+.sudoku__grid:focus-visible {
+  box-shadow: 0 0 0 3px rgba(125, 245, 179, 0.35);
+}
+.sudoku__cell {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-right: 1px solid rgba(125, 245, 179, 0.22);
+  border-bottom: 1px solid rgba(125, 245, 179, 0.22);
+  background: transparent;
+  color: var(--accent-2);
+  font: inherit;
+  font-size: clamp(15px, 2.2vw, 20px);
+  padding: 0;
+  transition: background 0.15s ease;
+}
+.sudoku__cell:nth-child(9n) {
+  border-right: 0;
+}
+.sudoku__cell.is-box-right {
+  border-right: 2px solid var(--accent-2);
+}
+.sudoku__cell.is-box-bottom {
+  border-bottom: 2px solid var(--accent-2);
+}
+.sudoku__cell.is-given {
+  color: var(--paper);
+  font-weight: 500;
+}
+.sudoku__cell.is-related {
+  background: rgba(125, 245, 179, 0.06);
+}
+.sudoku__cell.is-same {
+  background: rgba(125, 245, 179, 0.16);
+}
+.sudoku__cell.is-selected {
+  background: rgba(125, 245, 179, 0.28);
+  box-shadow: inset 0 0 0 2px var(--accent-2);
+}
+.sudoku__cell.is-bad {
+  color: #ff6b5c;
+}
+.sudoku__pad {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 6px;
+  width: min(100%, 396px);
+  margin: 12px auto 0;
+}
+.sudoku__pad button,
+.sudoku__actions button {
+  background: rgba(125, 245, 179, 0.08);
+  border: 1px solid rgba(125, 245, 179, 0.3);
+  color: var(--accent-2);
+  font: inherit;
+  border-radius: 4px;
+  padding: 8px 0;
+  transition: background 0.15s ease;
+}
+.sudoku__pad button:hover,
+.sudoku__actions button:hover {
+  background: rgba(125, 245, 179, 0.2);
+}
+.sudoku__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(100%, 396px);
+  margin: 10px auto 0;
+}
+.sudoku__actions button {
+  padding: 7px 12px;
+}
+.sudoku__hint {
+  margin-left: auto;
+  font-size: 11px;
+  color: color-mix(in oklab, var(--paper) 45%, transparent);
+}
+.sudoku__note {
+  width: min(100%, 396px);
+  margin: 10px auto 0;
+  min-height: 1.5em;
+  color: var(--paper);
+}
+html.modal-open {
+  overflow: hidden;
+}
+
 /* ───────────────────────────── colophon ───────────────────────────── */
 .colophon {
   display: flex;

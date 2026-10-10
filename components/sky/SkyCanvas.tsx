@@ -34,22 +34,22 @@ export default function SkyCanvas() {
 
     // CSS fallback: keep the body gradient in step with the store.
     let unsubFallback: (() => void) | null = null
-    const useFallback = () => {
+    const enableFallback = () => {
       if (unsubFallback) return
       document.documentElement.classList.add('no-webgl')
       const apply = (s: number) => document.documentElement.style.setProperty('--sky-fallback', skyToCss(s))
       apply(useProgress.getState().sky)
       unsubFallback = useProgress.subscribe((st) => apply(st.sky))
     }
-    const stopFallback = () => {
+    const disableFallback = () => {
       unsubFallback?.()
       unsubFallback = null
       document.documentElement.classList.remove('no-webgl')
     }
 
     if (!renderer || !renderer.gl || renderer.gl.isContextLost()) {
-      useFallback()
-      return stopFallback
+      enableFallback()
+      return disableFallback
     }
 
     const gl = renderer.gl
@@ -69,8 +69,8 @@ export default function SkyCanvas() {
     }
     const program = new Program(gl, { vertex: VERT, fragment: FRAG, uniforms })
     if (!gl.getProgramParameter(program.program, gl.LINK_STATUS)) {
-      useFallback()
-      return stopFallback
+      enableFallback()
+      return disableFallback
     }
     const mesh = new Mesh(gl, { geometry, program })
 
@@ -115,7 +115,7 @@ export default function SkyCanvas() {
     const onLost = (e: Event) => {
       e.preventDefault()
       cancelAnimationFrame(raf)
-      useFallback()
+      enableFallback()
     }
     canvas.addEventListener('webglcontextlost', onLost)
 
@@ -124,7 +124,7 @@ export default function SkyCanvas() {
       window.removeEventListener('resize', resize)
       document.removeEventListener('visibilitychange', onVisibility)
       canvas.removeEventListener('webglcontextlost', onLost)
-      stopFallback()
+      disableFallback()
       // The context is deliberately kept alive: React Strict Mode remounts on
       // the same canvas, and a lost context cannot be reacquired from it.
     }

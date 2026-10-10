@@ -31,7 +31,7 @@ export function poseRatio(pose: string): string | undefined {
 }
 
 /**
- * One cut-out render of Maria (or Ginger, or Sharjeel), served as AVIF with a
+ * One cut-out render of Maria (or a scene with her in it), served as AVIF with a
  * WebP fallback, with an optional eyes-closed layer that blinks on a random
  * 3.5 to 7 second cycle. The whole thing is a plain <picture>, no image
  * optimisation round-trip, because the files are already small.

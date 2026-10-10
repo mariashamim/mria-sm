@@ -26,7 +26,7 @@ Working name: **Aasmaan** (Urdu for sky). The browser title is simply "Maria".
 | Mood | Time-of-day palette arc (sky as narrative) |
 | Avatar | Stylised 3D render, stylised likeness of Maria |
 | Likeness | Light warm brown skin, oval face, large dark brown almond eyes, medium natural eyebrows, soft rounded nose, long thick straight layered dark hair always loose (no hijab in any scene), slim and average height, soft closed-mouth smile; round thin glasses only at screens; signature everyday outfit is a dusty-rose square-neck kurta with white scalloped lace trim over wide-leg white palazzo trousers and cream flats (hero, character sheet, letter); dusty-blue kurta at the desk; terracotta kurta on the night rooftop |
-| Companion | Ginger, a real cat: solid orange, medium slightly fluffy fur, amber-gold eyes, lean and playful; in every chapter |
+| Companion | None. Ginger the cat was rendered and tried in every chapter on 10 October, then removed at Maria's request: the site is about Maria alone. The storyboard's cat beats below are superseded. |
 | Person named | Sharjeel, older brother, first guide to computers and games |
 | Hinge | PAF GD Pilot application and rejection, told as the pivotal turning point |
 | The click | First "Hello, World" / first program that ran |

@@ -47,18 +47,6 @@
     "webp": 56,
     "avif": 37
   },
-  "pose-peek": {
-    "width": 573,
-    "height": 1139,
-    "webp": 95,
-    "avif": 54
-  },
-  "pose-sharjeel": {
-    "width": 910,
-    "height": 1600,
-    "webp": 96,
-    "avif": 55
-  },
   "pose-sky-blink": {
     "width": 386,
     "height": 1171,
@@ -82,42 +70,6 @@
     "height": 998,
     "webp": 58,
     "avif": 39
-  },
-  "ginger-sit-up": {
-    "width": 710,
-    "height": 1100,
-    "webp": 76,
-    "avif": 45
-  },
-  "ginger-sit-up-blink": {
-    "width": 710,
-    "height": 1100,
-    "webp": 78,
-    "avif": 48
-  },
-  "ginger-asleep": {
-    "width": 1328,
-    "height": 1100,
-    "webp": 158,
-    "avif": 88
-  },
-  "ginger-walk": {
-    "width": 1393,
-    "height": 1100,
-    "webp": 148,
-    "avif": 85
-  },
-  "ginger-bat": {
-    "width": 628,
-    "height": 1100,
-    "webp": 69,
-    "avif": 45
-  },
-  "ginger-sit-eyes-closed": {
-    "width": 703,
-    "height": 1100,
-    "webp": 79,
-    "avif": 48
   },
   "pose-home": {
     "width": 1166,

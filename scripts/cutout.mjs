@@ -26,8 +26,7 @@ const RAW = path.resolve(opt('--in', 'public/_raw'))
 const OUT = path.resolve(opt('--out', 'public/avatar'))
 const MAX_H = Number(opt('--max-h', 1600))
 const MAX_W = Number(opt('--max-w', 0)) || Infinity
-// Ginger is never shown large; keep her light.
-const maxHeightFor = (name) => (name.startsWith('ginger-') ? 1100 : MAX_H)
+const maxHeightFor = () => MAX_H
 
 // Per-image overrides.
 const OVERRIDES = {

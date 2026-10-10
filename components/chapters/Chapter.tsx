@@ -31,7 +31,6 @@ export default function Chapter({ chapter }: Props) {
       const title = el.querySelector<HTMLElement>('.chapter__title')
       const lines = Array.from(el.querySelectorAll<HTMLElement>('.chapter__lines p'))
       const figures = Array.from(el.querySelectorAll<HTMLElement>('.chapter__figure > *'))
-      const walker = el.querySelector<HTMLElement>('.chapter__walker')
       const layers = Array.from(el.querySelectorAll<HTMLElement>('.rooftop__layer'))
       const setSky = useProgress.getState().setSky
 
@@ -68,10 +67,6 @@ export default function Chapter({ chapter }: Props) {
         // Arrive a little after the title, then drift upward more slowly than the text.
         tl.fromTo(figures, { yPercent: 10, opacity: 0 }, { yPercent: 4, opacity: 1, duration: 0.8, ease: 'power2.out', stagger: 0.15 }, 0.25)
         tl.to(figures, { yPercent: -5, duration: total - 1.1 }, 1.1)
-      }
-      if (walker) {
-        // Ginger crosses the whole chapter, left to right, with a little bob.
-        tl.fromTo(walker, { x: () => -walker.offsetWidth - 40 }, { x: () => window.innerWidth + 40, duration: total + 1.2 }, 0)
       }
       layers.forEach((layer) => {
         const depth = Number(layer.dataset.depth || 0)
@@ -118,11 +113,6 @@ export default function Chapter({ chapter }: Props) {
       </div>
       {chapter.rooftop && <Rooftop layers={['city']} size="chapter" />}
       {figuresFor(chapter)}
-      {chapter.walker && hasPose(chapter.walker) && (
-        <div className="chapter__walker" style={{ aspectRatio: poseRatio(chapter.walker) }} aria-hidden="true">
-          <Avatar pose={chapter.walker} alt="" sizes="12vw" />
-        </div>
-      )}
     </section>
   )
 }
@@ -130,28 +120,23 @@ export default function Chapter({ chapter }: Props) {
 function figuresFor(chapter: ChapterData) {
   const figs = (chapter.figures ?? []).filter((f) => hasPose(f.pose))
   if (figs.length === 0) return null
-  const people = figs.filter((f) => f.role !== 'cat')
-  const layout = people.some((f) => f.size === 'wide') ? 'wide' : people.length > 1 ? 'pair' : 'single'
+  const layout = figs.some((f) => f.size === 'wide') ? 'wide' : figs.length > 1 ? 'pair' : 'single'
   return (
     <div className={`chapter__figure chapter__figure--${layout}`}>
-      {figs.map((f) => {
-        const isCat = f.role === 'cat'
-        const cls = isCat ? `chapter__fig chapter__fig--cat chapter__fig--cat-${f.size ?? 'normal'}` : `chapter__fig chapter__fig--${f.size ?? 'normal'}`
-        return (
-          // The wrapper takes GSAP's drift; the avatar inside keeps its own CSS breathing transform.
-          // The wrapper carries the aspect ratio so its width is definite inside the flex row.
-          <div key={f.pose} className={cls} style={{ aspectRatio: poseRatio(f.pose) }} data-cursor={isCat ? 'paw' : undefined}>
-            <Avatar
-              pose={f.pose}
-              alt={f.alt}
-              blink={f.blink}
-              breathe
-              className={f.mask ? `avatar--mask-${f.mask}` : undefined}
-              sizes={isCat ? '(max-width: 900px) 30vw, 12vw' : f.size === 'wide' ? '(max-width: 900px) 90vw, 56vw' : '(max-width: 900px) 70vw, 36vw'}
-            />
-          </div>
-        )
-      })}
+      {figs.map((f) => (
+        // The wrapper takes GSAP's drift; the avatar inside keeps its own CSS breathing transform.
+        // The wrapper carries the aspect ratio so its width is definite inside the flex row.
+        <div key={f.pose} className={`chapter__fig chapter__fig--${f.size ?? 'normal'}`} style={{ aspectRatio: poseRatio(f.pose) }}>
+          <Avatar
+            pose={f.pose}
+            alt={f.alt}
+            blink={f.blink}
+            breathe
+            className={f.mask ? `avatar--mask-${f.mask}` : undefined}
+            sizes={f.size === 'wide' ? '(max-width: 900px) 90vw, 56vw' : '(max-width: 900px) 70vw, 36vw'}
+          />
+        </div>
+      ))}
     </div>
   )
 }

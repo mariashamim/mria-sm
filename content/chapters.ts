@@ -9,8 +9,6 @@ export type Figure = {
   size?: 'small' | 'normal' | 'large' | 'wide'
   /** The chai render includes a real rooftop slab; fade its bottom edge. */
   mask?: 'floor'
-  /** Ginger: rendered small, tucked against the figure beside her. */
-  role?: 'cat'
 }
 
 export type Chapter = {
@@ -33,8 +31,6 @@ export type Chapter = {
   lines: string[]
   /** Renders placed in the chapter's figure slot, left to right. */
   figures?: Figure[]
-  /** A pose that walks across the bottom of the chapter as it plays. */
-  walker?: string
   /** Show the Karachi skyline along the bottom of this chapter. */
   rooftop?: boolean
 }
@@ -74,12 +70,7 @@ export const chapters: Chapter[] = [
       { at: 0.7, stop: 1 },
       { at: 1, stop: 2 },
     ],
-    lines: [
-      'I was born in Karachi in 2007.',
-      'A loud city got one more voice.',
-      '(Ginger came much later. She insists on being in every scene anyway.)',
-    ],
-    walker: 'ginger-walk',
+    lines: ['I was born in Karachi in 2007.', 'A loud city got one more voice.'],
     rooftop: true,
   },
   {
@@ -125,10 +116,7 @@ export const chapters: Chapter[] = [
       'Sharjeel had the PC first. I had the chair behind him.',
       "That's where the whole thing started, if I'm honest.",
     ],
-    figures: [
-      { pose: 'ginger-asleep', alt: 'Ginger asleep beside the chair', role: 'cat', size: 'small' },
-      { pose: 'pose-home', alt: 'Sharjeel at the family PC in a headset, Maria at eight peeking over the back of his chair, both lit by the screen', size: 'wide' },
-    ],
+    figures: [{ pose: 'pose-home', alt: 'Sharjeel at the family PC in a headset, Maria at eight peeking over the back of his chair, both lit by the screen', size: 'wide' }],
   },
   {
     id: 'karsaz',
@@ -146,10 +134,7 @@ export const chapters: Chapter[] = [
       { at: 1, stop: 5 },
     ],
     lines: ['Bahria College Karsaz. Pre-engineering.', 'Maths, physics, and a plan:', 'I was going to fly.'],
-    figures: [
-      { pose: 'pose-karsaz', alt: 'Maria at sixteen in the Karsaz uniform, a physics notebook under one arm and a paper plane raised in the other hand' },
-      { pose: 'ginger-bat', alt: 'Ginger up on her hind legs, batting at the paper plane', role: 'cat', size: 'large' },
-    ],
+    figures: [{ pose: 'pose-karsaz', alt: 'Maria at sixteen in the Karsaz uniform, a physics notebook under one arm and a paper plane raised in the other hand' }],
   },
   {
     id: 'sky',
@@ -174,10 +159,7 @@ export const chapters: Chapter[] = [
       'The sky said no.',
       "I didn't have a plan B. I had a laptop.",
     ],
-    figures: [
-      { pose: 'pose-sky', alt: 'Maria at eighteen in a white shirt and black trousers, seen from behind, looking up at the sky', blink: true, size: 'small' },
-      { pose: 'ginger-sit-up', alt: 'Ginger at her feet, the only warm thing left', role: 'cat', size: 'small', blink: true },
-    ],
+    figures: [{ pose: 'pose-sky', alt: 'Maria at eighteen in a white shirt and black trousers, seen from behind, looking up at the sky', blink: true, size: 'small' }],
   },
   {
     id: 'hello',
@@ -200,10 +182,7 @@ export const chapters: Chapter[] = [
       'something clicked that the sky never did.',
       'Then I built Kafeel, because Karachi has no real system for its elderly, and that felt like a gap someone should fill.',
     ],
-    figures: [
-      { pose: 'ginger-sit-up', alt: 'Ginger beside the desk, staring at the cursor', role: 'cat', blink: true },
-      { pose: 'pose-desk', alt: 'Maria at nineteen at a small wooden desk, round glasses catching the laptop light, typing', blink: true, size: 'normal' },
-    ],
+    figures: [{ pose: 'pose-desk', alt: 'Maria at nineteen at a small wooden desk, round glasses catching the laptop light, typing', blink: true, size: 'normal' }],
   },
   {
     id: 'loves',
@@ -225,12 +204,8 @@ export const chapters: Chapter[] = [
       'Valorant when I want to lose, Minecraft when I want to build, chess when I want to think.',
       'Coke Studio on repeat. Yes, still.',
       'Not cricket. Badminton and table tennis. I will not be taking questions.',
-      'Ginger. Orange. In charge.',
     ],
-    figures: [
-      { pose: 'ginger-asleep', alt: 'Ginger asleep beside her', role: 'cat' },
-      { pose: 'pose-loves', alt: 'Maria cross-legged on the rooftop at night with a cup of chai, headphones around her neck, a stickered laptop beside her', size: 'large', mask: 'floor' },
-    ],
+    figures: [{ pose: 'pose-loves', alt: 'Maria cross-legged on the rooftop at night with a cup of chai, headphones around her neck, a stickered laptop beside her', size: 'large', mask: 'floor' }],
     rooftop: true,
   },
   {
@@ -258,10 +233,7 @@ export const chapters: Chapter[] = [
       "You'll find the sky anyway. It's just not where you're looking.",
       '— M.',
     ],
-    figures: [
-      { pose: 'ginger-asleep', alt: 'Ginger curled up in the lamp light', role: 'cat', size: 'small' },
-      { pose: 'pose-letter', alt: 'Maria at the desk under a lamp, writing a letter by hand', blink: true, size: 'large' },
-    ],
+    figures: [{ pose: 'pose-letter', alt: 'Maria at the desk under a lamp, writing a letter by hand', blink: true, size: 'large' }],
     rooftop: true,
   },
 ]

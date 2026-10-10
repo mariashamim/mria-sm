@@ -7,7 +7,7 @@ import { gsap, isTouch, prefersReducedMotion } from '@/lib/gsap'
 import { activateChapter, useProgress } from '@/lib/progress'
 import { interpolateKeyframes } from '@/lib/sky'
 import Rooftop from '@/components/scene/Rooftop'
-import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
+import Avatar from '@/components/avatar/Avatar'
 
 type Props = { chapter: ChapterData }
 
@@ -27,7 +27,6 @@ export default function Hero({ chapter }: Props) {
       const touch = isTouch()
       const name = el.querySelector<HTMLElement>('.hero__name')
       const figure = el.querySelector<HTMLElement>('.hero__figure')
-      const cat = el.querySelector<HTMLElement>('.hero__cat')
       const cue = el.querySelector<HTMLElement>('.hero__cue')
       const layers = Array.from(el.querySelectorAll<HTMLElement>('.rooftop__layer'))
       const setSky = useProgress.getState().setSky
@@ -56,14 +55,13 @@ export default function Hero({ chapter }: Props) {
       if (cue) tl.to(cue, { opacity: 0, duration: 0.2 }, 0)
       if (name) tl.fromTo(name, { yPercent: 45, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1, ease: 'power2.out' }, 0.05)
       if (figure) tl.to(figure, { yPercent: -6, duration: 1.4 }, 0)
-      if (cat) tl.to(cat, { yPercent: -8, duration: 1.4 }, 0)
       // Parallax: nearer rooftop layers slide more than the far city.
       layers.forEach((layer) => {
         const depth = Number(layer.dataset.depth || 0)
         tl.fromTo(layer, { yPercent: 0 }, { yPercent: -14 * depth, duration: 1.4 }, 0)
       })
       tl.to({}, { duration: 0.3 })
-      const exit = [name, figure, cat].filter(Boolean) as HTMLElement[]
+      const exit = [name, figure].filter(Boolean) as HTMLElement[]
       if (exit.length) tl.to(exit, { opacity: 0, yPercent: '-=14', duration: 0.6, ease: 'power1.in' })
       if (layers.length) tl.to(layers, { opacity: 0, duration: 0.6, ease: 'power1.in' }, '<')
     },
@@ -71,7 +69,7 @@ export default function Hero({ chapter }: Props) {
   )
 
   return (
-    <section ref={ref} id={chapter.id} className="hero" data-ui={chapter.ui} aria-label="Maria, on a Karachi rooftop before dawn">
+    <section ref={ref} id={chapter.id} className="hero" data-ui={chapter.ui} aria-label="Maria on a Karachi rooftop before dawn">
       <h1 className="hero__name" aria-hidden="true">
         Maria
       </h1>
@@ -87,11 +85,6 @@ export default function Hero({ chapter }: Props) {
         />
       </div>
       <Rooftop layers={['parapet']} size="hero" className="hero__rooftop hero__rooftop--front" />
-      {hasPose('ginger-sit-up') && (
-        <div className="hero__cat" style={{ aspectRatio: poseRatio('ginger-sit-up') }} data-cursor="paw">
-          <Avatar pose="ginger-sit-up" alt="Ginger the cat sitting on the parapet beside her, also looking up" blink priority sizes="(max-width: 900px) 22vw, 10vh" />
-        </div>
-      )}
       <p className="hero__cue" aria-hidden="true">
         scroll
       </p>

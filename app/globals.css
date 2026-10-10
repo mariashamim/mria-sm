@@ -390,20 +390,21 @@ html.cursor-out .cursor {
 }
 
 /* ───────────────────────────── rooftop set ───────────────────────────── */
+/* The renders are never cropped or stretched. Each layer keeps its natural
+   shape at full viewport width (height = 0.41 × width for the city and roof,
+   0.223 × width for the parapet) and is anchored by a landmark line, so the
+   parapet top, wall top and roofline land at the same screen height on any
+   aspect ratio. Whatever extends below the viewport is simply hidden. */
 .rooftop {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 1;
   pointer-events: none;
+  overflow: hidden;
   --day: 0;
-}
-.rooftop--hero {
-  height: 80vh;
+  --layer-w: 100vw;
 }
 .rooftop--chapter {
-  height: 40vh;
   z-index: 0;
 }
 .hero__rooftop--front {
@@ -412,9 +413,9 @@ html.cursor-out .cursor {
 .rooftop__layer {
   position: absolute;
   left: 50%;
-  bottom: 0;
+  top: 0;
   transform: translateX(-50%);
-  width: 100vw;
+  width: var(--layer-w);
   will-change: transform, opacity;
 }
 .rooftop__layer picture,
@@ -422,8 +423,6 @@ html.cursor-out .cursor {
   display: block;
   width: 100%;
   height: auto;
-  object-fit: cover;
-  object-position: 50% 100%;
 }
 .rooftop__night {
   position: relative;
@@ -434,24 +433,35 @@ html.cursor-out .cursor {
   opacity: var(--day);
   transition: opacity 0.5s linear;
 }
-/* Far city: wide and low, pushed down so its own foreground roof hides behind ours. */
+/* Hero: tallest towers top out at 44vh; the roof's parapet line sits at 86vh;
+   the near wall's top edge at 89vh. Maria's feet (91vh) are on the roof slab
+   behind the wall; Ginger sits on the wall. */
 .rooftop--hero .rooftop__layer--city {
-  bottom: -12vh;
+  top: 44vh;
 }
-.rooftop--hero .rooftop__layer--city img {
-  max-height: 72vh;
+.rooftop--hero .rooftop__layer--fore {
+  top: calc(86vh - 0.316 * var(--layer-w));
 }
-.rooftop--hero .rooftop__layer--fore img {
-  max-height: 64vh;
+.rooftop--hero .rooftop__layer--parapet {
+  top: calc(89vh - 0.134 * var(--layer-w));
 }
-.rooftop--hero .rooftop__layer--parapet img {
-  max-height: 28vh;
-}
+/* Chapters: only the far city, low along the bottom, fading into the sky
+   at its top so it reads as haze rather than a pasted strip. */
 .rooftop--chapter .rooftop__layer--city {
-  bottom: -10vh;
+  top: 72vh;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 26%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 26%);
 }
-.rooftop--chapter .rooftop__layer--city img {
-  max-height: 36vh;
+@media (max-width: 900px) {
+  .rooftop {
+    --layer-w: 200vw;
+  }
+  .rooftop--hero .rooftop__layer--city {
+    top: 40vh;
+  }
+  .rooftop--chapter .rooftop__layer--city {
+    top: 76vh;
+  }
 }
 #karachi .chapter__inner {
   align-self: start;

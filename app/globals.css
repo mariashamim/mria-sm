@@ -393,7 +393,13 @@ html[data-chapter="sky"] .cursor--ring::after {
   margin-bottom: 9vh;
   will-change: transform;
 }
-.hero__figure > .avatar {
+/* The inner wrapper is what the entrance animates; the outer box belongs to the
+   scroll timeline. See Hero.tsx for why they must stay separate. */
+.hero__figure-in {
+  height: 100%;
+  will-change: transform, opacity;
+}
+.hero__figure .avatar {
   height: 100%;
   width: auto;
 }
@@ -532,6 +538,20 @@ html[data-chapter="sky"] .cursor--ring::after {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--fg-dim);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+/* Arrives last in the hero entrance, leaves on the first scroll. The breathing
+   lives on the inner span so it never fights the fade. */
+.hero__cue.is-in {
+  opacity: 1;
+}
+.hero__cue.is-gone {
+  opacity: 0;
+  transition-duration: 0.3s;
+}
+.hero__cue > span {
+  display: inline-block;
   animation: breathe 3.2s ease-in-out infinite;
 }
 @keyframes breathe {
@@ -1145,6 +1165,10 @@ html.modal-open {
     opacity: 1;
   }
   .hero__cue {
+    opacity: 1;
+    transition: none;
+  }
+  .hero__cue > span {
     animation: none;
   }
   .cursor {

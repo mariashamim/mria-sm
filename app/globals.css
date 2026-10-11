@@ -142,7 +142,7 @@ html.no-webgl .sky {
   z-index: 40;
   background: color-mix(in oklab, var(--ink) 94%, transparent);
   color: var(--paper);
-  display: grid;
+  display: none; /* GSAP switches it to grid and fades it in */
   place-items: center;
   padding: var(--gutter);
   overflow-y: auto;

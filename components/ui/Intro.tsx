@@ -5,6 +5,7 @@ import { gsap, prefersReducedMotion } from '@/lib/gsap'
 import { getLenis } from '@/lib/lenis'
 
 const KEY = 'aasmaan-intro-seen'
+const INTRO_DONE = 'aasmaan:intro-done'
 
 /**
  * Two to three seconds: a horizon line draws itself, the sky lifts from black,
@@ -20,7 +21,11 @@ export default function Intro() {
     try {
       seen = sessionStorage.getItem(KEY) === '1'
     } catch {}
-    if (seen || prefersReducedMotion()) return
+    if (seen || prefersReducedMotion()) {
+      // No intro this time: tell the hero to start its entrance right away.
+      const id = setTimeout(() => window.dispatchEvent(new CustomEvent(INTRO_DONE)), 0)
+      return () => clearTimeout(id)
+    }
     // Defer one frame so the state change isn't synchronous inside the effect.
     const id = requestAnimationFrame(() => setDone(false))
     return () => cancelAnimationFrame(id)
@@ -50,6 +55,7 @@ export default function Intro() {
           document.documentElement.classList.remove('intro-open')
           lenis?.start()
           setDone(true)
+          window.dispatchEvent(new CustomEvent(INTRO_DONE))
         },
       })
     }

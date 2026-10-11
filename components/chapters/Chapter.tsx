@@ -3,7 +3,7 @@
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import type { Chapter as ChapterData } from '@/content/chapters'
-import { gsap, isTouch, prefersReducedMotion } from '@/lib/gsap'
+import { gsap, SplitText, isTouch, prefersReducedMotion } from '@/lib/gsap'
 import { activateChapter, useProgress } from '@/lib/progress'
 import { interpolateKeyframes } from '@/lib/sky'
 import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
@@ -13,9 +13,11 @@ import { SCENES } from '@/components/scenes/registry'
 type Props = { chapter: ChapterData }
 
 /**
- * A pinned, scroll-scrubbed chapter. The year drifts up, the Urdu word drifts
- * across, and the lines mask-reveal one by one. Each chapter also drives the
- * sky through its keyframes and flips the UI colour when it becomes active.
+ * A pinned, scroll-scrubbed chapter. The year builds up digit by digit, the
+ * Urdu word is written from the right, the title rises word by word, the
+ * lines reveal one by one, the figure arrives and drifts, and at the end the
+ * whole stage clears before the next chapter scrolls in. Each chapter also
+ * drives the sky through its keyframes and flips the UI colour when active.
  */
 export default function Chapter({ chapter }: Props) {
   const ref = useRef<HTMLElement>(null)
@@ -26,12 +28,14 @@ export default function Chapter({ chapter }: Props) {
       if (!el) return
       const reduced = prefersReducedMotion()
       const touch = isTouch()
+      const inner = el.querySelector<HTMLElement>('.chapter__inner')
       const year = el.querySelector<HTMLElement>('.chapter__year')
       const urdu = el.querySelector<HTMLElement>('.chapter__urdu')
       const title = el.querySelector<HTMLElement>('.chapter__title')
       const lines = Array.from(el.querySelectorAll<HTMLElement>('.chapter__lines p'))
       const figures = Array.from(el.querySelectorAll<HTMLElement>('.chapter__figure > *'))
       const layers = Array.from(el.querySelectorAll<HTMLElement>('.rooftop__layer'))
+      const extras = Array.from(el.querySelectorAll<HTMLElement>('.terminal'))
       const setSky = useProgress.getState().setSky
 
       const tl = gsap.timeline({
@@ -57,11 +61,35 @@ export default function Chapter({ chapter }: Props) {
         scene?.build({ tl, el, total, reduced })
         return
       }
-      if (year) tl.fromTo(year, { yPercent: 10, opacity: 0.6 }, { yPercent: -10, opacity: 1, duration: total }, 0)
-      if (urdu) tl.fromTo(urdu, { xPercent: 4, opacity: 0 }, { xPercent: -4, opacity: 0.3, duration: total }, 0)
-      if (title) tl.fromTo(title, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 0.1)
+
+      // The year builds up digit by digit, then drifts upward for the rest of the chapter.
+      if (year) {
+        const split = SplitText.create(year, { type: 'chars' })
+        tl.from(split.chars, { yPercent: 45, opacity: 0, duration: 0.5, ease: 'power3.out', stagger: 0.07 }, 0)
+        tl.fromTo(year, { yPercent: 6 }, { yPercent: -8, duration: total }, 0)
+      }
+      // The Urdu word is written from the right, the way it is read.
+      if (urdu) {
+        tl.fromTo(urdu, { clipPath: 'inset(-10% 0 -10% 100%)', opacity: 0.3 }, { clipPath: 'inset(-10% 0 -10% 0%)', duration: 1.1, ease: 'power2.out' }, 0.15)
+        tl.fromTo(urdu, { xPercent: 3 }, { xPercent: -3, duration: total }, 0)
+      }
+      // The title rises a word at a time.
+      if (title) {
+        const split = SplitText.create(title, { type: 'words' })
+        tl.from(split.words, { yPercent: 60, opacity: 0, duration: 0.55, ease: 'power3.out', stagger: 0.06 }, 0.2)
+      }
       if (lines.length) {
-        tl.from(lines, { yPercent: 110, opacity: 0, duration: 0.7, ease: 'power2.out', stagger: 0.55 }, 0.5)
+        if (chapter.id === 'letter') {
+          // The letter writes itself, character by character, over most of the chapter.
+          const split = SplitText.create(lines, { type: 'chars' })
+          const each = (0.62 * total) / Math.max(1, split.chars.length)
+          tl.from(split.chars, { opacity: 0, duration: 0.02, stagger: { each, ease: 'none' } }, 0.55)
+        } else {
+          const from: gsap.TweenVars = { yPercent: 110, opacity: 0, duration: 0.7, ease: 'power2.out', stagger: 0.55 }
+          // The window chapter's lines surface out of a blur, like a thought forming.
+          if (chapter.id === 'sky') from.filter = 'blur(10px)'
+          tl.from(lines, from, 0.5)
+        }
       }
       if (figures.length) {
         // Arrive a little after the title, then drift upward more slowly than the text.
@@ -74,7 +102,11 @@ export default function Chapter({ chapter }: Props) {
         tl.to(layer, { yPercent: -10 * depth, duration: total + 0.4 }, 0.8)
       })
       scene?.build({ tl, el, total, reduced })
-      tl.to({}, { duration: 1.2 })
+
+      // Hold, then clear the stage so the next chapter arrives on an empty sky.
+      tl.to({}, { duration: 0.7 })
+      const stage = [inner, ...figures, ...extras].filter(Boolean) as HTMLElement[]
+      tl.to(stage, { y: -36, opacity: 0, duration: 0.5, ease: 'power2.in', stagger: 0.04 })
     },
     { scope: ref, dependencies: [chapter.id] },
   )

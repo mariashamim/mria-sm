@@ -1175,3 +1175,71 @@ html.modal-open {
     display: none !important;
   }
 }
+
+/* ───────────────────────────── world: the climb ─────────────────────────────
+   The rooftop set lives behind every chapter in two fixed roots (lib/world.ts
+   samples the scroll; World.tsx writes --rise to <html>). As --rise grows the
+   layers sink at different speeds, so leaving 2007 reads as the camera lifting
+   off the roof, and the night chapters bring the city back up underneath.
+   Two roots because the parapet must sit in front of the hero figure while
+   the far roof sits behind the page; one fixed parent would trap both. */
+.world,
+.world-front {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.world {
+  z-index: 0;
+}
+.world-front {
+  z-index: 5;
+}
+.world .rooftop__layer,
+.world-front .rooftop__layer {
+  transform: translateX(-50%) translateY(var(--sink, 0px));
+}
+.world .rooftop__layer--city {
+  --sink: calc(var(--rise, 0) * 62vh);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--rise, 0) * 34%));
+  mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--rise, 0) * 34%));
+}
+/* The roof slab and its near wall are one object: they sink at the same rate,
+   faster than the far city, so the climb reads as parallax and no sky can
+   open up between them. */
+.world .rooftop__layer--fore {
+  --sink: calc(var(--rise, 0) * 120vh);
+}
+.world-front .rooftop__layer--parapet {
+  --sink: calc(var(--rise, 0) * 120vh);
+}
+/* Optional cut-out cloud renders; positioned per frame by World.tsx. */
+.world__plate {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, var(--plate-y, -100vh));
+  opacity: var(--plate-alpha, 0);
+  will-change: transform, opacity;
+}
+.world__plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ───────────────────────────── intro: the name as a window ───────────────────────────── */
+.intro--window {
+  background: transparent;
+  display: block;
+}
+.intro__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.intro__name {
+  font-family: var(--font-display-stack);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}

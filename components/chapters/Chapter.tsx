@@ -4,20 +4,22 @@ import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import type { Chapter as ChapterData } from '@/content/chapters'
 import { gsap, SplitText, isTouch, prefersReducedMotion } from '@/lib/gsap'
-import { activateChapter, useProgress } from '@/lib/progress'
-import { interpolateKeyframes } from '@/lib/sky'
+import { activateChapter } from '@/lib/progress'
+import { registerChapterTrigger } from '@/lib/world'
 import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
-import Rooftop from '@/components/scene/Rooftop'
 import { SCENES } from '@/components/scenes/registry'
 
 type Props = { chapter: ChapterData }
 
 /**
- * A pinned, scroll-scrubbed chapter. The year builds up digit by digit, the
- * Urdu word is written from the right, the title rises word by word, the
+ * A pinned, scroll-scrubbed chapter. The year and the Urdu word already build
+ * while the section is scrolling into view, so a new chapter is forming as
+ * the previous one clears. Once pinned, the title rises word by word, the
  * lines reveal one by one, the figure arrives and drifts, and at the end the
- * whole stage clears before the next chapter scrolls in. Each chapter also
- * drives the sky through its keyframes and flips the UI colour when active.
+ * whole stage (scene overlays included) clears before the section rides out.
+ * The sky and the camera height are not driven here: the world layer samples
+ * them by absolute scroll position (lib/world.ts) so they keep moving between
+ * chapters. A chapter only registers its pinned range and flips the UI colour.
  */
 export default function Chapter({ chapter }: Props) {
   const ref = useRef<HTMLElement>(null)
@@ -34,9 +36,7 @@ export default function Chapter({ chapter }: Props) {
       const title = el.querySelector<HTMLElement>('.chapter__title')
       const lines = Array.from(el.querySelectorAll<HTMLElement>('.chapter__lines p'))
       const figures = Array.from(el.querySelectorAll<HTMLElement>('.chapter__figure > *'))
-      const layers = Array.from(el.querySelectorAll<HTMLElement>('.rooftop__layer'))
-      const extras = Array.from(el.querySelectorAll<HTMLElement>('.terminal'))
-      const setSky = useProgress.getState().setSky
+      const extras = Array.from(el.querySelectorAll<HTMLElement>('.terminal, .scene, .scene-dim, .scene-screen'))
 
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
@@ -47,30 +47,35 @@ export default function Chapter({ chapter }: Props) {
           pin: !reduced,
           scrub: reduced ? false : touch ? 0.5 : 1,
           anticipatePin: 1,
-          onUpdate: (self) => setSky(interpolateKeyframes(chapter.sky, self.progress)),
           onToggle: (self) => {
             if (self.isActive) activateChapter(chapter)
           },
         },
       })
+      const unregister = tl.scrollTrigger ? registerChapterTrigger(chapter.index, tl.scrollTrigger) : undefined
 
       const total = 1.2 + lines.length * 0.55 + 1.2
       const scene = SCENES[chapter.id]
 
       if (reduced) {
         scene?.build({ tl, el, total, reduced })
-        return
+        return unregister
       }
 
-      // The year builds up digit by digit, then drifts upward for the rest of the chapter.
+      // While the section scrolls up into view: the year builds digit by digit
+      // and the Urdu word is written from the right, the way it is read.
+      const approach = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: { trigger: el, start: 'top bottom', end: 'top top', scrub: touch ? 0.5 : 1 },
+      })
       if (year) {
         const split = SplitText.create(year, { type: 'chars' })
-        tl.from(split.chars, { yPercent: 45, opacity: 0, duration: 0.5, ease: 'power3.out', stagger: 0.07 }, 0)
+        approach.from(split.chars, { yPercent: 45, opacity: 0, duration: 0.5, ease: 'power3.out', stagger: 0.07 }, 0.3)
+        // Then it drifts upward for the rest of the chapter.
         tl.fromTo(year, { yPercent: 6 }, { yPercent: -8, duration: total }, 0)
       }
-      // The Urdu word is written from the right, the way it is read.
       if (urdu) {
-        tl.fromTo(urdu, { clipPath: 'inset(-10% 0 -10% 100%)', opacity: 0.3 }, { clipPath: 'inset(-10% 0 -10% 0%)', duration: 1.1, ease: 'power2.out' }, 0.15)
+        approach.fromTo(urdu, { clipPath: 'inset(-10% 0 -10% 100%)' }, { clipPath: 'inset(-10% 0 -10% 0%)', duration: 0.6, ease: 'power2.out' }, 0.4)
         tl.fromTo(urdu, { xPercent: 3 }, { xPercent: -3, duration: total }, 0)
       }
       // The title rises a word at a time.
@@ -96,17 +101,14 @@ export default function Chapter({ chapter }: Props) {
         tl.fromTo(figures, { yPercent: 10, opacity: 0 }, { yPercent: 4, opacity: 1, duration: 0.8, ease: 'power2.out', stagger: 0.15 }, 0.25)
         tl.to(figures, { yPercent: -5, duration: total - 1.1 }, 1.1)
       }
-      layers.forEach((layer) => {
-        const depth = Number(layer.dataset.depth || 0)
-        tl.fromTo(layer, { yPercent: 6 * depth, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
-        tl.to(layer, { yPercent: -10 * depth, duration: total + 0.4 }, 0.8)
-      })
       scene?.build({ tl, el, total, reduced })
 
-      // Hold, then clear the stage so the next chapter arrives on an empty sky.
+      // Hold, then clear the stage so the section rides out empty over the moving sky.
       tl.to({}, { duration: 0.7 })
       const stage = [inner, ...figures, ...extras].filter(Boolean) as HTMLElement[]
       tl.to(stage, { y: -36, opacity: 0, duration: 0.5, ease: 'power2.in', stagger: 0.04 })
+
+      return unregister
     },
     { scope: ref, dependencies: [chapter.id] },
   )
@@ -143,7 +145,6 @@ export default function Chapter({ chapter }: Props) {
           </div>
         )}
       </div>
-      {chapter.rooftop && <Rooftop layers={['city']} size="chapter" />}
       {figuresFor(chapter)}
     </section>
   )

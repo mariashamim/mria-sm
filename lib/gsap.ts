@@ -8,6 +8,7 @@ if (typeof window !== 'undefined') {
   ScrollTrigger.config({ ignoreMobileResize: true })
   if (process.env.NODE_ENV !== 'production') {
     ;(window as unknown as { __st?: typeof ScrollTrigger }).__st = ScrollTrigger
+    ;(window as unknown as { __gsap?: typeof gsap }).__gsap = gsap
   }
 }
 

@@ -1,4 +1,5 @@
-export type SkyKeyframe = { at: number; stop: number }
+export type Keyframe = { at: number; stop: number }
+export type SkyKeyframe = Keyframe
 
 export type Figure = {
   /** Base name in public/avatar. */
@@ -26,13 +27,17 @@ export type Chapter = {
   /** Pinned scroll length, as a multiple of the viewport height. */
   pin: number
   /** Sky keyframes in local progress (0..1) → sky stop index (see lib/sky.ts). */
-  sky: SkyKeyframe[]
+  sky: Keyframe[]
+  /**
+   * Camera height in local progress (0..1) → 0 (standing on the roof) to 1
+   * (high above the city). The world layer sinks the rooftop set and streams
+   * stars and clouds past as this grows; see lib/world.ts and World.tsx.
+   */
+  rise: Keyframe[]
   /** Draft copy, one entry per revealed line. Maria rewrites what isn't hers. */
   lines: string[]
   /** Renders placed in the chapter's figure slot, left to right. */
   figures?: Figure[]
-  /** Show the Karachi skyline along the bottom of this chapter. */
-  rooftop?: boolean
 }
 
 export const RAIL_YEARS = ['2007', '2010', '2011', '2017', '2023', 'NOW'] as const
@@ -53,6 +58,12 @@ export const chapters: Chapter[] = [
       { at: 0.55, stop: 0 },
       { at: 1, stop: 1 },
     ],
+    // The roof only starts to fall away as she and her name clear.
+    rise: [
+      { at: 0, stop: 0 },
+      { at: 0.72, stop: 0 },
+      { at: 1, stop: 0.22 },
+    ],
     lines: [],
   },
   {
@@ -70,8 +81,13 @@ export const chapters: Chapter[] = [
       { at: 0.7, stop: 1 },
       { at: 1, stop: 2 },
     ],
+    // The city is a low band for most of the chapter, then we leave it behind.
+    rise: [
+      { at: 0, stop: 0.22 },
+      { at: 0.7, stop: 0.42 },
+      { at: 1, stop: 0.7 },
+    ],
     lines: ['Born under the Karachi sky in 2007.', "I didn't know then that I'd spend the next fifteen years looking up."],
-    rooftop: true,
   },
   {
     id: 'london',
@@ -87,6 +103,10 @@ export const chapters: Chapter[] = [
       { at: 0, stop: 2 },
       { at: 0.72, stop: 2 },
       { at: 1, stop: 3 },
+    ],
+    rise: [
+      { at: 0, stop: 0.8 },
+      { at: 1, stop: 1 },
     ],
     lines: [
       'When I was three we moved to London.',
@@ -111,6 +131,10 @@ export const chapters: Chapter[] = [
       { at: 0.72, stop: 3 },
       { at: 1, stop: 4 },
     ],
+    rise: [
+      { at: 0, stop: 1 },
+      { at: 1, stop: 1 },
+    ],
     lines: [
       'Back in Karachi. City School, and a group of friends I still have.',
       'Sharjeel had the PC first. I had the chair behind him.',
@@ -133,6 +157,10 @@ export const chapters: Chapter[] = [
       { at: 0.72, stop: 4 },
       { at: 1, stop: 5 },
     ],
+    rise: [
+      { at: 0, stop: 1 },
+      { at: 1, stop: 1 },
+    ],
     lines: ['Bahria College Karsaz. Pre-engineering.', 'Maths, physics, and a plan:', 'I was going to fly.'],
     figures: [{ pose: 'pose-karsaz', alt: 'Maria at sixteen in the Karsaz uniform, a physics notebook under one arm and a paper plane raised in the other hand' }],
   },
@@ -152,6 +180,10 @@ export const chapters: Chapter[] = [
       { at: 0.72, stop: 6 },
       { at: 0.88, stop: 6 },
       { at: 1, stop: 7 },
+    ],
+    rise: [
+      { at: 0, stop: 1 },
+      { at: 1, stop: 1 },
     ],
     lines: [
       'I applied to the Air Force. GD Pilot.',
@@ -177,6 +209,12 @@ export const chapters: Chapter[] = [
       { at: 0.75, stop: 7 },
       { at: 1, stop: 8 },
     ],
+    // Finding her ground: the descent starts at the end of this chapter.
+    rise: [
+      { at: 0, stop: 1 },
+      { at: 0.75, stop: 1 },
+      { at: 1, stop: 0.9 },
+    ],
     lines: [
       'First semester. Computer Science, Bahria University.',
       'Two words printed across a black screen, but it felt like the warmest welcome.',
@@ -198,6 +236,12 @@ export const chapters: Chapter[] = [
       { at: 0, stop: 8 },
       { at: 1, stop: 8 },
     ],
+    // Back down to the rooftop at night; the city rises to meet us.
+    rise: [
+      { at: 0, stop: 0.85 },
+      { at: 0.3, stop: 0.52 },
+      { at: 1, stop: 0.5 },
+    ],
     lines: [
       'Things that are mine, no grades attached.',
       'Chai. Non-negotiable.',
@@ -206,7 +250,6 @@ export const chapters: Chapter[] = [
       'Padel, badminton and table tennis.',
     ],
     figures: [{ pose: 'pose-loves', alt: 'Maria cross-legged on the rooftop at night with a cup of chai, headphones around her neck, a stickered laptop beside her', size: 'large', mask: 'floor' }],
-    rooftop: true,
   },
   {
     id: 'letter',
@@ -223,6 +266,11 @@ export const chapters: Chapter[] = [
       { at: 0.5, stop: 8 },
       { at: 1, stop: 9 },
     ],
+    rise: [
+      { at: 0, stop: 0.5 },
+      { at: 0.6, stop: 0.5 },
+      { at: 1, stop: 0.3 },
+    ],
     lines: [
       'To the three-year-old in Southall,',
       "You're going to remember the snow more than the school. That's fine.",
@@ -234,6 +282,5 @@ export const chapters: Chapter[] = [
       '— M.',
     ],
     figures: [{ pose: 'pose-letter', alt: 'Maria at the desk under a lamp, writing a letter by hand', blink: true, size: 'large' }],
-    rooftop: true,
   },
 ]

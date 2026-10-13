@@ -56,6 +56,14 @@ File: `pose-hero.png` · eyes-closed variant: `pose-hero-blink.png`
 
 Blink variant: same prompt, replace "looking up and slightly to her right at the sky with quiet hope" with "eyes gently closed, same head angle, same pose exactly".
 
+## 1b · Karachi 2007: age 2 on the rooftop
+
+File: `pose-karachi.png`
+
+> Full-body front three-quarter view of Maria at age 2, a small toddler, standing barefoot on a flat Karachi rooftop at dusk, looking straight up at the sky with wide-eyed wonder and pointing up with one small index finger, the other hand held slightly out for balance. Short wispy dark hair with a tiny side clip. She wears a simple pale-yellow cotton frock with small white flowers and puffed sleeves, and plain white cotton shorts beneath. Rim light is warm amber-orange from the lower left as if from the last of the sunset, with a soft dusty-blue fill from above. Nothing else in frame.
+> [Block 2 CHARACTER] (keep identity, age 2)
+> [Block 1 STYLE]
+
 ---
 
 ## 2 · London 2010: age 3 in the snow

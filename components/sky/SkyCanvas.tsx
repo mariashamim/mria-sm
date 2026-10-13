@@ -9,9 +9,8 @@ import { FRAG, VERT } from './shaders'
 
 /**
  * One full-screen WebGL quad behind the whole page. It reads the continuous
- * sky value and the camera height from the progress store every frame and
- * eases toward them, so the sky always trails the scroll by a beat. Falls
- * back to a CSS gradient.
+ * sky value from the progress store every frame and eases toward it, so the
+ * sky always trails the scroll by a beat. Falls back to a CSS gradient.
  */
 export default function SkyCanvas() {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -67,9 +66,6 @@ export default function SkyCanvas() {
       uSnow: { value: 0 },
       uCity: { value: 0 },
       uGrain: { value: 0.045 },
-      uRise: { value: 0 },
-      uTravel: { value: 0 },
-      uCloud: { value: 1 },
     }
     const program = new Program(gl, { vertex: VERT, fragment: FRAG, uniforms })
     if (!gl.getProgramParameter(program.program, gl.LINK_STATUS)) {
@@ -89,14 +85,12 @@ export default function SkyCanvas() {
     const reduced = prefersReducedMotion()
     const start = performance.now()
     let current = useProgress.getState().sky
-    let rise = useProgress.getState().rise
     let raf = 0
 
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop)
-      const s = useProgress.getState()
-      current += (s.sky - current) * 0.08
-      rise += (s.rise - rise) * 0.1
+      const target = useProgress.getState().sky
+      current += (target - current) * 0.08
       const u = blendSky(current)
       uniforms.uTop.value = u.top
       uniforms.uMid.value = u.mid
@@ -106,9 +100,6 @@ export default function SkyCanvas() {
       uniforms.uStars.value = u.stars
       uniforms.uSnow.value = u.snow
       uniforms.uCity.value = u.city
-      uniforms.uRise.value = rise
-      uniforms.uTravel.value = s.travel
-      uniforms.uCloud.value = s.cloudPlates ? 0 : 1
       uniforms.uTime.value = reduced ? 10 : (now - start) / 1000
       r.render({ scene: mesh })
     }

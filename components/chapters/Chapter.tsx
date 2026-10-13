@@ -7,6 +7,7 @@ import { gsap, SplitText, isTouch, prefersReducedMotion } from '@/lib/gsap'
 import { activateChapter } from '@/lib/progress'
 import { registerChapterTrigger } from '@/lib/world'
 import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
+import Rooftop from '@/components/scene/Rooftop'
 import { SCENES } from '@/components/scenes/registry'
 
 type Props = { chapter: ChapterData }
@@ -17,9 +18,9 @@ type Props = { chapter: ChapterData }
  * the previous one clears. Once pinned, the title rises word by word, the
  * lines reveal one by one, the figure arrives and drifts, and at the end the
  * whole stage (scene overlays included) clears before the section rides out.
- * The sky and the camera height are not driven here: the world layer samples
- * them by absolute scroll position (lib/world.ts) so they keep moving between
- * chapters. A chapter only registers its pinned range and flips the UI colour.
+ * The sky is not driven here: World.tsx samples it by absolute scroll
+ * position so it keeps moving between chapters. A chapter only registers its
+ * pinned range and flips the UI colour when active.
  */
 export default function Chapter({ chapter }: Props) {
   const ref = useRef<HTMLElement>(null)
@@ -36,6 +37,7 @@ export default function Chapter({ chapter }: Props) {
       const title = el.querySelector<HTMLElement>('.chapter__title')
       const lines = Array.from(el.querySelectorAll<HTMLElement>('.chapter__lines p'))
       const figures = Array.from(el.querySelectorAll<HTMLElement>('.chapter__figure > *'))
+      const layers = Array.from(el.querySelectorAll<HTMLElement>('.rooftop__layer'))
       const extras = Array.from(el.querySelectorAll<HTMLElement>('.terminal, .scene, .scene-dim, .scene-screen'))
 
       const tl = gsap.timeline({
@@ -101,6 +103,12 @@ export default function Chapter({ chapter }: Props) {
         tl.fromTo(figures, { yPercent: 10, opacity: 0 }, { yPercent: 4, opacity: 1, duration: 0.8, ease: 'power2.out', stagger: 0.15 }, 0.25)
         tl.to(figures, { yPercent: -5, duration: total - 1.1 }, 1.1)
       }
+      // The city strip along the bottom settles in and drifts slowly, by depth.
+      layers.forEach((layer) => {
+        const depth = Number(layer.dataset.depth || 0)
+        tl.fromTo(layer, { yPercent: 6 * depth, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
+        tl.to(layer, { yPercent: -10 * depth, duration: total + 0.4 }, 0.8)
+      })
       scene?.build({ tl, el, total, reduced })
 
       // Hold, then clear the stage so the section rides out empty over the moving sky.
@@ -145,6 +153,7 @@ export default function Chapter({ chapter }: Props) {
           </div>
         )}
       </div>
+      {chapter.rooftop && <Rooftop layers={['city']} size="chapter" />}
       {figuresFor(chapter)}
     </section>
   )

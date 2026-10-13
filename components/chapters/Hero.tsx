@@ -7,23 +7,22 @@ import { gsap, SplitText, isTouch, prefersReducedMotion } from '@/lib/gsap'
 import { activateChapter } from '@/lib/progress'
 import { registerChapterTrigger } from '@/lib/world'
 import { useUI } from '@/lib/ui'
+import Rooftop from '@/components/scene/Rooftop'
 import Avatar from '@/components/avatar/Avatar'
 
 type Props = { chapter: ChapterData }
 
 /**
- * Wordless hero: Maria on the rooftop under a pre-dawn sky. The roof itself
- * belongs to the world layer behind the page (components/scene/World.tsx);
- * once the intro lets her in (useUI.introDone) the far roof settles, the
- * parapet follows, she arrives, then the chrome and the scroll cue. On the
- * first scroll her name rises letter by letter behind her, and as the chapter
- * clears the world starts to sink away beneath her: the climb begins.
+ * Wordless hero: Maria on the rooftop under a pre-dawn sky. Once the intro
+ * lets her in (useUI.introDone) the far roof settles, the parapet follows,
+ * she arrives, then the chrome and the scroll cue. On the first scroll her
+ * name rises letter by letter behind her and the sky begins to brighten.
  *
  * Two sets of elements on purpose: ScrollTrigger renders the scroll timeline
  * through once on refresh and records every tween's start values at that
  * moment, so nothing the time-based entrance animates may also be a scroll
- * target. The entrance moves the world roots and an inner figure wrapper; the
- * scroll timeline moves the outer figure box and the name.
+ * target. The entrance moves the rooftop roots and an inner figure wrapper;
+ * the scroll timeline moves the rooftop layers and the outer figure box.
  */
 export default function Hero({ chapter }: Props) {
   const ref = useRef<HTMLElement>(null)
@@ -37,9 +36,10 @@ export default function Hero({ chapter }: Props) {
       const name = el.querySelector<HTMLElement>('.hero__name')
       const figure = el.querySelector<HTMLElement>('.hero__figure')
       const figureIn = el.querySelector<HTMLElement>('.hero__figure-in')
+      const roofBack = el.querySelector<HTMLElement>('.hero__rooftop:not(.hero__rooftop--front)')
+      const roofFront = el.querySelector<HTMLElement>('.hero__rooftop--front')
       const cue = el.querySelector<HTMLElement>('.hero__cue')
-      const roofBack = document.querySelector<HTMLElement>('.world')
-      const roofFront = document.querySelector<HTMLElement>('.world-front')
+      const layers = Array.from(el.querySelectorAll<HTMLElement>('.rooftop__layer'))
 
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
@@ -64,16 +64,21 @@ export default function Hero({ chapter }: Props) {
         return unregister
       }
 
-      // Scroll-driven: the name builds letter by letter, she drifts, then both clear.
+      // Scroll-driven: the name builds letter by letter, everything drifts, then clears.
       if (name) {
         gsap.set(name, { opacity: 1 })
         const split = SplitText.create(name, { type: 'chars' })
         tl.from(split.chars, { yPercent: 60, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08 }, 0.05)
       }
       if (figure) tl.to(figure, { yPercent: -6, duration: 1.4 }, 0)
+      layers.forEach((layer) => {
+        const depth = Number(layer.dataset.depth || 0)
+        tl.fromTo(layer, { yPercent: 0 }, { yPercent: -14 * depth, duration: 1.4 }, 0)
+      })
       tl.to({}, { duration: 0.3 })
       const exit = [name, figure].filter(Boolean) as HTMLElement[]
       if (exit.length) tl.to(exit, { opacity: 0, yPercent: '-=14', duration: 0.6, ease: 'power1.in' })
+      if (layers.length) tl.to(layers, { opacity: 0, duration: 0.6, ease: 'power1.in' }, '<')
 
       // Time-driven entrance. Everything that arrives is hidden up front, so the
       // intro reveals an empty sky; then the far roof, the parapet, Maria, the
@@ -112,6 +117,7 @@ export default function Hero({ chapter }: Props) {
       <h1 className="hero__name" aria-hidden="true">
         Maria
       </h1>
+      <Rooftop layers={['city', 'fore']} size="hero" className="hero__rooftop" />
       <div className="hero__figure">
         <div className="hero__figure-in">
           <Avatar
@@ -124,6 +130,7 @@ export default function Hero({ chapter }: Props) {
           />
         </div>
       </div>
+      <Rooftop layers={['parapet']} size="hero" className="hero__rooftop hero__rooftop--front" />
       <p className="hero__cue" aria-hidden="true">
         <span>scroll</span>
       </p>

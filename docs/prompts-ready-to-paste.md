@@ -338,31 +338,3 @@ FORMAT: landscape 3:2, both characters fully visible with clear margin, the chai
 
 If Gemini turns the chair to show Sharjeel's face, reply: "Keep everything, but rotate the view so we see Sharjeel from behind and only the edge of his profile; Maria stays peeking over the chair back at the right, facing the screen."
 
----
-
-## 10 · Cloud plates for the climb → `cloud-far.png` and `cloud-near.png` (no sheet needed)
-
-Two renders of clouds alone on green. They become parallax layers that stream past while the site climbs away from the rooftop between chapters; until they exist the sky shader draws its own thinner clouds. Generate `cloud-far` first, then `cloud-near` in the same chat.
-
-```
-Stylised 3D render of a few thin, wispy, horizontally stretched clouds, like torn cirrus and stratus seen from slightly below, with a soft matte volumetric material and gentle light scattering through them. Lit softly from above: a faint warm cream tint along the upper edges, a cool pale blue in the shadows. The clouds float alone in the middle band of the frame with nothing else: no sky gradient, no horizon, no ground, no sun, no birds. Everything that is not cloud is a flat solid chroma green background #00B140 with no gradient and no vignette. Cloud edges may be soft and feathered. No text, no watermark.
-
-VARIANT: far layer. Four or five very thin, translucent, low-contrast wisps, widely spaced.
-
-FORMAT: ultra-wide landscape 21:9. The clouds occupy roughly the middle third of the height, with clear green above and below.
-```
-
-Then, in the same chat:
-
-```
-Same style, same green background, same lighting and format. VARIANT: near layer. Two or three fuller wisps with more visible volume and a little more contrast, still thin and horizontal, placed off-centre so they do not line up with the first image.
-```
-
-Save them to `public/_raw/cloud-far.png` and `public/_raw/cloud-near.png`, then:
-
-```
-node scripts/cutout.mjs cloud-far --in public/_raw --out public/scene
-node scripts/cutout.mjs cloud-near --in public/_raw --out public/scene
-```
-
-The site picks them up by name (World.tsx) and switches the shader clouds off. If an edge keeps a green tint, the override for these two names in `scripts/cutout.mjs` already keys wide and strips green everywhere; raise `keyHi` a little if needed.

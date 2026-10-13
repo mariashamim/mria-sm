@@ -396,9 +396,9 @@ Resolved on 10 October: uniforms (reference photos received), all avatar likenes
 
 ## 14. Transitions v2 (13 Oct 2026)
 
-Maria's brief after the first live build: better transitions between chapters and a better intro, still calm, with singularity.engl.design as the benchmark (realevate.agency and kyoosangchoi.com for texture). Decisions from the Q&A: the background travels ("rise through the sky"), chapters ride out with the page but softened, the next chapter builds straight in with no gap, the intro is the name as a window, and she will render cloud plates in Gemini.
+Maria asked for better transitions between chapters and a better intro, still calm. A first pass (one rooftop that sank away as the camera "rose through the sky", streaming stars, shader clouds, a dropping horizon, MARIA as a mask over black) read as "cranky and boring", and the second star layer looked like snow in every night chapter. What stayed after her review:
 
-- **World layer** (`components/scene/World.tsx`, `lib/world.ts`): one rooftop set behind every chapter instead of a copy per chapter. The sky and a camera height (`rise`, per-chapter keyframes in `content/chapters.ts`) are sampled by absolute scroll position, so they keep moving through the gap between pins. Leaving 2007 the parapet, roof and city sink at different speeds (the camera lifts off the roof); the night chapters bring the city back.
-- **Sky shader**: the horizon drops with `rise`, stars stream past at two depths, thin fbm clouds appear on the climb (switched off automatically when `cloud-far` / `cloud-near` plates exist in `public/scene`).
-- **Chapters**: the year and the Urdu word build while the section is still scrolling in (a second, unpinned ScrollTrigger), so the next chapter is forming as the previous one clears. The clear beat also takes the scene overlays, so nothing hard-edged rides out.
-- **Intro**: MARIA as an SVG mask over black. The letters open onto the sky one by one while the hero arrives behind them, then the I widens into a doorway. Skippable, once per session.
+- **Sky continuity**: the sky is sampled by absolute scroll position (`lib/world.ts`, `components/scene/World.tsx`), so it keeps changing through the gap between two pinned chapters instead of pausing.
+- **Early build**: the year and the Urdu word build on a second, unpinned ScrollTrigger while the section is still scrolling in, so the next chapter forms as the previous one clears; the clear beat also takes the scene overlays.
+- **Rooftop as before**: full set in the hero, city strip in 2007 and the night chapters, nothing sinks. Sky shader exactly as before.
+- **Intro, in progress**: her idea, the dream. Cockpit view, first-person flight down over Karachi at night, then the cut to Maria on the roof as the jet climbs away over the city. Prototype at claude.ai/artifact/WEYC2MEvYg6Xnkt4pnroSb; she generates the cockpit and jet renders in Gemini once the sequence is confirmed.

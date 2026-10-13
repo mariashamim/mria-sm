@@ -60,7 +60,7 @@ Blink variant: same prompt, replace "looking up and slightly to her right at the
 
 File: `pose-karachi.png`
 
-> Full-body front three-quarter view of Maria at age 2, a small toddler, standing barefoot on a flat Karachi rooftop at dusk, looking straight up at the sky with wide-eyed wonder and pointing up with one small index finger, the other hand held slightly out for balance. Short wispy dark hair with a tiny side clip. She wears a simple pale-yellow cotton frock with small white flowers and puffed sleeves, and plain white cotton shorts beneath. Rim light is warm amber-orange from the lower left as if from the last of the sunset, with a soft dusty-blue fill from above. Nothing else in frame.
+> Full-body front three-quarter view of Maria at age 2, a small toddler, standing barefoot on a flat Karachi rooftop at dusk, flying a kite that is out of frame: her right arm is stretched up and out toward the upper left of the image, her small fist gripping a thin white kite string that runs straight out of the top left of the frame, her other arm relaxed at her side, her face turned up toward the string with wide-eyed wonder and an open delighted smile. Short wispy dark hair with a tiny side clip. She wears a simple pale-yellow cotton frock with small white flowers and puffed sleeves, and plain white cotton shorts beneath. Rim light is warm amber-orange from the lower left as if from the last of the sunset, with a soft dusty-blue fill from above. Nothing else in frame.
 > [Block 2 CHARACTER] (keep identity, age 2)
 > [Block 1 STYLE]
 

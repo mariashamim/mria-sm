@@ -2,6 +2,7 @@
 
 import { gsap } from '@/lib/gsap'
 import { useUI } from '@/lib/ui'
+import karachi from '@/components/scenes/Karachi'
 
 export type SceneContext = {
   tl: ReturnType<typeof gsap.timeline>
@@ -179,4 +180,4 @@ const hello: SceneDef = {
   },
 }
 
-export const SCENES: Record<string, SceneDef> = { karsaz, sky, hello }
+export const SCENES: Record<string, SceneDef> = { karachi, karsaz, sky, hello }

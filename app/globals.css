@@ -1274,3 +1274,28 @@ html.modal-open {
     left: 50%;
   }
 }
+
+/* 2007: the kite. Paper in her kurta's dusty rose and cream, a dark spar,
+   a string from her hand; the scene fades in with her. */
+.scene--karachi {
+  opacity: 0;
+}
+.scene--karachi .scene__string {
+  stroke: color-mix(in oklab, var(--paper) 62%, transparent);
+}
+.scene--karachi .scene__kite-left {
+  fill: #d8a3a9;
+}
+.scene--karachi .scene__kite-right {
+  fill: #f1e6d3;
+}
+.scene--karachi .scene__kite-spar,
+.scene--karachi .scene__kite-edge {
+  stroke: rgba(40, 24, 36, 0.55);
+}
+.scene--karachi .scene__kite-tailline {
+  stroke: color-mix(in oklab, var(--paper) 70%, transparent);
+}
+.scene--karachi .scene__kite-bow {
+  stroke: #d8a3a9;
+}

@@ -70,7 +70,7 @@ export const chapters: Chapter[] = [
       { at: 1, stop: 2 },
     ],
     lines: ['Born under the Karachi sky in 2007.', "I didn't know then that I'd spend the next fifteen years looking up."],
-    figures: [{ pose: 'pose-karachi', alt: 'Maria at two, a toddler in a little cotton frock on the rooftop, pointing up at the Karachi sky' }],
+    figures: [{ pose: 'pose-karachi', alt: 'Maria at two, a toddler in a little cotton frock on the rooftop, holding a kite string and looking up' }],
   },
   {
     id: 'london',

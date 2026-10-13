@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { chapters } from '@/content/chapters'
 import { gsap, prefersReducedMotion } from '@/lib/gsap'
 import { useProgress } from '@/lib/progress'
-import { getLenis, scrollToTarget } from '@/lib/lenis'
+import { getLenis } from '@/lib/lenis'
+import { scrollToChapter } from '@/lib/stage'
 
 /** Corner wordmark and a full-screen chapter list that fades up, items staggering in. */
 export default function Menu() {
@@ -50,7 +51,7 @@ export default function Menu() {
   const go = (id: string) => {
     setOpen(false)
     // let Lenis restart before scrolling
-    requestAnimationFrame(() => scrollToTarget(`#${id}`))
+    requestAnimationFrame(() => scrollToChapter(id))
   }
 
   return (

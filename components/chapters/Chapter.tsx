@@ -1,130 +1,21 @@
 'use client'
 
-import { useRef } from 'react'
-import { useGSAP } from '@gsap/react'
 import type { Chapter as ChapterData } from '@/content/chapters'
-import { gsap, SplitText, isTouch, prefersReducedMotion } from '@/lib/gsap'
-import { activateChapter } from '@/lib/progress'
-import { registerChapterTrigger } from '@/lib/world'
 import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
-import Rooftop from '@/components/scene/Rooftop'
 import { SCENES } from '@/components/scenes/registry'
 
 type Props = { chapter: ChapterData }
 
 /**
- * A pinned, scroll-scrubbed chapter. The year and the Urdu word already build
- * while the section is scrolling into view, so a new chapter is forming as
- * the previous one clears. Once pinned, the title rises word by word, the
- * lines reveal one by one, the figure arrives and drifts, and at the end the
- * whole stage (scene overlays included) clears before the section rides out.
- * The sky is not driven here: World.tsx samples it by absolute scroll
- * position so it keeps moving between chapters. A chapter only registers its
- * pinned range and flips the UI colour when active.
+ * A chapter's layer on the stage: the year, the Urdu word, the title, the
+ * lines, the figure and any scene. It has no motion of its own; the stage
+ * (components/stage/Stage.tsx) forms it, plays its content timeline
+ * (lib/chapterTimelines.ts) and dissolves it as the scroll moves on.
  */
 export default function Chapter({ chapter }: Props) {
-  const ref = useRef<HTMLElement>(null)
-
-  useGSAP(
-    () => {
-      const el = ref.current
-      if (!el) return
-      const reduced = prefersReducedMotion()
-      const touch = isTouch()
-      const inner = el.querySelector<HTMLElement>('.chapter__inner')
-      const year = el.querySelector<HTMLElement>('.chapter__year')
-      const urdu = el.querySelector<HTMLElement>('.chapter__urdu')
-      const title = el.querySelector<HTMLElement>('.chapter__title')
-      const lines = Array.from(el.querySelectorAll<HTMLElement>('.chapter__lines p'))
-      const figures = Array.from(el.querySelectorAll<HTMLElement>('.chapter__figure > *'))
-      const layers = Array.from(el.querySelectorAll<HTMLElement>('.rooftop__layer'))
-      const extras = Array.from(el.querySelectorAll<HTMLElement>('.terminal, .scene, .scene-dim, .scene-screen'))
-
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: el,
-          start: 'top top',
-          end: () => `+=${window.innerHeight * (touch ? chapter.pin * 0.7 : chapter.pin)}`,
-          pin: !reduced,
-          scrub: reduced ? false : touch ? 0.5 : 1,
-          anticipatePin: 1,
-          onToggle: (self) => {
-            if (self.isActive) activateChapter(chapter)
-          },
-        },
-      })
-      const unregister = tl.scrollTrigger ? registerChapterTrigger(chapter.index, tl.scrollTrigger) : undefined
-
-      const total = 1.2 + lines.length * 0.55 + 1.2
-      const scene = SCENES[chapter.id]
-
-      if (reduced) {
-        scene?.build({ tl, el, total, reduced })
-        return unregister
-      }
-
-      // While the section scrolls up into view: the year builds digit by digit
-      // and the Urdu word is written from the right, the way it is read.
-      const approach = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: { trigger: el, start: 'top bottom', end: 'top top', scrub: touch ? 0.5 : 1 },
-      })
-      if (year) {
-        const split = SplitText.create(year, { type: 'chars' })
-        approach.from(split.chars, { yPercent: 45, opacity: 0, duration: 0.5, ease: 'power3.out', stagger: 0.07 }, 0.3)
-        // Then it drifts upward for the rest of the chapter.
-        tl.fromTo(year, { yPercent: 6 }, { yPercent: -8, duration: total }, 0)
-      }
-      if (urdu) {
-        approach.fromTo(urdu, { clipPath: 'inset(-10% 0 -10% 100%)' }, { clipPath: 'inset(-10% 0 -10% 0%)', duration: 0.6, ease: 'power2.out' }, 0.4)
-        tl.fromTo(urdu, { xPercent: 3 }, { xPercent: -3, duration: total }, 0)
-      }
-      // The title rises a word at a time.
-      if (title) {
-        const split = SplitText.create(title, { type: 'words' })
-        tl.from(split.words, { yPercent: 60, opacity: 0, duration: 0.55, ease: 'power3.out', stagger: 0.06 }, 0.2)
-      }
-      if (lines.length) {
-        if (chapter.id === 'letter') {
-          // The letter writes itself, character by character, over most of the chapter.
-          const split = SplitText.create(lines, { type: 'chars' })
-          const each = (0.62 * total) / Math.max(1, split.chars.length)
-          tl.from(split.chars, { opacity: 0, duration: 0.02, stagger: { each, ease: 'none' } }, 0.55)
-        } else {
-          const from: gsap.TweenVars = { yPercent: 110, opacity: 0, duration: 0.7, ease: 'power2.out', stagger: 0.55 }
-          // The window chapter's lines surface out of a blur, like a thought forming.
-          if (chapter.id === 'sky') from.filter = 'blur(10px)'
-          tl.from(lines, from, 0.5)
-        }
-      }
-      if (figures.length) {
-        // Arrive a little after the title, then drift upward more slowly than the text.
-        tl.fromTo(figures, { yPercent: 10, opacity: 0 }, { yPercent: 4, opacity: 1, duration: 0.8, ease: 'power2.out', stagger: 0.15 }, 0.25)
-        tl.to(figures, { yPercent: -5, duration: total - 1.1 }, 1.1)
-      }
-      // The city strip along the bottom settles in and drifts slowly, by depth.
-      layers.forEach((layer) => {
-        const depth = Number(layer.dataset.depth || 0)
-        tl.fromTo(layer, { yPercent: 6 * depth, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 0)
-        tl.to(layer, { yPercent: -10 * depth, duration: total + 0.4 }, 0.8)
-      })
-      scene?.build({ tl, el, total, reduced })
-
-      // Hold, then clear the stage so the section rides out empty over the moving sky.
-      tl.to({}, { duration: 0.7 })
-      const stage = [inner, ...figures, ...extras].filter(Boolean) as HTMLElement[]
-      tl.to(stage, { y: -36, opacity: 0, duration: 0.5, ease: 'power2.in', stagger: 0.04 })
-
-      return unregister
-    },
-    { scope: ref, dependencies: [chapter.id] },
-  )
-
   const Scene = SCENES[chapter.id]?.Scene
-
   return (
-    <section ref={ref} id={chapter.id} className="chapter" data-ui={chapter.ui} aria-labelledby={`${chapter.id}-title`}>
+    <section id={chapter.id} data-layer={chapter.id} className="chapter" data-ui={chapter.ui} aria-labelledby={`${chapter.id}-title`}>
       {Scene && <Scene />}
       <div className="chapter__urdu" aria-hidden="true" lang="ur">
         {chapter.urdu}
@@ -153,7 +44,6 @@ export default function Chapter({ chapter }: Props) {
           </div>
         )}
       </div>
-      {chapter.rooftop && <Rooftop layers={['city']} size="chapter" />}
       {figuresFor(chapter)}
     </section>
   )

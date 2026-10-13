@@ -1197,3 +1197,56 @@ html.modal-open {
   height: 100%;
   display: block;
 }
+
+/* ───────────────────────────── the stage ─────────────────────────────
+   One pinned viewport for the whole story (components/stage/Stage.tsx).
+   The rooftop set is persistent inside it; the hero and every chapter are
+   layers stacked in the same place, formed and dissolved by the master
+   timeline. --to-strip moves the roof from its hero view to the city strip:
+   the near wall and the roof slab drop out, the city settles lower and gains
+   its haze at the top. */
+.stage {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  --to-strip: 0;
+  --strip-shift: 28vh;
+}
+@media (max-width: 900px) {
+  .stage {
+    --strip-shift: 36vh;
+  }
+}
+.stage .hero,
+.stage .chapter {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  will-change: transform, opacity, filter;
+}
+.stage__roof {
+  z-index: 1;
+}
+.stage__roof--front {
+  z-index: 3;
+}
+.stage__roof .rooftop__layer--city {
+  transform: translateX(-50%) translateY(calc(var(--to-strip) * var(--strip-shift)));
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--to-strip) * 26%));
+  mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--to-strip) * 26%));
+}
+.stage__roof .rooftop__layer--fore,
+.stage__roof .rooftop__layer--parapet {
+  transform: translateX(-50%) translateY(calc(var(--to-strip) * 70vh));
+}
+/* Reduced motion: no stage, no pin; the layers simply stack in reading order. */
+.stage--static {
+  height: auto;
+  overflow: visible;
+}
+.stage--static .hero,
+.stage--static .chapter {
+  position: relative;
+  will-change: auto;
+}

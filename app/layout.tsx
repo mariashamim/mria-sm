@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import { Big_Shoulders, Fraunces, Gulzar, Hanken_Grotesk, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 import SkyCanvas from '@/components/sky/SkyCanvas'
-import World from '@/components/scene/World'
 import SmoothScroll from '@/components/scroll/SmoothScroll'
 import Intro from '@/components/ui/Intro'
 import Cursor from '@/components/ui/Cursor'
@@ -66,7 +65,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" data-ui="paper" className={`${display.variable} ${serif.variable} ${body.variable} ${urdu.variable} ${mono.variable}`}>
       <body>
         <SkyCanvas />
-        <World />
         <SmoothScroll />
         <Intro />
         <Cursor />

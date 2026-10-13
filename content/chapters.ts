@@ -32,8 +32,6 @@ export type Chapter = {
   lines: string[]
   /** Renders placed in the chapter's figure slot, left to right. */
   figures?: Figure[]
-  /** Show the Karachi skyline along the bottom of this chapter. */
-  rooftop?: boolean
 }
 
 export const RAIL_YEARS = ['2007', '2010', '2011', '2017', '2023', 'NOW'] as const
@@ -72,7 +70,6 @@ export const chapters: Chapter[] = [
       { at: 1, stop: 2 },
     ],
     lines: ['Born under the Karachi sky in 2007.', "I didn't know then that I'd spend the next fifteen years looking up."],
-    rooftop: true,
   },
   {
     id: 'london',
@@ -207,7 +204,6 @@ export const chapters: Chapter[] = [
       'Padel, badminton and table tennis.',
     ],
     figures: [{ pose: 'pose-loves', alt: 'Maria cross-legged on the rooftop at night with a cup of chai, headphones around her neck, a stickered laptop beside her', size: 'large', mask: 'floor' }],
-    rooftop: true,
   },
   {
     id: 'letter',
@@ -235,6 +231,5 @@ export const chapters: Chapter[] = [
       '— M.',
     ],
     figures: [{ pose: 'pose-letter', alt: 'Maria at the desk under a lamp, writing a letter by hand', blink: true, size: 'large' }],
-    rooftop: true,
   },
 ]

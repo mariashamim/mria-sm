@@ -2,7 +2,7 @@
 
 import { chapters, RAIL_YEARS } from '@/content/chapters'
 import { useProgress } from '@/lib/progress'
-import { scrollToTarget } from '@/lib/lenis'
+import { scrollToChapter } from '@/lib/stage'
 
 /** The thin timeline rail of years on the right edge. */
 export default function Rail() {
@@ -11,7 +11,7 @@ export default function Rail() {
 
   const go = (year: (typeof RAIL_YEARS)[number]) => {
     const target = chapters.find((c) => c.rail === year)
-    if (target) scrollToTarget(`#${target.id}`)
+    if (target) scrollToChapter(target.id)
   }
 
   return (

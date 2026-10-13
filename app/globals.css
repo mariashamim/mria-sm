@@ -625,13 +625,16 @@ html[data-chapter="sky"] .cursor--ring::after {
 .chapter__fig--wide {
   height: 58%;
 }
+/* The window closed: she stands full height in the right third, seen from
+   behind against the dusk, clear of the lines on the left; the lit screen
+   sits at her feet. */
 #sky .chapter__figure {
   right: auto;
-  left: 50%;
+  left: 66%;
   transform: translateX(-50%);
   justify-content: center;
-  height: 70vh;
-  width: 40vw;
+  height: 74vh;
+  width: 36vw;
 }
 #sky .chapter__inner {
   align-self: start;
@@ -813,13 +816,13 @@ html[data-chapter="sky"] .cursor--ring::after {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse 70% 60% at 50% 72%, rgba(0, 0, 0, 0) 0%, rgba(3, 2, 8, 0.85) 75%, rgba(3, 2, 8, 0.95) 100%);
+  background: radial-gradient(ellipse 70% 60% at 66% 72%, rgba(0, 0, 0, 0) 0%, rgba(3, 2, 8, 0.85) 75%, rgba(3, 2, 8, 0.95) 100%);
   opacity: 0;
   will-change: opacity;
 }
 .scene-screen {
   position: absolute;
-  left: 50%;
+  left: 66%;
   bottom: 9vh;
   z-index: 1;
   width: clamp(72px, 8vw, 120px);
@@ -1249,4 +1252,25 @@ html.modal-open {
 .stage--static .chapter {
   position: relative;
   will-change: auto;
+}
+
+/* Phones: the window chapter's figure takes the phone slot like every other
+   chapter, centred under the lines, with the lit screen under her. */
+@media (max-width: 900px) {
+  #sky {
+    --m-fig: 36vh;
+  }
+  #sky .chapter__figure {
+    left: auto;
+    transform: none;
+    width: 70vw;
+    height: var(--m-fig);
+    margin-inline: auto;
+  }
+  .scene-dim {
+    background: radial-gradient(ellipse 80% 55% at 50% 78%, rgba(0, 0, 0, 0) 0%, rgba(3, 2, 8, 0.85) 75%, rgba(3, 2, 8, 0.95) 100%);
+  }
+  .scene-screen {
+    left: 50%;
+  }
 }

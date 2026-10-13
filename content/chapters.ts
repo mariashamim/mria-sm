@@ -158,7 +158,7 @@ export const chapters: Chapter[] = [
       'They closed the window to the sky.',
       'So I opened a terminal window.',
     ],
-    figures: [{ pose: 'pose-sky', alt: 'Maria at eighteen in a white shirt and black trousers, seen from behind, looking up at the sky', blink: true, size: 'small' }],
+    figures: [{ pose: 'pose-sky', alt: 'Maria at eighteen in a white shirt and black trousers, seen from behind, looking up at the sky', blink: true, size: 'large' }],
   },
   {
     id: 'hello',

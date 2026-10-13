@@ -76,5 +76,11 @@
     "height": 792,
     "webp": 112,
     "avif": 64
+  },
+  "pose-karachi": {
+    "width": 271,
+    "height": 492,
+    "webp": 20,
+    "avif": 16
   }
 }

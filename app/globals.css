@@ -1299,3 +1299,11 @@ html.modal-open {
 .scene--karachi .scene__kite-bow {
   stroke: #d8a3a9;
 }
+
+/* Phones: the toddler faces the other way so her kite arm points up-right,
+   into the room beside the short last line. */
+@media (max-width: 900px) {
+  #karachi .avatar img {
+    transform: scaleX(-1);
+  }
+}

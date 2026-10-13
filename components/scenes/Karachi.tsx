@@ -13,7 +13,7 @@ import type { SceneDef } from '@/components/scenes/registry'
 
 // Where the string leaves the figure, as fractions of the figure's box.
 // Tuned to the render: her right arm stretched up toward the upper left.
-const HAND = { x: 0.2, y: 0.12 }
+const HAND = { x: 0.07, y: 0.14 }
 
 // Kite position as fractions of the chapter box, start → end of the chapter.
 const DESKTOP = { from: { x: 0.6, y: 0.28 }, to: { x: 0.57, y: 0.16 }, scale: 1.15 }
@@ -64,9 +64,11 @@ const karachi: SceneDef = {
       // Everything measured in the layer's own pixels, whatever scale the stage has it at.
       const k = w / box.width
       const f = fig.getBoundingClientRect()
-      const hx = (f.left - box.left) * k + f.width * k * HAND.x
+      const phone = w < 900
+      const spec = phone ? PHONE : DESKTOP
+      // On phones she is mirrored (CSS) so her kite arm points up-right, beside the short last line.
+      const hx = (f.left - box.left) * k + f.width * k * (phone ? 1 - HAND.x : HAND.x)
       const hy = (f.top - box.top) * k + f.height * k * HAND.y
-      const spec = w < 900 ? PHONE : DESKTOP
       const kx = lerp(spec.from.x, spec.to.x, climb) * w
       const ky = lerp(spec.from.y, spec.to.y, climb) * h
       kite.setAttribute('transform', `translate(${kx.toFixed(1)} ${ky.toFixed(1)}) scale(${spec.scale})`)

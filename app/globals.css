@@ -1176,18 +1176,24 @@ html.modal-open {
   }
 }
 
-/* ───────────────────────────── intro: the name as a window ───────────────────────────── */
-.intro--window {
+/* ───────────────────────────── intro: the flyby ─────────────────────────────
+   Black lifts on the roof while the hero's own entrance plays underneath; a
+   jet crosses the sky left to right on a transparent WebGL canvas, then the
+   canvas thins away with its contrail. The root never catches the pointer. */
+.intro--flyby {
   background: transparent;
   display: block;
+  pointer-events: none;
 }
-.intro__svg {
-  display: block;
+.intro__veil {
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+.intro__jet {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-}
-.intro__name {
-  font-family: var(--font-display-stack);
-  font-weight: 900;
-  letter-spacing: -0.02em;
+  display: block;
 }

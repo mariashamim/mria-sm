@@ -4,10 +4,12 @@
 //   node scripts/shots.mjs [outDir=.shots] [mobile|desktop] [chapter,chapter,...]
 import { spawn } from 'node:child_process'
 import fs from 'node:fs/promises'
+import path from 'node:path'
 
 const EDGE = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'
 const PORT = Number(process.env.CDP_PORT || 9333)
-const OUT = process.argv[2] || '.shots'
+const SITE = process.env.SITE_URL || 'http://localhost:3000'
+const OUT = path.resolve(process.argv[2] || '.shots')
 const mode = process.argv[3] || 'mobile'
 const chapters = (process.argv[4] || 'karachi,sky,hello,loves').split(',')
 const W = mode === 'mobile' ? 375 : 1280
@@ -61,14 +63,14 @@ await send('Runtime.enable')
 await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: mode === 'mobile' ? 2 : 1, mobile: mode === 'mobile' })
 if (mode === 'mobile') await send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 })
 
-await send('Page.navigate', { url: 'http://localhost:3000/?v=71' })
+await send('Page.navigate', { url: `${SITE}/?v=71` })
 // Wait for the stage to exist (first compile can take a while), then mark the intro seen and reload.
 for (let i = 0; i < 90; i++) {
   await sleep(1000)
   if ((await evalJs('!!window.__stage')) === true) break
 }
 await evalJs(`sessionStorage.setItem('aasmaan-intro-seen', '1'); 'set'`)
-await send('Page.navigate', { url: 'http://localhost:3000/?v=72' })
+await send('Page.navigate', { url: `${SITE}/?v=72` })
 for (let i = 0; i < 60; i++) {
   await sleep(1000)
   if ((await evalJs('!!window.__stage && !!window.__lenis')) === true) break

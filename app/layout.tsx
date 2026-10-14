@@ -14,7 +14,7 @@ const display = Big_Shoulders({
   weight: 'variable',
   axes: ['opsz'],
   variable: '--font-display',
-  display: 'swap',
+  display: 'block',
 })
 
 const serif = Fraunces({
@@ -22,7 +22,7 @@ const serif = Fraunces({
   style: ['normal', 'italic'],
   axes: ['opsz', 'SOFT', 'WONK'],
   variable: '--font-serif',
-  display: 'swap',
+  display: 'block',
 })
 
 const body = Hanken_Grotesk({
@@ -35,7 +35,7 @@ const urdu = Gulzar({
   subsets: ['arabic'],
   weight: '400',
   variable: '--font-urdu',
-  display: 'swap',
+  display: 'block',
 })
 
 const mono = IBM_Plex_Mono({
@@ -64,6 +64,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" data-ui="paper" className={`${display.variable} ${serif.variable} ${body.variable} ${urdu.variable} ${mono.variable}`}>
       <body>
+        {/* Without scripts: no veil, every chapter in reading order. */}
+        <noscript>
+          <style>{`.intro{display:none}.stage,.stage--static{height:auto;overflow:visible}.stage .hero,.stage .chapter{position:relative;opacity:1;visibility:visible}.stage__roof,.hero__figure-in,.hero__name,.topbar,.rail{opacity:1;visibility:visible}`}</style>
+        </noscript>
         <SkyCanvas />
         <SmoothScroll />
         <Intro />

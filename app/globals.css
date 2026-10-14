@@ -1869,3 +1869,38 @@ html.modal-open {
     letter-spacing: 0.02em;
   }
 }
+
+/* ═══════════════════════ the first frame ═══════════════════════
+   Before the scripts run, everything the animations will later bring in
+   starts exactly where those animations begin, so hydration changes nothing
+   on screen: the chapters are stacked but hidden (the stage fades each one
+   in with explicit values), the roof, Maria, the name and the chrome wait
+   for the hero's entrance, and the server-rendered veil is black on top.
+   Reduced motion gets it all at once; the no-script case is in layout.tsx. */
+.stage .chapter,
+.stage__roof,
+.hero__figure-in,
+.topbar,
+.rail {
+  opacity: 0;
+  visibility: hidden;
+}
+.hero__name {
+  opacity: 0;
+}
+.stage--static .chapter,
+.stage--static .stage__roof {
+  opacity: 1;
+  visibility: visible;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage .chapter,
+  .stage__roof,
+  .hero__figure-in,
+  .topbar,
+  .rail,
+  .hero__name {
+    opacity: 1;
+    visibility: visible;
+  }
+}

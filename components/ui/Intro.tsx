@@ -8,34 +8,47 @@ import { createFlyby, type FlybyHandle } from '@/lib/flyby'
 
 const KEY = 'aasmaan-intro-seen'
 
+type Phase = 'veil' | 'flyby' | 'done'
+
 /**
  * The flyby. Black lifts on the roof while the hero's own entrance plays
  * underneath (the far roof settles, the parapet follows, Maria arrives). A jet
  * comes in from the left just above the skyline, passes high over her head,
  * and leaves to the right, its contrail hanging in her sky, then thinning.
  * About seven seconds; any key, click or scroll ends it. Shown once per session.
+ *
+ * The black veil is in the server markup, so the very first frame is black
+ * rather than the page before its scripts. A repeat visit only lifts it.
  */
 export default function Intro() {
   const ref = useRef<HTMLDivElement>(null)
-  const [done, setDone] = useState(true)
+  const [phase, setPhase] = useState<Phase>('veil')
 
+  // Decide on mount: a repeat visit just lifts the black; a first visit flies.
   useEffect(() => {
     let seen = false
     try {
       seen = sessionStorage.getItem(KEY) === '1'
     } catch {}
     if (seen || prefersReducedMotion()) {
-      // No intro this time: let the hero start its entrance right away.
       useUI.getState().setIntroDone(true)
-      return
+      const veil = ref.current?.querySelector<HTMLElement>('.intro__veil')
+      if (!veil) {
+        setPhase('done')
+        return
+      }
+      const lift = gsap.to(veil, { opacity: 0, duration: 0.7, ease: 'power2.out', delay: 0.05, onComplete: () => setPhase('done') })
+      return () => {
+        lift.kill()
+      }
     }
     // Defer one frame so the state change isn't synchronous inside the effect.
-    const id = requestAnimationFrame(() => setDone(false))
+    const id = requestAnimationFrame(() => setPhase('flyby'))
     return () => cancelAnimationFrame(id)
   }, [])
 
   useEffect(() => {
-    if (done || !ref.current) return
+    if (phase !== 'flyby' || !ref.current) return
     const el = ref.current
     const veil = el.querySelector<HTMLElement>('.intro__veil')
     const canvas = el.querySelector<HTMLCanvasElement>('.intro__jet')
@@ -58,7 +71,7 @@ export default function Intro() {
       document.documentElement.classList.remove('intro-open')
       lenis?.start()
       letHeroIn()
-      setDone(true)
+      setPhase('done')
     }
 
     const build = () => {
@@ -116,12 +129,12 @@ export default function Intro() {
       jet?.dispose()
       jet = null
     }
-  }, [done])
+  }, [phase])
 
-  if (done) return null
+  if (phase === 'done') return null
   return (
     <div ref={ref} className="intro intro--flyby" aria-hidden="true">
-      <canvas className="intro__jet" />
+      {phase === 'flyby' && <canvas className="intro__jet" />}
       <div className="intro__veil" />
     </div>
   )

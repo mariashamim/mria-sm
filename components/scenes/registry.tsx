@@ -3,6 +3,9 @@
 import { gsap } from '@/lib/gsap'
 import { useUI } from '@/lib/ui'
 import karachi from '@/components/scenes/Karachi'
+import EyeChart from '@/components/scenes/EyeChart'
+import TerminalPrompt from '@/components/scenes/TerminalPrompt'
+import MateInOne from '@/components/scenes/MateInOne'
 
 export type SceneContext = {
   tl: ReturnType<typeof gsap.timeline>
@@ -64,7 +67,7 @@ const karsaz: SceneDef = {
   },
 }
 
-/* ───────────────────── The sky said no: contrail and dark ───────────────────── */
+/* ───────────────────── The sky said no: contrail, the chart, the dark ───────────────────── */
 
 const CONTRAIL = 'M-80 560 C 340 470, 780 330, 1540 100'
 
@@ -81,6 +84,7 @@ function SkyScene() {
       <div className="scene-screen" aria-hidden="true">
         <span />
       </div>
+      <EyeChart />
     </>
   )
 }
@@ -92,16 +96,19 @@ const sky: SceneDef = {
     const jet = el.querySelector<SVGGElement>('.scene__jet')
     const dim = el.querySelector<HTMLElement>('.scene-dim')
     const screen = el.querySelector<HTMLElement>('.scene-screen')
+    const eye = el.querySelector<HTMLElement>('.eye')
     if (!contrail || !jet || !dim || !screen) return
     const end = total + 1.2
     gsap.set(contrail, { strokeDasharray: 1, strokeDashoffset: 1, opacity: 1 })
     gsap.set(jet, { opacity: 0 })
     gsap.set(dim, { opacity: 0 })
     gsap.set(screen, { opacity: 0, scale: 0.4 })
+    if (eye) gsap.set(eye, { opacity: 0, y: 18, rotation: -1.4, '--auto-gaze': 0 })
     if (reduced) {
       gsap.set(contrail, { strokeDashoffset: 0, opacity: 0.35 })
       gsap.set(dim, { opacity: 0.6 })
       gsap.set(screen, { opacity: 1, scale: 1 })
+      if (eye) gsap.set(eye, { opacity: 1, y: 0, '--auto-gaze': 1 })
       return
     }
     // A jet crosses while the first lines land; its trail hangs, then the dark comes.
@@ -112,6 +119,12 @@ const sky: SceneDef = {
     tl.to(contrail, { strokeDashoffset: 0, duration: d, ease: 'none' }, s)
     tl.to(jet, { opacity: 0, duration: 0.05 }, s + d - 0.05)
     tl.to(contrail, { opacity: 0, duration: 0.2 * end, ease: 'power1.in' }, 0.5 * end)
+    // The chart arrives with "My eyesight failed the medical test" (line 3 lands at 1.6)
+    // and reads itself down to the line that will not come into focus.
+    if (eye) {
+      tl.to(eye, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.45)
+      tl.to(eye, { '--auto-gaze': 1, duration: 1.3, ease: 'power1.inOut' }, 1.75)
+    }
     tl.to(dim, { opacity: 0.78, duration: 0.35 * end, ease: 'power1.inOut' }, 0.42 * end)
     // The one thing that lights up in the dark: a screen.
     tl.to(screen, { opacity: 1, scale: 1, duration: 0.14 * end, ease: 'power2.out' }, 0.86 * end)
@@ -140,6 +153,7 @@ function HelloScene() {
         </div>
         <div className="terminal__line terminal__out">Hello, World</div>
       </div>
+      <TerminalPrompt />
       <button type="button" className="terminal__sudoku" onClick={() => openSudoku(true)} data-hover>
         <span className="terminal__grid" aria-hidden="true" />
         <span className="terminal__sudoku-label">
@@ -157,16 +171,17 @@ const hello: SceneDef = {
     const term = el.querySelector<HTMLElement>('.terminal')
     const typed = el.querySelector<HTMLElement>('.terminal__typed')
     const caret = el.querySelector<HTMLElement>('.terminal__caret')
-    const out = el.querySelector<HTMLElement>('.terminal__out')
+    const out = el.querySelector<HTMLElement>('.terminal__body .terminal__out')
+    const live = el.querySelector<HTMLElement>('.terminal__live')
     const sudoku = el.querySelector<HTMLElement>('.terminal__sudoku')
-    if (!term || !typed || !out || !sudoku || !caret) return
+    if (!term || !typed || !out || !sudoku || !caret || !live) return
     if (reduced) {
       typed.textContent = CODE
-      gsap.set([term, out, sudoku], { opacity: 1 })
+      gsap.set([term, out, live, sudoku], { opacity: 1 })
       return
     }
     gsap.set(term, { opacity: 0, y: 24 })
-    gsap.set([out, sudoku], { opacity: 0 })
+    gsap.set([out, live, sudoku], { opacity: 0 })
     const state = { n: 0 }
     const render = () => {
       typed.textContent = CODE.slice(0, Math.round(state.n))
@@ -176,8 +191,27 @@ const hello: SceneDef = {
     tl.to(state, { n: CODE.length, duration: 0.36 * total, ease: 'none', onUpdate: render }, 0.42 * total)
     tl.to(out, { opacity: 1, duration: 0.12 }, 0.8 * total)
     tl.to(caret, { opacity: 0, duration: 0.05 }, 0.8 * total)
-    tl.to(sudoku, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.9 * total)
+    // Then the prompt is yours.
+    tl.to(live, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.88 * total)
+    tl.to(sudoku, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.94 * total)
   },
 }
 
-export const SCENES: Record<string, SceneDef> = { karachi, karsaz, sky, hello }
+/* ───────────────────────── What I love: mate in one ───────────────────────── */
+
+const loves: SceneDef = {
+  Scene: MateInOne,
+  build: ({ tl, el, reduced }) => {
+    const mate = el.querySelector<HTMLElement>('.mate')
+    if (!mate) return
+    if (reduced) {
+      gsap.set(mate, { opacity: 1 })
+      return
+    }
+    // After "chess when I want to think" has landed (line 3, at 1.6).
+    gsap.set(mate, { opacity: 0, y: 16 })
+    tl.to(mate, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 2.0)
+  },
+}
+
+export const SCENES: Record<string, SceneDef> = { karachi, karsaz, sky, hello, loves }

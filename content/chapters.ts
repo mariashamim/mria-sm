@@ -32,6 +32,8 @@ export type Chapter = {
   lines: string[]
   /** Renders placed in the chapter's figure slot, left to right. */
   figures?: Figure[]
+  /** A postscript under the lines, with the doors (content/links.ts) beneath it. */
+  ps?: string[]
 }
 
 export const RAIL_YEARS = ['2007', '2010', '2011', '2017', '2023', 'NOW'] as const
@@ -231,6 +233,7 @@ export const chapters: Chapter[] = [
       "You'll find the sky anyway. It's just not where you're looking.",
       '— M.',
     ],
+    ps: ["P.S. If you're in Karachi, the chai is on me.", "If you're not, I'm always up for a game of chess.", 'Either way, say hello.'],
     figures: [{ pose: 'pose-letter', alt: 'Maria at the desk under a lamp, writing a letter by hand', blink: true, size: 'large' }],
   },
 ]

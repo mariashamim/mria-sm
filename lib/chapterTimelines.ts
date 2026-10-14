@@ -79,6 +79,9 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
     tl.fromTo(figures, { yPercent: 10, opacity: 0 }, { yPercent: 4, opacity: 1, duration: 0.8, ease: 'power2.out', stagger: 0.15 }, 0.25)
     tl.to(figures, { yPercent: -5, duration: total - 1.1 }, 1.1)
   }
+  // The postscript and the doors come once the letter has been written.
+  const ps = Array.from(layer.querySelectorAll<HTMLElement>('.chapter__ps > *'))
+  if (ps.length) tl.fromTo(ps, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', stagger: 0.18 }, 0.8 * total)
   scene?.build({ tl, el: layer, total, reduced })
   // A hold at the end: the chapter rests before the stage lets it dissolve.
   tl.to({}, { duration: 0.6 })

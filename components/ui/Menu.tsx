@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { chapters } from '@/content/chapters'
+import { DOORS } from '@/content/links'
 import { gsap, prefersReducedMotion } from '@/lib/gsap'
 import { useProgress } from '@/lib/progress'
 import { getLenis } from '@/lib/lenis'
@@ -78,6 +79,13 @@ export default function Menu() {
             </li>
           ))}
         </ol>
+        <nav className="menu__doors doors" aria-label="Say hello">
+          {DOORS.map((d) => (
+            <a key={d.id} href={d.href} title={d.title} target={d.href.startsWith('mailto:') ? undefined : '_blank'} rel={d.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'} data-hover tabIndex={open ? 0 : -1}>
+              {d.label}
+            </a>
+          ))}
+        </nav>
       </div>
     </>
   )

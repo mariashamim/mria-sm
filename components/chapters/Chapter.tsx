@@ -3,6 +3,7 @@
 import type { Chapter as ChapterData } from '@/content/chapters'
 import Avatar, { hasPose, poseRatio } from '@/components/avatar/Avatar'
 import { SCENES } from '@/components/scenes/registry'
+import { DOORS } from '@/content/links'
 
 type Props = { chapter: ChapterData }
 
@@ -41,6 +42,20 @@ export default function Chapter({ chapter }: Props) {
                 <p>{line}</p>
               </div>
             ))}
+          </div>
+        )}
+        {chapter.ps && (
+          <div className="chapter__ps">
+            {chapter.ps.map((line, i) => (
+              <p key={i}>{line}</p>
+            ))}
+            <nav className="doors" aria-label="Say hello">
+              {DOORS.map((d) => (
+                <a key={d.id} href={d.href} title={d.title} target={d.href.startsWith('mailto:') ? undefined : '_blank'} rel={d.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'} data-hover>
+                  {d.label}
+                </a>
+              ))}
+            </nav>
           </div>
         )}
       </div>

@@ -30,7 +30,9 @@ export default function Intro() {
     try {
       seen = sessionStorage.getItem(KEY) === '1'
     } catch {}
-    if (seen || prefersReducedMotion()) {
+    // A link straight to a chapter skips the flyby: the reader was sent somewhere specific.
+    const deep = window.location.hash.length > 1
+    if (seen || deep || prefersReducedMotion()) {
       useUI.getState().setIntroDone(true)
       const veil = ref.current?.querySelector<HTMLElement>('.intro__veil')
       if (!veil) {
@@ -95,9 +97,14 @@ export default function Intro() {
       tl.to(canvas, { opacity: 0, duration: 2.2, ease: 'power1.in' }, 5.0)
     }
 
-    // Load the jet first (briefly), so it is there when the black lifts.
+    // Load the jet first (briefly), so it is there when the black lifts. The
+    // 3D library waits for the page's own load event so it never competes
+    // with hydration; the black holds 1.4 s before the jet is due anyway.
     gsap.set(canvas, { opacity: 0 })
-    const load = createFlyby(canvas).then((h) => {
+    const whenLoaded = document.readyState === 'complete' ? Promise.resolve() : new Promise<void>((r) => window.addEventListener('load', () => r(), { once: true }))
+    const load = whenLoaded
+      .then(() => createFlyby(canvas))
+      .then((h) => {
       if (cancelled) {
         h.dispose()
         return

@@ -13,6 +13,7 @@ export default function Menu() {
   const [open, setOpen] = useState(false)
   const active = useProgress((s) => s.active)
   const overlay = useRef<HTMLDivElement>(null)
+  const toggle = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const lenis = getLenis()
@@ -30,6 +31,9 @@ export default function Menu() {
         gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power2.out' })
         gsap.fromTo(items, { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', stagger: 0.045, delay: 0.08 })
       }
+      // Keyboard and screen-reader users land on the current chapter, not behind the dialog.
+      const target = el.querySelector<HTMLElement>('.menu__list li.is-active button') ?? el.querySelector<HTMLElement>('.menu__list button')
+      target?.focus({ preventScroll: true })
     } else {
       lenis?.start()
       gsap.killTweensOf([el, ...items])
@@ -38,6 +42,8 @@ export default function Menu() {
       } else {
         gsap.to(el, { opacity: 0, duration: 0.25, ease: 'power2.in', onComplete: () => gsap.set(el, { display: 'none' }) })
       }
+      // Focus goes back to the button that opened the dialog.
+      if (el.contains(document.activeElement)) toggle.current?.focus({ preventScroll: true })
     }
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setOpen(false)
@@ -58,10 +64,10 @@ export default function Menu() {
   return (
     <>
       <header className="topbar">
-        <button type="button" className="topbar__mark" onClick={() => go('hero')} data-hover aria-label="Back to the start">
+        <button type="button" className="topbar__mark" onClick={() => go('hero')} data-hover aria-label="Maria. Back to the start">
           Maria
         </button>
-        <button type="button" className="topbar__menu" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="menu" data-hover>
+        <button ref={toggle} type="button" className="topbar__menu" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="menu" data-hover>
           {open ? 'Close' : 'Menu'}
         </button>
       </header>

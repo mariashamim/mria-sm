@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react'
 import { chapters } from '@/content/chapters'
 import { DOORS } from '@/content/links'
 import { HELP, WHOAMI } from '@/content/interactive'
@@ -12,6 +12,17 @@ type Line = { kind: 'in' | 'out' | 'err'; text: string }
 
 const CHIPS = ['help', 'whoami', 'chai', 'chess', 'hello', 'sudoku']
 
+const coarse = () => (typeof window === 'undefined' ? null : window.matchMedia('(pointer: coarse)'))
+const subscribeTouch = (cb: () => void) => {
+  const mq = coarse()
+  mq?.addEventListener('change', cb)
+  return () => mq?.removeEventListener('change', cb)
+}
+/** Coarse pointer or not; false on the server so the markup matches, then the client's truth. */
+function useIsTouch() {
+  return useSyncExternalStore(subscribeTouch, isTouch, () => false)
+}
+
 /**
  * The prompt under Maria's first program. Click it and type; `help` lists
  * what it knows. On phones there is no keyboard (a virtual keyboard would
@@ -20,12 +31,11 @@ const CHIPS = ['help', 'whoami', 'chai', 'chess', 'hello', 'sudoku']
 export default function TerminalPrompt() {
   const [lines, setLines] = useState<Line[]>([])
   const [value, setValue] = useState('')
-  const [touch, setTouch] = useState(false)
+  const touch = useIsTouch()
   const input = useRef<HTMLInputElement>(null)
   const log = useRef<HTMLDivElement>(null)
   const openSudoku = useUI((s) => s.setSudokuOpen)
 
-  useEffect(() => setTouch(isTouch()), [])
   useEffect(() => {
     log.current?.scrollTo({ top: log.current.scrollHeight })
   }, [lines])

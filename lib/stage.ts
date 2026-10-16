@@ -73,17 +73,19 @@ export function activeAt(time: number): number {
   return active
 }
 
-/** Scroll so that a chapter's content is just beginning. */
-export function scrollToChapter(id: string) {
+/** Scroll so that a chapter's content is just beginning (the hero: the very top). */
+export function scrollToChapter(id: string, opts: { immediate?: boolean } = {}) {
   const seg = segments.find((s) => s.id === id)
   const target = document.getElementById(id)
   if (!master || !seg) {
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (target) target.scrollIntoView({ behavior: opts.immediate ? 'instant' : 'smooth', block: 'start' })
     return
   }
+  // Before the first refresh (fonts and images still loading) the trigger has no span yet.
+  if (!(master.end > master.start)) master.refresh()
   // Land once the previous chapter has fully dissolved and this one is sharp.
-  const y = master.start + ((seg.bodyStart + 0.35) / duration) * (master.end - master.start)
+  const y = seg.index === 0 ? master.start : master.start + ((seg.bodyStart + 0.35) / duration) * (master.end - master.start)
   const lenis = getLenis()
-  if (lenis) lenis.scrollTo(y, { duration: 1.6 })
-  else window.scrollTo({ top: y, behavior: 'smooth' })
+  if (lenis) lenis.scrollTo(y, opts.immediate ? { immediate: true, force: true } : { duration: 1.6 })
+  else window.scrollTo({ top: y, behavior: opts.immediate ? 'instant' : 'smooth' })
 }

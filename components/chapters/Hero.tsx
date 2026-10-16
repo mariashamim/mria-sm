@@ -67,9 +67,8 @@ export default function Hero({ chapter }: Props) {
 
   return (
     <section ref={ref} id={chapter.id} data-layer={chapter.id} className="hero" data-ui={chapter.ui} aria-label="Maria on a Karachi rooftop before dawn">
-      <h1 className="hero__name" aria-hidden="true">
-        Maria
-      </h1>
+      {/* SplitText labels the heading and hides its split characters, so it reads as one word. */}
+      <h1 className="hero__name">Maria</h1>
       <div className="hero__figure">
         <div className="hero__figure-in">
           <Avatar

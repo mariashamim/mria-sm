@@ -54,7 +54,7 @@ export default function Rooftop({ layers = ['city', 'fore', 'parapet'], size = '
           <div key={l} className={`rooftop__layer rooftop__layer--${l}`} data-depth={depth} style={{ '--ratio': m.width / m.height } as React.CSSProperties}>
             <picture className="rooftop__night">
               <source type="image/avif" srcSet={`/scene/${base}.avif`} />
-              <img src={`/scene/${base}.webp`} alt="" width={m.width} height={m.height} decoding="async" loading={size === 'hero' ? 'eager' : 'lazy'} draggable={false} />
+              <img src={`/scene/${base}.webp`} alt="" width={m.width} height={m.height} decoding="async" loading={size === 'hero' ? 'eager' : 'lazy'} fetchPriority={size === 'hero' && l === 'city' ? 'high' : undefined} draggable={false} />
             </picture>
             {hasDay && (
               <picture className="rooftop__day">

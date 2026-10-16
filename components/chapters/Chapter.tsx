@@ -29,12 +29,13 @@ export default function Chapter({ chapter }: Props) {
           <span aria-hidden="true"> · </span>
           <span>{chapter.urduMeaning}</span>
         </p>
-        <h2 className="chapter__year" aria-hidden="true">
+        {/* The year is decoration; the title is the section's heading. */}
+        <div className="chapter__year" aria-hidden="true">
           {chapter.year}
-        </h2>
-        <h3 id={`${chapter.id}-title`} className="chapter__title">
+        </div>
+        <h2 id={`${chapter.id}-title`} className="chapter__title">
           {chapter.title}
-        </h3>
+        </h2>
         {chapter.lines.length > 0 && (
           <div className="chapter__lines">
             {chapter.lines.map((line, i) => (

@@ -40,10 +40,11 @@ const mono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Maria',
+  metadataBase: new URL('https://mria-sm.vercel.app'),
+  title: 'Maria Shamim',
   description: 'Born under the Karachi sky. A story, not a resume.',
   openGraph: {
-    title: 'Maria',
+    title: 'Maria Shamim',
     description: 'Born under the Karachi sky. A story, not a resume.',
     type: 'website',
   },

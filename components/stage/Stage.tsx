@@ -5,11 +5,40 @@ import { useGSAP } from '@gsap/react'
 import { chapters } from '@/content/chapters'
 import { gsap, isTouch, prefersReducedMotion } from '@/lib/gsap'
 import { activateChapter, useProgress } from '@/lib/progress'
-import { activeAt, clearStage, setStage, skyAt, type Segment } from '@/lib/stage'
+import { activeAt, clearStage, scrollToChapter, setStage, skyAt, type Segment } from '@/lib/stage'
+import { useUI } from '@/lib/ui'
 import { buildChapterContent, buildHeroContent } from '@/lib/chapterTimelines'
 import Rooftop from '@/components/scene/Rooftop'
 
 type Props = { children: React.ReactNode }
+
+/**
+ * A #chapter in the address lands on that chapter once the intro has let the
+ * page go (the intro stops the scroll while it plays). Returns a cleanup.
+ */
+function deepLink(ids: string[]): () => void {
+  const id = window.location.hash.slice(1)
+  if (!id || !ids.includes(id)) return () => {}
+  // Straight there, like an anchor; a 1.6 s glide from the top would look like a glitch.
+  // The router also scrolls to the hash's element right after hydration, which lands at
+  // the top of the pinned stage, so the jump is repeated until it sticks.
+  const jump = () => scrollToChapter(id, { immediate: true })
+  const schedule = () => {
+    const timers = [60, 400, 1000].map((ms) => setTimeout(jump, ms))
+    return () => timers.forEach(clearTimeout)
+  }
+  if (useUI.getState().introDone) return schedule()
+  let cancel: (() => void) | null = null
+  const unsubscribe = useUI.subscribe((s) => {
+    if (!s.introDone) return
+    unsubscribe()
+    cancel = schedule()
+  })
+  return () => {
+    unsubscribe()
+    cancel?.()
+  }
+}
 
 /** How far a layer takes to form, to dissolve, and how far into a dissolve the next layer starts forming. */
 const ENTER = 0.6
@@ -49,7 +78,7 @@ export default function Stage({ children }: Props) {
         layers.forEach(({ c, layer }) => (c.id === 'hero' ? buildHeroContent(layer, true) : buildChapterContent(layer, c, true)))
         cue?.classList.add('is-in')
         activateChapter(chapters[0])
-        return
+        return deepLink(layers.map((l) => l.c.id))
       }
 
       const totalViewports = chapters.reduce((sum, c) => sum + c.pin, 0)
@@ -111,16 +140,23 @@ export default function Stage({ children }: Props) {
         cue?.classList.toggle('is-gone', time > 0.06)
         const active = activeAt(time)
         if (active !== lastActive) {
+          const first = lastActive === -1
           lastActive = active
           activateChapter(chapters[active])
+          // The address follows the chapter, so a refresh or a shared link lands here.
+          if (!first) history.replaceState(null, '', active === 0 ? `${location.pathname}${location.search}` : `#${chapters[active].id}`)
         }
       }
       if (master.scrollTrigger) setStage(master.scrollTrigger, segments, duration)
       if (process.env.NODE_ENV !== 'production') {
         ;(window as unknown as { __stage?: unknown }).__stage = { master, segments, duration }
       }
+      const unsubscribe = deepLink(segments.map((s) => s.id))
       update(0)
-      return () => clearStage()
+      return () => {
+        unsubscribe()
+        clearStage()
+      }
     },
     { scope: ref },
   )

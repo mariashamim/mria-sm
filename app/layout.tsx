@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Big_Shoulders, Fraunces, Gulzar, Hanken_Grotesk, IBM_Plex_Mono } from 'next/font/google'
+import { Big_Shoulders, Fraunces, Gulzar, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 import SkyCanvas from '@/components/sky/SkyCanvas'
 import SmoothScroll from '@/components/scroll/SmoothScroll'
@@ -23,12 +23,6 @@ const serif = Fraunces({
   axes: ['opsz', 'SOFT', 'WONK'],
   variable: '--font-serif',
   display: 'block',
-})
-
-const body = Hanken_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-body',
-  display: 'swap',
 })
 
 const urdu = Gulzar({
@@ -62,7 +56,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-ui="paper" className={`${display.variable} ${serif.variable} ${body.variable} ${urdu.variable} ${mono.variable}`}>
+    <html lang="en" data-ui="paper" className={`${display.variable} ${serif.variable} ${urdu.variable} ${mono.variable}`}>
       <body>
         {/* Without scripts: no veil, every chapter in reading order. */}
         <noscript>

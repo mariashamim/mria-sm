@@ -12,8 +12,9 @@ const SITE = process.env.SITE_URL || 'http://localhost:3000'
 const OUT = path.resolve(process.argv[2] || '.shots')
 const mode = process.argv[3] || 'mobile'
 const chapters = (process.argv[4] || 'karachi,sky,hello,loves').split(',')
-const W = mode === 'mobile' ? 375 : 1280
-const H = mode === 'mobile' ? 812 : 800
+const VIEW = process.env.VIEW ? process.env.VIEW.split("x").map(Number) : null
+const W = VIEW ? VIEW[0] : mode === "mobile" ? 375 : 1280
+const H = VIEW ? VIEW[1] : mode === "mobile" ? 812 : 800
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 await fs.mkdir(OUT, { recursive: true })

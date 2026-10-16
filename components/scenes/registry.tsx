@@ -140,14 +140,12 @@ function HelloScene() {
   return (
     <div className="terminal" aria-label="Maria's first program">
       <div className="terminal__bar" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-        <span>maria@karachi: ~/first</span>
+        <span>C:\MARIA\FIRST.C</span>
+        <span>80 × 25</span>
       </div>
       <div className="terminal__body">
         <div className="terminal__line">
-          <span className="terminal__prompt">$ </span>
+          <span className="terminal__prompt">&gt; </span>
           <span className="terminal__typed" />
           <span className="terminal__caret" aria-hidden="true" />
         </div>
@@ -155,9 +153,8 @@ function HelloScene() {
       </div>
       <TerminalPrompt />
       <button type="button" className="terminal__sudoku" onClick={() => openSudoku(true)} data-hover>
-        <span className="terminal__grid" aria-hidden="true" />
         <span className="terminal__sudoku-label">
-          sudoku.exe
+          <b>▸ SUDOKU.EXE</b>
           <small>The one I wrote in x86 assembly. Click to play.</small>
         </span>
       </button>

@@ -64,7 +64,8 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
   if (lines.length) {
     if (chapter.id === 'letter') {
       // The letter writes itself, character by character, over most of the chapter.
-      const split = SplitText.create(lines, { type: 'chars' })
+      // Words wrap, chars animate: splitting into bare chars let lines break mid-word.
+      const split = SplitText.create(lines, { type: 'words,chars' })
       const each = (0.62 * total) / Math.max(1, split.chars.length)
       tl.from(split.chars, { opacity: 0, duration: 0.02, stagger: { each, ease: 'none' } }, 0.55)
     } else {

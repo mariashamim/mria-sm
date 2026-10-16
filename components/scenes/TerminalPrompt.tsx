@@ -104,14 +104,14 @@ export default function TerminalPrompt() {
       <div ref={log} className="terminal__log" data-lenis-prevent aria-live="polite">
         {lines.map((l, i) => (
           <div key={i} className={`terminal__line terminal__${l.kind}`}>
-            {l.kind === 'in' ? '$ ' : ''}
+            {l.kind === 'in' ? '> ' : ''}
             {l.text}
           </div>
         ))}
       </div>
       <form className="terminal__line terminal__form" onSubmit={submit}>
         <label htmlFor="terminal-in" className="terminal__prompt">
-          $&nbsp;
+          &gt;&nbsp;
         </label>
         <input
           ref={input}

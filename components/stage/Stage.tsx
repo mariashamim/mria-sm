@@ -92,7 +92,14 @@ export default function Stage({ children }: Props) {
       const hello = seg('hello')
       if (hero && karachi) {
         // The near wall and the roof slab drop out of frame and the city settles into its strip.
-        master.to(el, { '--to-strip': 1, duration: karachi.bodyStart - hero.bodyEnd, ease: 'power2.inOut' }, hero.bodyEnd)
+        const span = karachi.bodyStart - hero.bodyEnd
+        master.to(el, { '--to-strip': 1, duration: span, ease: 'power2.inOut' }, hero.bodyEnd)
+        // They also fade as they sink: on wide screens the sink alone left the
+        // clothesline's pole peeking into the bottom right corner of every chapter.
+        const near = [el.querySelector<HTMLElement>('.stage__roof .rooftop__layer--fore'), el.querySelector<HTMLElement>('.stage__roof .rooftop__layer--parapet')].filter(
+          (n): n is HTMLElement => !!n,
+        )
+        if (near.length) master.to(near, { autoAlpha: 0, duration: span * 0.7, ease: 'power1.in' }, hero.bodyEnd)
       }
       if (city && karachi) master.to(city, { autoAlpha: 0, duration: EXIT, ease: 'power1.inOut' }, karachi.bodyEnd)
       if (city && hello) master.to(city, { autoAlpha: 1, duration: ENTER, ease: 'power1.inOut' }, hello.bodyEnd + EXIT * OVERLAP)

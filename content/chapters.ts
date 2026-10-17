@@ -255,11 +255,11 @@ export const chapters: Chapter[] = [
     urdu: 'خط',
     urduMeaning: 'letter',
     ui: 'paper',
-    scroll: 6,
+    scroll: 7,
     sky: [
       { at: 0, stop: 8 },
-      { at: 0.4, stop: 8 },
-      { at: 1, stop: 9 },
+      { at: 0.5, stop: 9 },
+      { at: 1, stop: 10 },
     ],
     lines: [
       'To the little girl who wanted to fly,',
@@ -284,8 +284,7 @@ export const chapters: Chapter[] = [
     ui: 'ink',
     scroll: 2.8,
     sky: [
-      { at: 0, stop: 9 },
-      { at: 0.6, stop: 10 },
+      { at: 0, stop: 10 },
       { at: 1, stop: 10 },
     ],
     lines: [

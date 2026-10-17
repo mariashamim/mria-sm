@@ -3841,3 +3841,431 @@ body {
 #hello .terminal__body {
   min-height: 7.5em;
 }
+
+/* ═══════════════════════ chai steam and the envelope letter (17 Oct 2026) ═══════════════════════
+   After reference/chai-letter.html, rebuilt for the stage. */
+
+/* ── Outside the classroom: the steam sits over her, under the words and the board ── */
+.chai-steam {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+#loves .chapter__inner,
+#loves .mate {
+  z-index: 3;
+}
+
+/* ── The letter: a room, a window, a desk ── */
+.room {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.room__wall {
+  position: absolute;
+  inset: 0;
+}
+.room__wall--night {
+  background: radial-gradient(120% 90% at 30% 20%, #2a2140 0%, #1a1524 60%, #120e1a 100%);
+}
+.room__wall--dawn {
+  opacity: 0;
+  background: radial-gradient(80% 70% at 20% 0%, rgba(255, 190, 140, 0.22), transparent 60%), radial-gradient(120% 90% at 30% 20%, #4a3440 0%, #3a2a30 60%, #2a1e24 100%);
+}
+.room__lamp {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 196, 120, 0.42), rgba(255, 180, 100, 0.12) 55%, rgba(255, 180, 100, 0) 100%);
+}
+.room__window {
+  position: absolute;
+  left: max(6vw, 16px);
+  top: 12vh;
+  z-index: 1;
+  width: min(34vw, 420px);
+  aspect-ratio: 1.12;
+  overflow: hidden;
+  border: 12px solid #3a281c;
+  border-radius: 3px;
+  box-shadow: 0 0 0 2px #2a1d14, 0 30px 60px rgba(0, 0, 0, 0.35);
+}
+.room__sky {
+  position: absolute;
+  inset: 0;
+}
+.room__sky--night {
+  background: linear-gradient(180deg, rgb(11, 14, 44) 0%, rgb(24, 30, 74) 62%, rgb(52, 48, 96) 100%);
+}
+.room__sky--dawn {
+  opacity: 0;
+  background: linear-gradient(180deg, rgb(120, 160, 205) 0%, rgb(246, 190, 140) 62%, rgb(244, 150, 106) 100%);
+}
+.room__stars i {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0.75;
+}
+.room__sun {
+  position: absolute;
+  left: 62%;
+  top: 40%;
+  width: 26%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  opacity: 0;
+  background: radial-gradient(circle, #fff3d6 0%, #ffd08a 45%, rgba(255, 170, 90, 0) 70%);
+  will-change: transform, opacity;
+}
+.room__city {
+  position: absolute;
+  left: -30%;
+  bottom: 0;
+  width: 160%;
+  height: 62%;
+  background-position: center bottom;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.room__city--night {
+  background-image: url("/scene/city-skyline.webp");
+}
+.room__city--day {
+  opacity: 0;
+  background-image: url("/scene/city-skyline-day.webp");
+}
+.room__mul {
+  position: absolute;
+  background: #3a281c;
+}
+.room__mul--v {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  margin-left: -4px;
+}
+.room__mul--h {
+  top: 46%;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
+/* She writes at the desk, bottom left, in front of the window. */
+#letter .chapter__figure {
+  position: absolute;
+  left: max(2vw, 8px);
+  right: auto;
+  top: auto;
+  bottom: 0;
+  z-index: 3;
+  display: block;
+  width: calc(min(62vh, 560px) * 794 / 998);
+  height: min(62vh, 560px);
+  margin: 0;
+  transform: none;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+}
+#letter .chapter__fig {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+/* The envelope, in 3D, on the desk side of the room. */
+.desk {
+  position: absolute;
+  inset: 0 0 0 38%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  perspective: 1500px;
+  pointer-events: none;
+}
+.envelope {
+  position: relative;
+  width: min(440px, 84vw);
+  aspect-ratio: 1.55;
+  transform-style: preserve-3d;
+  opacity: 0;
+}
+.envelope__body {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.envelope__face {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.envelope__front {
+  background: linear-gradient(160deg, #f3e7cf, #e7d6b5);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
+}
+.envelope__addr {
+  position: absolute;
+  left: 12%;
+  top: 44%;
+  max-width: 62%;
+  font-family: var(--font-hand-stack);
+  font-weight: 500;
+  font-size: clamp(20px, 3vw, 29px);
+  line-height: 1.1;
+  color: var(--t-letter-ink);
+}
+.envelope__stamp {
+  position: absolute;
+  right: 7%;
+  top: 9%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 3px;
+  width: 17%;
+  aspect-ratio: 0.82;
+  padding: 5%;
+  background: #f9f4e8;
+  outline: 4px dotted #e9dcc0;
+  outline-offset: -2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.envelope__stamp-art {
+  background: url("/scene/city-skyline-day.webp") 40% 100% / auto 140% no-repeat, linear-gradient(#9ec0de, #f5c89a);
+}
+.envelope__stamp span {
+  font-family: var(--font-mono-stack);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  color: #6a4b2b;
+  text-align: center;
+}
+.envelope__postmark {
+  position: absolute;
+  right: 16%;
+  top: 12%;
+  width: 34%;
+  opacity: 0.7;
+}
+.envelope__back {
+  transform: rotateY(180deg);
+  transform-style: flat;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
+}
+.envelope__inside {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(#b89f76, #c9b28a);
+}
+.envelope__page {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: 7%;
+  height: 86%;
+  border-radius: 2px;
+  background: #fbf6ea;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.12);
+}
+.envelope__pocket {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(170deg, #efe2c9, #e3d0ae);
+  clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%);
+}
+.envelope__flap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  width: 100%;
+  height: 58%;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+}
+.envelope__flap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #e9d9ba, #dcc59d);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+.envelope__flap.is-open {
+  z-index: 0;
+}
+.envelope__flap.is-open::before {
+  background: linear-gradient(0deg, #cdb68e, #bfa67b);
+}
+.envelope__seal {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 50px;
+  height: 50px;
+  margin: -32px 0 0 -25px;
+}
+.envelope__seal i {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 30%, #c0464a, #8e1f22 55%, #6a1013);
+  box-shadow: inset 0 0 0 4px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+.envelope__seal i::after {
+  content: "M";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-size: 26px;
+  color: rgba(255, 220, 210, 0.55);
+}
+.envelope__seal-l {
+  clip-path: polygon(0 0, 52% 0, 44% 40%, 56% 62%, 46% 100%, 0 100%);
+}
+.envelope__seal-r {
+  clip-path: polygon(52% 0, 100% 0, 100% 100%, 46% 100%, 56% 62%, 44% 40%);
+}
+
+/* The page that comes out: the card, in front of the envelope, on the desk side. */
+#letter .chapter__inner {
+  position: absolute;
+  inset: 0 0 0 38%;
+  z-index: 5;
+  width: min(540px, 54vw);
+  height: fit-content;
+  max-height: 92vh;
+  margin: auto;
+  overflow: hidden;
+  opacity: 0;
+  transform-origin: 50% 60%;
+  will-change: transform, opacity;
+}
+#letter .chapter__lines p,
+#letter .chapter__ps > p {
+  width: fit-content;
+  max-width: 100%;
+  clip-path: inset(-6px 100% -8px -6px);
+}
+#letter .chapter__ps > p {
+  background-image: none;
+}
+#letter .chapter__ps {
+  background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - 1px), rgba(38, 55, 95, 0.13) calc(var(--rule) - 1px) var(--rule));
+}
+
+/* The doors, as postage stamps: still links. */
+.doors__note {
+  display: none;
+}
+#letter .doors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: calc(var(--rule) * 0.8);
+}
+#letter .doors a {
+  --tilt: -4deg;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: 78px;
+  height: 62px;
+  padding: 0;
+  border: 0;
+  background: #f9f4e8;
+  outline: 4px dotted #fbf6ea;
+  outline-offset: -2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+  font-family: var(--font-hand-stack);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #7a3e17;
+  text-decoration: none;
+  opacity: 0;
+  transform: rotate(var(--tilt));
+}
+#letter .doors a:nth-child(2) {
+  --tilt: 3deg;
+}
+#letter .doors a:nth-child(3) {
+  --tilt: -2deg;
+}
+#letter .doors a:hover,
+#letter .doors a:focus-visible {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  outline-color: #e9b872;
+}
+#letter .doors .doors__note {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-mono-stack);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a7a5a;
+}
+#letter .chapter__urdu {
+  z-index: 1;
+  opacity: 0.12;
+}
+
+/* Phones: the window smaller, her in the middle, the card over her until the end. */
+@media (max-width: 900px) {
+  .room__window {
+    top: 9vh;
+    width: 46vw;
+  }
+  .desk {
+    inset: 0;
+  }
+  #letter .chapter__figure {
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+  }
+  #letter .chapter__fig {
+    width: auto;
+  }
+  #letter .chapter__inner {
+    inset: 0;
+    width: min(92vw, 540px);
+    max-height: 88vh;
+  }
+}
+
+/* Reduced motion: the open letter, written, at sunrise; no envelope. */
+.stage--static #letter .chapter__inner {
+  opacity: 1;
+}
+.stage--static #letter .chapter__lines p,
+.stage--static #letter .chapter__ps > p {
+  clip-path: none;
+}
+.stage--static #letter .doors a {
+  opacity: 1;
+}
+.stage--static .envelope {
+  display: none;
+}

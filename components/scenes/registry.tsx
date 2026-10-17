@@ -11,6 +11,7 @@ import letter from '@/components/scenes/Letter'
 import closing from '@/components/scenes/Closing'
 import TerminalPrompt from '@/components/scenes/TerminalPrompt'
 import MateInOne from '@/components/scenes/MateInOne'
+import ChaiSteam from '@/components/scenes/ChaiSteam'
 
 export type SceneContext = {
   tl: ReturnType<typeof gsap.timeline>
@@ -21,7 +22,7 @@ export type SceneContext = {
 }
 
 /** Parts of a chapter's standard animation (lib/chapterTimelines.ts) that a scene animates itself. */
-export type ScenePart = 'year' | 'urdu' | 'title' | 'lines' | 'figures'
+export type ScenePart = 'year' | 'urdu' | 'title' | 'lines' | 'figures' | 'ps'
 
 export type SceneDef = {
   Scene: () => React.JSX.Element
@@ -137,8 +138,17 @@ const hello: SceneDef = {
 /* ───────────────────────── What I love: mate in one ───────────────────────── */
 
 // No big year: the Urdu word is the headline; the lines read like every other section's.
+function LovesScene() {
+  return (
+    <>
+      <ChaiSteam />
+      <MateInOne />
+    </>
+  )
+}
+
 const loves: SceneDef = {
-  Scene: MateInOne,
+  Scene: LovesScene,
   owns: ['year', 'urdu'],
   build: ({ tl, el, reduced }) => {
     const mate = el.querySelector<HTMLElement>('.mate')

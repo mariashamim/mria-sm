@@ -63,7 +63,8 @@ export default function Chapter({ chapter }: Props) {
             <nav className="doors" aria-label="Say hello">
               {DOORS.map((d) => (
                 <a key={d.id} href={d.href} title={d.title} target={d.href.startsWith('mailto:') ? undefined : '_blank'} rel={d.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'} data-hover>
-                  {d.label}
+                  <span className="doors__label">{d.label}</span>
+                  <small className="doors__note">{d.note}</small>
                 </a>
               ))}
             </nav>

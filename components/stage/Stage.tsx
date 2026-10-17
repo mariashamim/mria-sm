@@ -142,8 +142,9 @@ export default function Stage({ children }: Props) {
       // whole set comes back up and she looks level again (lib/chapterTimelines.ts
       // and the letter scene finish the frame).
       if (letter) {
-        const back = letter.bodyStart + (letter.bodyEnd - letter.bodyStart) * 0.12
-        const span = (letter.bodyEnd - letter.bodyStart) * 0.3
+        // Behind the letter's room, near its end, so the closing opens on the roof.
+        const back = letter.bodyStart + (letter.bodyEnd - letter.bodyStart) * 0.8
+        const span = (letter.bodyEnd - letter.bodyStart) * 0.15
         master.to(el, { '--to-strip': 0, '--look': 0, duration: span, ease: 'power2.inOut' }, back)
         // The roof slab only: the near parapet would stand in front of the card and its doors.
         const slab = near.filter((n) => n.classList.contains('rooftop__layer--fore'))

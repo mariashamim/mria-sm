@@ -52,7 +52,7 @@ const res = await evalJs(`(() => {
   const S = window.__stage
   const layers = [...document.querySelectorAll('[data-layer]')]
   const eff = (el) => { let o = 1; for (let n = el; n && n !== document.documentElement; n = n.parentElement) { const cs = getComputedStyle(n); if (cs.visibility === 'hidden' || cs.display === 'none') return 0; o *= +cs.opacity } return o }
-  const TEXT = '.chapter__year, .chapter__title, .chapter__lines p, .hero__lead, .hero__intro, .terminal, .chapter__urdu'
+  const TEXT = '.chapter__year, .chapter__title, .chapter__lines p, .hero__lead, .hero__intro, .terminal, .chapter__urdu, .envelope__addr'
   const leaves = (el) => { const l = [...el.querySelectorAll('*')].filter((n) => !n.children.length && n.textContent.trim()); return l.length ? l : [el] }
   const out = []
   for (let t = 0; t <= S.duration + 1e-6; t += ${STEP}) {

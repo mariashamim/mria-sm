@@ -28,7 +28,8 @@ function useIsTouch() {
  * what it knows. On phones there is no keyboard (a virtual keyboard would
  * resize the pinned stage), so the commands are chips instead.
  */
-export default function TerminalPrompt() {
+/** onLeave: called before a command takes the visitor elsewhere on the page (cd, sudoku), so a sheet holding the terminal can close first. */
+export default function TerminalPrompt({ onLeave }: { onLeave?: () => void } = {}) {
   const [lines, setLines] = useState<Line[]>([])
   const [value, setValue] = useState('')
   const touch = useIsTouch()
@@ -68,12 +69,13 @@ export default function TerminalPrompt() {
         const target = chapters.find((c) => c.id !== 'hero' && (c.id === arg || (!!c.year && c.year.toLowerCase() === arg)))
         if (target) {
           say(`→ ${target.title}`)
+          onLeave?.()
           scrollToChapter(target.id)
         } else err(`cd: no such chapter: ${arg || '?'}. try ls`)
         break
       }
       case 'cat':
-        if (rest[0] === 'letter.txt') say('read it yourself. keep scrolling.')
+        if (rest[0] === 'letter.txt') SECRETS.catLetter.forEach(say)
         else if (rest[0] === 'chai.txt') SECRETS.chaiTxt.forEach(say)
         else err(`cat: ${rest[0] ?? ''}: no such file`)
         break
@@ -91,6 +93,7 @@ export default function TerminalPrompt() {
         break
       case 'sudoku':
         say('loading sudoku.exe')
+        onLeave?.()
         openSudoku(true)
         break
       case 'clear':

@@ -37,7 +37,7 @@ npm run dev                         # :3000; dev-only handles window.__stage/__s
 npx tsc --noEmit -p .
 npx eslint app components lib content scripts/*.mjs --max-warnings=0
 npx next build && npx next start -p 3001
-node scripts/verify.mjs             # against next dev; 43 checks, expect 42/43 (320x568 residual)
+node scripts/verify.mjs             # against next dev; 47 checks, expect 46/47 (320x568 residual)
 ```
 
 If a CSS change does not show up in the browser, stop the dev server,

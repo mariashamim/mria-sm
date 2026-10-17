@@ -45,4 +45,40 @@ export const KARSAZ_SUM = ['2007', '+ 10']
 export const SECRETS = {
   sudoFly: ['sudo: permission denied.', 'they closed the window to the sky.', 'this one is open, though. try: cd 2024'],
   chaiTxt: ['chai.txt: non-negotiable.', "if you're in karachi, it's on her. type chai."],
+  // SUGGESTED, awaiting Maria's approval: cat letter.txt.
+  catLetter: ['to the little girl who wanted to fly,', '...the rest is on paper. keep scrolling.'],
+}
+
+/**
+ * Explore desk: the labels on the paper objects, the eye test's words, and the
+ * two handwritten notes. The notes are PLACEHOLDERS until Maria writes them.
+ */
+export const DESK = {
+  labels: {
+    laptop: 'Terminal',
+    sudoku: 'Sudoku',
+    eye: 'Eye test',
+    chess: 'Chess puzzle',
+    chai: 'Chai',
+    music: 'Music',
+  },
+  eye: { ask: 'Read the last line.', placeholder: 'Type what you see' },
+  notes: {
+    chai: ['[Placeholder: a short note about chai, in Maria’s words.]'],
+    music: ['[Placeholder: a short note about Coke Studio and music, in Maria’s words.]'],
+  },
+}
+
+/**
+ * The closing's dream planes. The question and the button are Maria's words;
+ * the two lines after are the card's own. The planes in the sky come from
+ * data/dreams.json (Maria edits that file); the visitor's own plane stays in
+ * their browser and is never sent anywhere.
+ */
+export const DREAMS = {
+  ask: 'What did you want to be when you were little?',
+  placeholder: 'an astronaut',
+  button: 'Fold it into a plane',
+  done: 'It’s up there now, on your screen only.',
+  again: 'Fold another',
 }

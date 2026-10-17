@@ -2,6 +2,7 @@
 
 import { gsap } from '@/lib/gsap'
 import type { SceneDef } from '@/components/scenes/registry'
+import { DreamCard, DreamSky } from '@/components/scenes/DreamPlanes'
 
 /**
  * The closing: Maria on the roof at sunrise with her chai, looking out over
@@ -30,15 +31,28 @@ function ClosingScene() {
   )
 }
 
+function ClosingSky() {
+  return (
+    <>
+      <ClosingScene />
+      <DreamSky />
+    </>
+  )
+}
+
 const closing: SceneDef = {
-  Scene: ClosingScene,
+  Scene: ClosingSky,
+  After: DreamCard,
   build: ({ tl, el, total, reduced }) => {
     const scene = el.querySelector<HTMLElement>('.closing__scene')
+    const dream = el.querySelector<HTMLElement>('.dream')
     if (!scene) return
     if (reduced) {
-      gsap.set(scene, { opacity: 1 })
+      gsap.set([scene, dream].filter(Boolean), { opacity: 1, visibility: 'inherit' })
       return
     }
+    // The card arrives after the last line, "Thanks for stopping by."
+    if (dream) tl.fromTo(dream, { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 3.2)
     // The morning settles in: a slow push back from slightly too close.
     tl.fromTo(scene, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 1, ease: 'power2.out' }, 0)
     tl.fromTo(scene, { yPercent: 0 }, { yPercent: -2, duration: total, ease: 'none' }, 0)

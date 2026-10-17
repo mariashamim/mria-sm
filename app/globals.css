@@ -4599,3 +4599,807 @@ body {
     max-width: 46ch;
   }
 }
+
+/* ── Explore desk (17 Oct 2026) ──
+   Her desk at night in the letter's room. The paper objects (.dk-o wrappers
+   take GSAP's entrance; the .dk-obj buttons inside take the hover lift), the
+   laptop hotspot over the render, and the sheet they open over the page. */
+#explore {
+  align-content: start;
+  justify-items: start;
+}
+#explore .chapter__inner {
+  z-index: 3;
+  width: min(520px, 40vw);
+  margin-inline: 0;
+}
+.room--explore .room__window {
+  left: auto;
+  right: 7vw;
+  top: 11vh;
+  width: min(30vw, 400px);
+}
+.room--explore .room__lamp {
+  right: 2vw;
+  bottom: -10vh;
+  width: 60vw;
+  height: 70vh;
+  opacity: 0.55;
+}
+.dk {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.dk__wall {
+  position: absolute;
+  inset: 0;
+}
+.dk-o {
+  position: absolute;
+  opacity: 0;
+  pointer-events: auto;
+}
+.dk-o--eye {
+  left: 46vw;
+  top: 13vh;
+  width: clamp(96px, 7.6vw, 132px);
+}
+.dk-o--chess {
+  left: 37vw;
+  top: 60vh;
+  width: clamp(110px, 8.6vw, 150px);
+}
+.dk-o--chai {
+  left: max(var(--gutter), 5vw);
+  top: 64vh;
+  width: clamp(88px, 7vw, 120px);
+}
+.dk-o--music {
+  left: 17vw;
+  top: 73vh;
+  width: clamp(160px, 13vw, 220px);
+}
+.dk-obj {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1), filter 0.3s;
+}
+.dk-obj:hover,
+.dk-obj:focus-visible {
+  transform: translateY(-8px);
+  filter: drop-shadow(0 0 14px rgba(233, 184, 114, 0.45));
+  outline: none;
+}
+.dk-obj:focus-visible > :first-child {
+  outline: 2px solid #e9b872;
+  outline-offset: 4px;
+}
+.dk-obj__tag {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  z-index: 2;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(10, 12, 26, 0.88);
+  border: 1px solid rgba(233, 184, 114, 0.45);
+  color: #e9b872;
+  font-family: var(--font-mono-stack);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+}
+.dk-obj:hover .dk-obj__tag,
+.dk-obj:focus-visible .dk-obj__tag,
+.dk-laptop:hover .dk-obj__tag,
+.dk-laptop:focus-visible .dk-obj__tag {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* The word on the bare wall between the words and the window, not over the window. */
+@media (min-width: 901px) {
+  #explore .chapter__urdu {
+    right: auto;
+    left: 41vw;
+    top: 31vh;
+    font-size: clamp(72px, 10vw, 180px);
+  }
+}
+
+/* Paper, like the envelope: warm cream, a soft shadow. */
+.dk-paper {
+  position: relative;
+  display: block;
+  border-radius: 2px;
+  background: linear-gradient(160deg, #f3e7cf, #e7d6b5);
+  color: #2a2236;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+.dk-pin {
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff9a8a, #b8322b 70%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+}
+.dk-tape {
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  width: 46%;
+  height: 16px;
+  margin-left: -23%;
+  background: rgba(240, 230, 200, 0.55);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  transform: rotate(-3deg);
+}
+.dk-eyecard {
+  display: grid;
+  justify-items: center;
+  gap: 0.18em;
+  padding: 22px 8px 12px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: clamp(11px, 0.95vw, 15px);
+  line-height: 1;
+  transform: rotate(1.5deg);
+}
+.dk-eyecard b {
+  letter-spacing: 0.12em;
+}
+.dk-chesscard {
+  display: grid;
+  gap: 8px;
+  padding: 12px 12px 10px;
+  transform: rotate(-3deg);
+}
+.dk-chesscard__board {
+  position: relative;
+  aspect-ratio: 1;
+  background: repeating-conic-gradient(#b58863 0 25%, #f0d9b5 0 50%) 0 0 / 25% 25%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.3);
+}
+.dk-chesscard__k,
+.dk-chesscard__q {
+  position: absolute;
+  font-size: clamp(16px, 1.5vw, 24px);
+  line-height: 1;
+}
+.dk-chesscard__k {
+  left: 64%;
+  top: 4%;
+  color: #1a1420;
+}
+.dk-chesscard__q {
+  left: 14%;
+  top: 54%;
+  color: #fff;
+  text-shadow: 0 0 1px #000, 0 0 1px #000;
+}
+.dk-chesscard small {
+  font-family: var(--font-mono-stack);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.dk-sticky {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: linear-gradient(170deg, #fbe58a, #f2d064);
+  color: #2b2a52;
+  font-family: var(--font-hand-stack);
+  font-size: clamp(28px, 2.4vw, 40px);
+  box-shadow:
+    0 14px 24px rgba(0, 0, 0, 0.4),
+    inset 0 -10px 18px rgba(160, 120, 20, 0.12);
+  transform: rotate(-4deg);
+}
+.dk-ticket {
+  display: flex;
+  transform: rotate(3deg);
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.42));
+}
+.dk-ticket__main,
+.dk-ticket__stub {
+  background: linear-gradient(160deg, #f3e7cf, #e2cfa8);
+  color: #7a2330;
+}
+.dk-ticket__main {
+  flex: 1;
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 4px 0 0 4px;
+  border-right: 2px dashed rgba(122, 35, 48, 0.4);
+}
+.dk-ticket__main b {
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(17px, 1.4vw, 22px);
+  line-height: 1.1;
+}
+.dk-ticket__main small,
+.dk-ticket__stub {
+  font-family: var(--font-mono-stack);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.dk-ticket__stub {
+  display: grid;
+  place-items: center;
+  padding: 0 8px;
+  border-radius: 0 4px 4px 0;
+  writing-mode: vertical-rl;
+}
+
+/* Her at the desk, bottom right in front of the window; the laptop is a button over the render. */
+.dk__seat {
+  position: absolute;
+  right: 9vw;
+  bottom: 0;
+  height: min(66vh, 680px);
+  opacity: 0;
+  pointer-events: auto;
+}
+.dk__seat .avatar {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.45));
+}
+.dk-laptop {
+  position: absolute;
+  left: 3%;
+  top: 27%;
+  width: 36%;
+  height: 21%;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  cursor: pointer;
+  transition: box-shadow 0.3s, background 0.3s;
+}
+.dk-laptop:hover,
+.dk-laptop:focus-visible {
+  outline: none;
+  background: radial-gradient(closest-side, rgba(233, 184, 114, 0.18), transparent);
+  box-shadow: 0 0 0 2px rgba(233, 184, 114, 0.55);
+}
+.dk-laptop .dk-obj__tag {
+  bottom: calc(100% + 6px);
+}
+.dk-o--sudoku {
+  left: -24%;
+  top: 38%;
+  width: 30%;
+}
+.dk-sudoku {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  aspect-ratio: 1;
+  padding: 6px;
+  transform: rotate(-7deg);
+}
+.dk-sudoku i {
+  display: grid;
+  place-items: center;
+  border-right: 1px solid rgba(42, 34, 54, 0.22);
+  border-bottom: 1px solid rgba(42, 34, 54, 0.22);
+  font-family: var(--font-mono-stack);
+  font-size: clamp(6px, 0.55vw, 10px);
+  font-style: normal;
+  line-height: 1;
+}
+.dk-sudoku i:nth-child(9n + 3),
+.dk-sudoku i:nth-child(9n + 6) {
+  border-right-color: rgba(42, 34, 54, 0.7);
+}
+.dk-sudoku i:nth-child(n + 19):nth-child(-n + 27),
+.dk-sudoku i:nth-child(n + 46):nth-child(-n + 54) {
+  border-bottom-color: rgba(42, 34, 54, 0.7);
+}
+
+/* The sheet: over the page, the object opened. */
+.dk-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 290;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(6, 8, 20, 0.6);
+  backdrop-filter: blur(3px);
+  animation: dk-fade 0.25s ease-out;
+}
+.dk-sheet__panel {
+  width: min(560px, 100%);
+  max-height: 88vh;
+  max-height: 88svh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 20px 22px 24px;
+  border-radius: 14px;
+  background: #0f1226;
+  border: 1px solid rgba(247, 243, 236, 0.12);
+  color: var(--paper);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  animation: dk-pop 0.35s cubic-bezier(0.2, 0.8, 0.3, 1.1);
+}
+.dk-sheet__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.dk-sheet__head h3 {
+  margin: 0;
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(24px, 4vw, 30px);
+}
+.dk-sheet__close {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(247, 243, 236, 0.25);
+  background: none;
+  color: var(--paper);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.dk-sheet__close:hover,
+.dk-sheet__close:focus-visible {
+  border-color: #e9b872;
+  color: #e9b872;
+  outline: none;
+}
+@keyframes dk-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes dk-pop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}
+.dk-sheet .terminal--sheet {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+  width: 100%;
+  margin: 0;
+  opacity: 1;
+}
+.dk-eye {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+.dk-sheet .eye {
+  order: 0;
+  margin: 0;
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  top: auto;
+  width: min(260px, 100%);
+  max-width: none;
+  opacity: 1;
+  transform: none;
+}
+.dk-eye__form label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.dk-eye__form {
+  order: 1;
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  font-family: var(--font-mono-stack);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.dk-eye__form > div {
+  display: flex;
+  gap: 8px;
+}
+.dk-eye__form input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(247, 243, 236, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--paper);
+  font-family: var(--font-mono-stack);
+  font-size: 16px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.dk-eye__form input:focus {
+  outline: 2px solid #e9b872;
+  outline-offset: 1px;
+}
+.dk-eye__form button {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: 1px solid #e9b872;
+  background: none;
+  color: #e9b872;
+  font: inherit;
+  cursor: pointer;
+}
+.dk-eye__reply {
+  min-height: 1.4em;
+  margin: 4px 0 0;
+  color: #e9b872;
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-size: 24px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.dk-chess {
+  display: grid;
+  justify-items: center;
+}
+.dk-sheet .mate {
+  position: relative;
+  left: auto;
+  top: auto;
+  --sq: clamp(30px, 9.5vw, 48px);
+  opacity: 1;
+  transform: none;
+}
+.dk-note {
+  margin: 4px 0 0;
+  padding: 26px 26px 22px;
+  border-radius: 3px;
+  background: linear-gradient(160deg, #fbf6ea, #f1e6cf);
+  color: #26375f;
+  font-family: var(--font-hand-stack);
+  font-size: 26px;
+  line-height: 1.3;
+  transform: rotate(-1deg);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+}
+.dk-note p {
+  margin: 0 0 0.4em;
+}
+.dk-note--chai {
+  background: linear-gradient(170deg, #fbe58a, #f2d064);
+  color: #2b2a52;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dk-obj,
+  .dk-obj__tag {
+    transition: none;
+  }
+  .dk-obj:hover,
+  .dk-obj:focus-visible {
+    transform: none;
+  }
+  .dk-sheet,
+  .dk-sheet__panel {
+    animation: none;
+  }
+}
+
+/* Phones: the words, then the paper as a row of large tap targets with their
+   names always shown, then her at the desk with the laptop and the Sudoku. */
+@media (max-width: 900px) {
+  #explore {
+    --m-fig: 34vh;
+  }
+  #explore .chapter__inner {
+    width: 100%;
+  }
+  .room--explore .room__window {
+    right: 6vw;
+    top: auto;
+    bottom: calc(3vh + var(--m-fig, 34vh) * 0.42);
+    width: min(44vw, 260px);
+  }
+  .dk {
+    position: relative;
+    inset: auto;
+    order: 1;
+    width: 100%;
+    margin-top: 3vh;
+    display: grid;
+    gap: 3vh;
+  }
+  .dk__wall {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: min(100%, 440px);
+    justify-self: center;
+    align-items: end;
+    gap: 12px;
+  }
+  .dk-o,
+  .dk-o--music {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: auto;
+  }
+  .dk-obj {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    min-height: 44px;
+  }
+  .dk-obj__tag {
+    position: static;
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
+    opacity: 0.85;
+    transform: none;
+    padding: 2px 8px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .dk-obj:hover .dk-obj__tag,
+  .dk-obj:focus-visible .dk-obj__tag {
+    transform: none;
+  }
+  .dk-laptop .dk-obj__tag {
+    position: absolute;
+    opacity: 0.85;
+    padding: 2px 8px;
+    font-size: 10px;
+    transform: translate(-50%, 0);
+  }
+  .dk-eyecard {
+    width: 100%;
+    font-size: 9px;
+    padding-top: 18px;
+  }
+  .dk-chesscard {
+    width: 100%;
+    padding: 8px 8px 6px;
+  }
+  .dk-chesscard small {
+    display: none;
+  }
+  .dk-chesscard__k,
+  .dk-chesscard__q {
+    font-size: 15px;
+  }
+  .dk-sticky {
+    width: 100%;
+    font-size: 26px;
+  }
+  .dk-ticket {
+    width: 100%;
+  }
+  .dk-ticket__main {
+    padding: 8px 6px;
+  }
+  .dk-ticket__main b {
+    font-size: 14px;
+  }
+  .dk-ticket__main small {
+    display: none;
+  }
+  .dk-ticket__stub {
+    padding: 0 3px;
+    font-size: 7px;
+  }
+  .dk__seat {
+    position: relative;
+    right: auto;
+    height: var(--m-fig);
+    justify-self: center;
+    margin-left: 22%;
+  }
+  .dk-o--sudoku {
+    position: absolute;
+    left: -62%;
+    top: 34%;
+    width: 52%;
+  }
+  .dk-sudoku i {
+    font-size: 7px;
+  }
+}
+
+/* ── Dream planes (17 Oct 2026) ──
+   The canvas over the closing's sky (under the words), and the paper card
+   under "Thanks for stopping by." that folds into a plane. */
+.dream-sky {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.dream {
+  opacity: 0;
+  visibility: hidden;
+  margin-top: clamp(14px, 2.4vh, 24px);
+  pointer-events: auto;
+  text-shadow: none;
+}
+.dream__card {
+  width: min(27rem, 100%);
+  padding: 14px 16px 16px;
+  border-radius: 3px;
+  background: linear-gradient(160deg, #fbf6ea, #f1e6cf);
+  color: #26375f;
+  text-align: left;
+  box-shadow:
+    0 14px 30px rgba(60, 40, 30, 0.22),
+    0 0 0 1px rgba(60, 40, 30, 0.08);
+  transform-origin: 50% 50%;
+  will-change: transform, clip-path;
+}
+.dream__card--done {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  animation: dk-fade 0.5s ease-out;
+}
+.dream__ask {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.dream__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.dream__row input {
+  flex: 1 1 10rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-bottom: 1.5px solid rgba(38, 55, 95, 0.4);
+  border-radius: 0;
+  background: transparent;
+  color: #26375f;
+  font-family: var(--font-hand-stack);
+  font-size: 26px;
+}
+.dream__row input::placeholder {
+  color: rgba(38, 55, 95, 0.35);
+}
+.dream__row input:focus {
+  outline: none;
+  border-bottom-color: #26375f;
+}
+.dream__row button,
+.dream__again {
+  flex: none;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid #26375f;
+  border-radius: 999px;
+  background: #26375f;
+  color: #fbf6ea;
+  font-family: var(--font-mono-stack);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.dream__row button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.dream__row button:focus-visible,
+.dream__again:focus-visible {
+  outline: 2px solid #26375f;
+  outline-offset: 3px;
+}
+.dream__again {
+  background: transparent;
+  color: #26375f;
+}
+.dream__done {
+  margin: 0;
+  font-family: var(--font-hand-stack);
+  font-size: 22px;
+  line-height: 1.2;
+}
+/* Phones: one compact row, and the scene band a little lower, so the card
+   sits in the sky above her and never over her. */
+@media (max-width: 900px) {
+  .dream {
+    justify-self: center;
+    width: min(24rem, 100%);
+    margin-top: 10px;
+  }
+  .dream__card {
+    padding: 8px 10px 10px;
+  }
+  .dream__ask {
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+  .dream__row {
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+  .dream__row input {
+    flex: 1 1 auto;
+    padding: 0 4px;
+    font-size: 21px;
+    min-height: 40px;
+  }
+  .dream__row button,
+  .dream__again {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+  }
+  .dream__done {
+    font-size: 19px;
+  }
+  #closing .chapter__lines {
+    gap: 0.2em;
+  }
+  #closing .closing__scene {
+    bottom: calc(-1 * min(10vh, 84px));
+  }
+}
+.stage--static .dream {
+  opacity: 1;
+  visibility: inherit;
+}

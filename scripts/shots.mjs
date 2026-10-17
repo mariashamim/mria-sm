@@ -3,6 +3,7 @@
 // screenshot per chapter. Works while the browser pane is blocked by popups.
 //   node scripts/shots.mjs [outDir=.shots] [mobile|desktop] [chapter,chapter,...|all]
 // AT=0.05,0.5,0.95 parks each chapter at those points of its own content (default 0.95).
+// CLICK=<selector> clicks an element after parking; EXEC=<js> runs after the click.
 import { spawn } from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
@@ -101,6 +102,13 @@ for (const c of chapters) for (const at of AT) {
     `(()=>{const R=${R}; const q=s=>R(document.querySelector('#${c} '+s)); return JSON.stringify({vw: innerWidth, vh: innerHeight, inner:q('.chapter__inner'), piece:q('.eye, .terminal, .mate'), fig:q('.chapter__figure'), img:q('.chapter__fig img'), kite: document.querySelector('#${c} .scene__kite')?.getAttribute('transform') ?? null, op: getComputedStyle(document.querySelector('#${c}')).opacity})})()`,
   )
   console.log(c, at, m)
+  // CLICK=<selector> opens something on the parked chapter first; EXEC=<js> runs after it.
+  if (process.env.CLICK) {
+    await evalJs(`document.querySelector(${JSON.stringify(process.env.CLICK)})?.click(); 'click'`)
+    await sleep(900)
+    if (process.env.EXEC) console.log('exec:', await evalJs(process.env.EXEC))
+    await sleep(600)
+  }
   const shot = await send('Page.captureScreenshot', { format: 'jpeg', quality: 82 })
   await fs.writeFile(AT.length > 1 ? `${OUT}/${W}-${c}-${String(Math.round(at * 100)).padStart(2, "0")}.jpg` : `${OUT}/${mode}-${c}.jpg`, Buffer.from(shot.result.data, 'base64'))
 }

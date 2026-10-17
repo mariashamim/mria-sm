@@ -1,7 +1,6 @@
 'use client'
 
 import { gsap, SplitText } from '@/lib/gsap'
-import { useUI } from '@/lib/ui'
 import karachi from '@/components/scenes/Karachi'
 import london from '@/components/scenes/London'
 import home from '@/components/scenes/Home'
@@ -9,7 +8,7 @@ import karsaz from '@/components/scenes/Karsaz'
 import sky from '@/components/scenes/Sky'
 import letter from '@/components/scenes/Letter'
 import closing from '@/components/scenes/Closing'
-import TerminalPrompt from '@/components/scenes/TerminalPrompt'
+import explore from '@/components/scenes/Desk'
 import MateInOne from '@/components/scenes/MateInOne'
 import ChaiSteam from '@/components/scenes/ChaiSteam'
 
@@ -30,6 +29,8 @@ export type SceneDef = {
   owns?: ScenePart[]
   /** Rendered inside the chapter's text column, just above the year. */
   YearNote?: () => React.JSX.Element
+  /** Rendered inside the chapter's text column, after the lines. */
+  After?: () => React.JSX.Element
 }
 
 /* ───────────────────────── Hello, World: the terminal ───────────────────────── */
@@ -57,42 +58,6 @@ function HelloScene() {
     </div>
     </>
   )
-}
-
-/* ───────────────────────── Explore: the terminal and Sudoku ───────────────────────── */
-
-/** The prompt that answers, and the Sudoku, in a window of their own under her invitation. */
-function ExploreScene() {
-  const openSudoku = useUI((s) => s.setSudokuOpen)
-  return (
-    <div className="terminal terminal--explore" aria-label="A terminal you can type into">
-      <div className="terminal__bar" aria-hidden="true">
-        <span>C:\MARIA</span>
-        <span>80 × 25</span>
-      </div>
-      <TerminalPrompt />
-      <button type="button" className="terminal__sudoku" onClick={() => openSudoku(true)} data-hover>
-        <span className="terminal__sudoku-label">
-          <b>▸ SUDOKU.EXE</b>
-          <small>The one I wrote in x86 assembly. Click to play.</small>
-        </span>
-      </button>
-    </div>
-  )
-}
-
-const explore: SceneDef = {
-  Scene: ExploreScene,
-  build: ({ tl, el, reduced }) => {
-    const term = el.querySelector<HTMLElement>('.terminal')
-    if (!term) return
-    if (reduced) {
-      gsap.set(term, { opacity: 1 })
-      return
-    }
-    // Right after the invitation to try it (the second line rises at 0.85).
-    tl.fromTo(term, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 1.1)
-  },
 }
 
 // 2024 opens on the window 2023 opened, alone and centred on the black: it

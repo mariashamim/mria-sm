@@ -324,6 +324,49 @@ From `docs/asset-brief.md`, Maria generated four of the six; all are integrated.
 - Still to generate: the London rooftop strip and the paper textures.
   Originals live in `public/_raw` and `public/_raw/scene` (not committed).
 
+## Explore desk and dream planes (branch `desk`, 17 Oct 2026)
+
+Built from Maria's prototype (`Downloads/desk-planes.html`), with existing
+assets and code-drawn paper only.
+
+- **Explore desk** (`components/scenes/Desk.tsx`, replaces the old Explore
+  terminal): the letter's room at night (same `.room` classes, window and
+  skyline), `pose-desk` bottom right. The laptop is a button over the render
+  and opens her real terminal (`TerminalPrompt`) in a sheet. Paper objects,
+  drawn in HTML/CSS: Sudoku sheet on the desk (opens the real Sudoku
+  window), eye chart pinned to the wall (sheet with `EyeChart` and an input;
+  any answer gets `EYE_CHART.fail`), chess card (sheet with `MateInOne`), a
+  "chai" sticky note and a Coke Studio ticket (handwritten notes). Hover or
+  focus lifts an object and shows its label; Esc, the close button or the
+  backdrop closes a sheet and focus goes back. Phones: a row of four large
+  paper targets with labels always shown, then her at the desk with the
+  Sudoku beside her. Words in `DESK` (`content/interactive.ts`).
+  `TerminalPrompt` takes `onLeave` so `cd` and `sudoku` close the sheet first.
+- **Dream planes** (`components/scenes/DreamPlanes.tsx`): a paper card under
+  "Thanks for stopping by." (Chapter scenes can now render `After`, inside
+  the text column after the lines). On submit it folds into a dart (WAAPI
+  clip-path) and flies to its plane. Planes are drawn on one canvas in lanes
+  of clear sky worked out at runtime: the words (by ink extent), the card,
+  the Urdu word, rail, top bar, her figure and the two rooftops (fractions of
+  the source render) are kept clear; short lanes park a plane in place.
+  Planes come from `data/dreams.json` (Maria edits it; starts with "a pilot"
+  signed M); the visitor's own plane is in `localStorage` (`aasmaan-dream`)
+  and never sent. The loop runs only while the closing is the active chapter
+  and the tab is visible; reduced motion draws the planes in place. On
+  phones the closing scene sits ~80px lower (feet cropped) so the card is
+  never over her face. Dev handle `window.__dreams()`.
+- `scripts/shots.mjs` takes `CLICK=` and `EXEC=`; `scripts/verify.mjs` now
+  opens the terminal from the laptop and tests the desk sheet and the planes
+  (47 checks, expect 46/47).
+
+Waiting on Maria (do not deploy with these as they are):
+- Wording for the chai and music notes (`DESK.notes`, placeholders now).
+- Approval of the hidden-command replies `sudo fly` (`SECRETS.sudoFly`) and
+  `cat letter.txt` (`SECRETS.catLetter`, suggested).
+- Whether to remove the chess puzzle from "Outside the classroom" (it is in
+  both places for now).
+- The card's two lines after folding (`DREAMS.done`, `DREAMS.again`) are mine.
+
 ## Half-done / waiting on Maria
 
 - **Her own copy.** Done: every section now uses her approved copy.
@@ -373,13 +416,13 @@ From `docs/asset-brief.md`, Maria generated four of the six; all are integrated.
 npx tsc --noEmit -p .
 npx eslint app components lib content scripts/*.mjs --max-warnings=0
 npx next build
-node scripts/verify.mjs          # needs `next dev` on :3000 (uses window.__stage); 43 checks, ~4 min
+node scripts/verify.mjs          # needs `next dev` on :3000 (uses window.__stage); 47 checks, ~4 min
 ```
 
 `scripts/verify.mjs` covers console/network errors, headings, metadata,
 images, menu/rail/deep-link navigation, terminal, chess, Sudoku, eye chart,
 kite, keyboard focus rings, a responsive scan at 320/375/430/768/1024/1366/
-1440/1920 and reduced motion. Expected: 42/43, the one failure being the
+1440/1920 and reduced motion. Expected: 46/47, the one failure being the
 320×568 residual above. `SHOTS=1 OUT_DIR=.shots/x` saves screenshots.
 
 Other harnesses (all headless Edge over DevTools, Windows path to msedge

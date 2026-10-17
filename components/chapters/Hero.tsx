@@ -3,9 +3,11 @@
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import type { Chapter as ChapterData } from '@/content/chapters'
-import { gsap, prefersReducedMotion } from '@/lib/gsap'
+import { gsap, prefersReducedMotion, SplitText } from '@/lib/gsap'
 import { useUI } from '@/lib/ui'
 import Avatar from '@/components/avatar/Avatar'
+import Constellations from '@/components/scenes/Constellations'
+import ShootingStar from '@/components/scenes/ShootingStar'
 
 type Props = { chapter: ChapterData }
 
@@ -45,14 +47,23 @@ export default function Hero({ chapter }: Props) {
       const run = contextSafe(() => {
         if (fired) return
         fired = true
+        // Entering a memory: the camera settles on the roof (a slow push from slightly
+        // too close), she arrives, then her question rises a word at a time, then
+        // who is asking, and last the invitation to scroll.
         const etl = gsap.timeline({ defaults: { ease: 'power3.out' } })
-        if (roofBack) etl.fromTo(roofBack, { y: 36, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.4 }, 0)
-        if (roofFront) etl.fromTo(roofFront, { y: 54, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.4 }, 0.2)
-        if (figureIn) etl.fromTo(figureIn, { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.3 }, 0.35)
-        // Her first words, as soon as she is there: the question, then who is asking.
-        if (openingIn) etl.fromTo(openingIn, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.1 }, 0.7)
-        if (chrome.length) etl.fromTo(chrome, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 0.9)
-        if (cue) etl.call(() => cue.classList.add('is-in'), [], 1.3)
+        if (roofBack) etl.fromTo(roofBack, { y: 36, scale: 1.05, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: 2.2, ease: 'power2.out' }, 0)
+        if (roofFront) etl.fromTo(roofFront, { y: 64, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.8 }, 0.15)
+        if (figureIn) etl.fromTo(figureIn, { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.4 }, 0.45)
+        const lead = openingIn?.querySelector<HTMLElement>('.hero__lead')
+        const intro = openingIn ? Array.from(openingIn.querySelectorAll<HTMLElement>('.hero__intro')) : []
+        if (openingIn) etl.set(openingIn, { autoAlpha: 1 }, 0.9)
+        if (lead) {
+          const words = SplitText.create(lead, { type: 'words' }).words
+          etl.fromTo(words, { yPercent: 70, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.9, stagger: 0.09 }, 0.9)
+        }
+        if (intro.length) etl.fromTo(intro, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1 }, 1.6)
+        if (chrome.length) etl.fromTo(chrome, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 1.7)
+        if (cue) etl.call(() => cue.classList.add('is-in'), [], 2.3)
       })
       if (useUI.getState().introDone) run()
       const unsubscribe = useUI.subscribe((s) => {
@@ -70,6 +81,8 @@ export default function Hero({ chapter }: Props) {
 
   return (
     <section ref={ref} id={chapter.id} data-layer={chapter.id} className="hero" data-ui={chapter.ui} aria-label="Maria on a Karachi rooftop before dawn">
+      <Constellations />
+      <ShootingStar />
       {/* The entrance moves the inner block; the scroll timeline moves the outer one. */}
       <div className="hero__opening">
         <div className="hero__opening-in">

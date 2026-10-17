@@ -120,7 +120,11 @@ function KarachiScene() {
 
 const karachi: SceneDef = {
   Scene: KarachiScene,
+  // The Urdu word arrives by ink (lib/setpieces.ts); it appears as the drawn one settles onto it.
+  owns: ['urdu'],
   build: ({ tl, el, total, reduced }) => {
+    const urdu = el.querySelector<HTMLElement>('.chapter__urdu')
+    if (urdu && !reduced) tl.fromTo(urdu, { opacity: 0 }, { opacity: 0.3, duration: 0.4, ease: 'power1.inOut' }, 0.25)
     const svg = el.querySelector<SVGSVGElement>('.scene--karachi')
     const string = svg?.querySelector<SVGPathElement>('.scene__string')
     const kite = svg?.querySelector<SVGGElement>('.scene__kite')

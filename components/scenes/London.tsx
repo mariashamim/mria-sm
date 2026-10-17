@@ -1,6 +1,8 @@
 'use client'
 
-import { gsap } from '@/lib/gsap'
+import { useEffect, useRef } from 'react'
+import { gsap, prefersReducedMotion } from '@/lib/gsap'
+import { chapterById, useProgress } from '@/lib/progress'
 import type { SceneDef } from '@/components/scenes/registry'
 
 /**
@@ -18,10 +20,51 @@ const rand = (i: number, k: number) => {
   return v - Math.floor(v)
 }
 
+/**
+ * Tap (or click) a falling snowflake and it melts with a tiny soft fade, then
+ * quietly comes back. Only while London is on stage; the nearest flake within
+ * a finger's width counts, since the flakes themselves are a few pixels.
+ */
+function useMelt(ref: React.RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const snow = ref.current
+    const index = chapterById('london')?.index ?? -1
+    if (!snow || prefersReducedMotion()) return
+    const onDown = (e: PointerEvent) => {
+      if (useProgress.getState().active !== index) return
+      let best: HTMLElement | null = null
+      let bd = 30
+      for (const f of Array.from(snow.children) as HTMLElement[]) {
+        const r = f.getBoundingClientRect()
+        const d = Math.hypot(r.left + r.width / 2 - e.clientX, r.top + r.height / 2 - e.clientY)
+        if (d < bd) {
+          bd = d
+          best = f
+        }
+      }
+      if (!best || best.getAnimations().some((a) => a.id === 'melt')) return
+      const melt = best.animate(
+        [
+          { scale: '1', opacity: getComputedStyle(best).opacity },
+          { scale: '1.9', opacity: '0.5', offset: 0.35 },
+          { scale: '0.2', opacity: '0', offset: 0.8 },
+          { scale: '0', opacity: '0' },
+        ],
+        { duration: 2600, easing: 'ease-out' },
+      )
+      melt.id = 'melt'
+    }
+    window.addEventListener('pointerdown', onDown)
+    return () => window.removeEventListener('pointerdown', onDown)
+  }, [ref])
+}
+
 function LondonScene() {
+  const ref = useRef<HTMLDivElement>(null)
+  useMelt(ref)
   return (
     <>
-      <div className="snow" aria-hidden="true">
+      <div ref={ref} className="snow" aria-hidden="true">
         {Array.from({ length: FLAKES }, (_, i) => {
           const style = {
             '--x': `${(rand(i, 1) * 100).toFixed(1)}%`,

@@ -95,7 +95,7 @@ const karsaz: SceneDef = {
       svg.setAttribute('viewBox', `0 0 ${w} ${h}`)
       // In from the top right, where the kite went; out at the top left, toward 2023.
       const into = `M${(w * 1.03).toFixed(1)} ${(-h * 0.04).toFixed(1)} C${(w * 0.92).toFixed(1)} ${(h * 0.14).toFixed(1)}, ${(hx + w * 0.14).toFixed(1)} ${(hy - h * 0.22).toFixed(1)}, ${hx.toFixed(1)} ${hy.toFixed(1)}`
-      const out = `M${hx.toFixed(1)} ${hy.toFixed(1)} C${(hx - w * 0.14).toFixed(1)} ${(hy - h * 0.16).toFixed(1)}, ${(w * 0.34).toFixed(1)} ${(h * 0.16).toFixed(1)}, ${(-w * 0.06).toFixed(1)} ${(-h * 0.06).toFixed(1)}`
+      const out = `M${hx.toFixed(1)} ${hy.toFixed(1)} C${(hx - w * 0.14).toFixed(1)} ${(hy - h * 0.16).toFixed(1)}, ${(w * 0.34).toFixed(1)} ${(h * 0.16).toFixed(1)}, ${(w * 0.22).toFixed(1)} ${(h * 0.2).toFixed(1)}`
       threadIn.setAttribute('d', into)
       revealIn.setAttribute('d', into)
       trail.setAttribute('d', out)

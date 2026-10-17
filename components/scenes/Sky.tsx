@@ -201,7 +201,8 @@ const sky: SceneDef = {
     tl.fromTo(frame, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false, onStart: draw }, O)
     tl.to(open, { p: 1, duration: 0.8, ease: 'power3.inOut', onUpdate: draw }, O)
     tl.fromTo(caret, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: 'power1.in', immediateRender: false }, O + 0.05)
-    tl.to(year, { opacity: 0.75, duration: 0.6, ease: 'power1.inOut' }, O + 0.2)
+    // The year steps aside for the window opening over it.
+    tl.to(year, { opacity: 0, duration: 0.4, ease: 'power1.in' }, O + 0.1)
     tl.to({}, { duration: 0.2 }, O + 0.8)
   },
 }

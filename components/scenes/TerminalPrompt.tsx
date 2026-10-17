@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from 'react'
 import { chapters } from '@/content/chapters'
 import { DOORS } from '@/content/links'
-import { HELP, WHOAMI } from '@/content/interactive'
+import { HELP, SECRETS, WHOAMI } from '@/content/interactive'
 import { isTouch } from '@/lib/gsap'
 import { scrollToChapter } from '@/lib/stage'
 import { useUI } from '@/lib/ui'
@@ -74,6 +74,7 @@ export default function TerminalPrompt() {
       }
       case 'cat':
         if (rest[0] === 'letter.txt') say('read it yourself. keep scrolling.')
+        else if (rest[0] === 'chai.txt') SECRETS.chaiTxt.forEach(say)
         else err(`cat: ${rest[0] ?? ''}: no such file`)
         break
       case 'chai':
@@ -96,6 +97,10 @@ export default function TerminalPrompt() {
         setLines([])
         setValue('')
         return
+      case 'sudo':
+        if (rest[0] === 'fly') SECRETS.sudoFly.forEach(say)
+        else err('sudo: nice try.')
+        break
       default:
         err(`${name}: command not found. try help`)
     }

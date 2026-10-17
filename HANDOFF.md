@@ -264,6 +264,47 @@ for one typography system. Not merged to `main`, not deployed.
 - **Outside the classroom**: plain lines like every other section; the
   sticker treatment is gone.
 
+## Creative pass: set pieces, chai, letter (branch `chai-letter`, 17 Oct 2026)
+
+Maria compared the site with a competitor's (taibaworld.vercel.app, inspected
+in the browser pane at ~736px: hero, collage, a sideways "walk with me"
+journey, letter-roll chapter titles, cats, a notes wall) and asked for a
+bolder, cinematic pass. Direction agreed: bold set pieces between calmer
+sections, nothing copied from the competitor.
+
+- **Ink bleed, opening → 2007** (`lib/setpieces.ts` `buildInk`, drawn on the
+  stage's effects layer `components/stage/Fx.tsx`): گھر draws itself stroke
+  by stroke, the ink floods the frame in 2007's dawn (an SVG goo filter with
+  a turbulence wobble; phones get the filter without the turbulence), 2007
+  forms underneath and the word settles into the chapter's Urdu spot. The
+  word is centred on its glyph ink (`measureText`), not `getBBox`, whose
+  Gulzar line box is far taller than the letters. The hero's exit is 1.7
+  viewports with `lead: 0.8`; karachi enters instantly under the ink.
+- **Split-flap years** (`splitFlap` in `lib/chapterTimelines.ts`): 2007,
+  2010, 2011 and 2024 flip up from the previous year, digit by digit, with a
+  departures-board split line; 2017 keeps its handwritten sum, 2023 its
+  reveal-last.
+- **Fly-through, 2017 → 2023** (`buildFly`): the paper plane comes at the
+  camera from where Karsaz's plane ends (now on screen at 22%, 20%), mist
+  and clouds stream past, 2023 settles from 1.12 scale.
+- **Opening entrance** (`components/chapters/Hero.tsx`): the roof settles
+  from 1.05, she arrives, the question rises word by word, then the intro,
+  then the cue. **Constellations** are back (`components/scenes/Constellations.tsx`)
+  and a rare **shooting star** crosses the opening sky (`ShootingStar.tsx`).
+- **2024's hinge line**: "They closed the window to the sky." arrives, then
+  "So I opened a terminal window." types itself with a cursor that follows
+  the letters and stays blinking after.
+- **Chai steam** (`components/scenes/ChaiSteam.tsx`) and the **envelope
+  letter** (`components/scenes/Letter.tsx`), after `reference/chai-letter.html`:
+  see the code comments. The letter is scroll 7; the closing opens at dawn.
+- **Small things**: tap a London snowflake to melt it; hidden terminal
+  commands `sudo fly` and `cat chai.txt` (words in `SECRETS`,
+  `content/interactive.ts`, new and Maria's to change); one hover/press/focus
+  language for every control; terminal lines type in, errors shake.
+- **Assets**: `docs/asset-brief.md` has six prioritised Gemini prompts
+  (closing pose, London rooftop strip, cloud cut-outs, airfield strip, a
+  London reaction pose, paper textures). None generated yet.
+
 ## Half-done / waiting on Maria
 
 - **Her own copy.** Done: every section now uses her approved copy.

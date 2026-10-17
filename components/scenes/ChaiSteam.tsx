@@ -102,7 +102,9 @@ export default function ChaiSteam() {
 
     // The word, sampled from Gulzar into points, placed in the sky above her head.
     const formWord = () => {
-      if (reduced || !fig.w) return
+      // Narrow screens have no clear sky above her: the word would cross the words or
+      // the board, so phones keep the wisps and skip it.
+      if (reduced || !fig.w || W < 700) return
       const room = fig.y - 60
       const fs = Math.min(230, W * 0.24, room * 0.85)
       if (fs < 48) return

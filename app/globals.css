@@ -4269,3 +4269,190 @@ body {
 .stage--static .envelope {
   display: none;
 }
+
+/* ═══════════════════════ set pieces (17 Oct 2026) ═══════════════════════
+   The effects layer over the chapters (components/stage/Fx.tsx, lib/setpieces.ts). */
+.fx {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+.fx__ink,
+.fx__fly {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+}
+.fx__word {
+  font-family: var(--font-urdu-stack);
+  fill: #7a3e17;
+  fill-opacity: 0;
+  stroke: #c4692c;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.stage--static .fx {
+  display: none;
+}
+
+/* The years as a departures board: each digit a window onto a strip that
+   counts up to it, with the board's split line across the middle. */
+.flap {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1;
+  margin-block: -0.1em;
+  vertical-align: top;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(50% - 0.012em), transparent calc(50% - 0.012em), transparent calc(50% + 0.012em), #000 calc(50% + 0.012em));
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(50% - 0.012em), transparent calc(50% - 0.012em), transparent calc(50% + 0.012em), #000 calc(50% + 0.012em));
+}
+.flap__sizer {
+  display: block;
+  visibility: hidden;
+}
+.flap__strip {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 100%;
+  will-change: transform;
+}
+.flap__strip b {
+  display: block;
+  height: 100%;
+  font-weight: inherit;
+  text-align: center;
+}
+
+/* The opening: constellations under the words, a rare shooting star. */
+.constellations {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.shooting-star {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: 120px;
+  height: 1.5px;
+  border-radius: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: 100% 50%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(230, 238, 255, 0.95));
+  box-shadow: 0 0 6px rgba(200, 220, 255, 0.6);
+}
+.flap--narrow .flap__strip b:not(:last-child) {
+  transform: scaleX(0.55);
+}
+
+/* ═══════════════════════ micro-interactions (17 Oct 2026) ═══════════════════════
+   One language for every control: a lift on hover, a press that gives, and the
+   same amber focus ring. Nothing depends on hover; touch gets the press. */
+.doors a,
+.terminal__chips button,
+.terminal__sudoku,
+.topbar__menu,
+.topbar__mark,
+.rail button,
+.mate__again,
+.mate__cta,
+.sudoku__actions button,
+.sudoku__pad button,
+.sudoku__close {
+  transition: transform 0.18s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+@media (hover: hover) {
+  .terminal__chips button:hover,
+  .sudoku__actions button:hover,
+  .sudoku__pad button:hover,
+  .mate__again:hover,
+  .mate__cta:hover {
+    transform: translateY(-1px);
+  }
+  .terminal__sudoku:hover {
+    transform: translateY(-2px);
+  }
+}
+.doors a:active,
+.terminal__chips button:active,
+.terminal__sudoku:active,
+.topbar__menu:active,
+.rail button:active,
+.mate__again:active,
+.mate__cta:active,
+.sudoku__actions button:active,
+.sudoku__pad button:active {
+  transform: scale(0.96);
+}
+#letter .doors a:active {
+  transform: rotate(var(--tilt)) scale(0.95);
+}
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+/* The terminal answers: each new line types in, quickly. */
+.terminal__log > .terminal__line {
+  animation: term-line 0.28s ease-out both;
+}
+@keyframes term-line {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+.terminal__err {
+  animation: term-line 0.28s ease-out both, term-shake 0.3s ease-in-out 0.05s;
+}
+@keyframes term-shake {
+  25% {
+    translate: -3px 0;
+  }
+  75% {
+    translate: 3px 0;
+  }
+}
+
+/* 2024's hinge: the cursor waits after "So I opened a terminal window." */
+.hinge-caret {
+  display: inline-block;
+  width: 0.45em;
+  height: 0.95em;
+  margin-left: 0.12em;
+  vertical-align: -0.12em;
+}
+.hinge-caret i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-2);
+  animation: caret-blink 1.06s steps(1, end) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .terminal__log > .terminal__line,
+  .terminal__err {
+    animation: none;
+  }
+  .hinge-caret i {
+    animation: none;
+  }
+}
+@media (min-width: 901px) {
+  /* The letter's card is centred in the room below the top bar, never under it. */
+  #letter .chapter__inner {
+    inset: 64px 0 0 38%;
+    max-height: calc(100vh - 76px);
+  }
+}

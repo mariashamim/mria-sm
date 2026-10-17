@@ -9,6 +9,8 @@ import { activeAt, clearStage, scrollToChapter, setStage, skyAt, type Segment } 
 import { useUI } from '@/lib/ui'
 import { buildChapterContent, buildHeroContent } from '@/lib/chapterTimelines'
 import { enterOf, exitOf } from '@/lib/transitions'
+import { buildFly, buildInk } from '@/lib/setpieces'
+import Fx from '@/components/stage/Fx'
 import Rooftop from '@/components/scene/Rooftop'
 
 type Props = { children: React.ReactNode }
@@ -122,6 +124,10 @@ export default function Stage({ children }: Props) {
       const karachi = seg('karachi')
       const hello = seg('hello')
       const letter = seg('letter')
+      const karsaz = seg('karsaz')
+      // The set pieces across boundaries, on the effects layer.
+      if (hero) buildInk(master, el, hero.bodyEnd, exitOf('hero').dur)
+      if (karsaz) buildFly(master, el, karsaz.bodyEnd, exitOf('karsaz').dur)
       const near = [el.querySelector<HTMLElement>('.stage__roof .rooftop__layer--fore'), el.querySelector<HTMLElement>('.stage__roof .rooftop__layer--parapet')].filter(
         (n): n is HTMLElement => !!n,
       )
@@ -187,6 +193,7 @@ export default function Stage({ children }: Props) {
       <Rooftop layers={['city', 'fore']} size="hero" className="stage__roof" windows />
       <Rooftop layers={['parapet']} size="hero" className="stage__roof stage__roof--front" />
       {children}
+      <Fx />
     </div>
   )
 }

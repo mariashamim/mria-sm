@@ -1,6 +1,6 @@
 'use client'
 
-import { gsap } from '@/lib/gsap'
+import { gsap, SplitText } from '@/lib/gsap'
 import { useUI } from '@/lib/ui'
 import karachi from '@/components/scenes/Karachi'
 import london from '@/components/scenes/London'
@@ -132,6 +132,38 @@ const hello: SceneDef = {
     tl.to(dark, { opacity: 0, duration: 0.2 * total, ease: 'power1.inOut' }, 0.3 * total)
     // Warmth comes back into the night.
     tl.to(warm, { opacity: 1, duration: 0.35 * total, ease: 'power1.inOut' }, 0.5 * total)
+
+    // The story's hinge: the first sentence arrives with the line; then the second
+    // types itself out, the way her first program did, and a cursor waits after it.
+    const hinge = el.querySelector<HTMLElement>('.chapter__lines .mask:last-child p')
+    const text = hinge?.textContent ?? ''
+    const cut = text.indexOf('So I')
+    if (!hinge || cut < 0) return
+    const chars = SplitText.create(hinge, { type: 'words,chars' }).chars as HTMLElement[]
+    let n = 0
+    const typedChars = chars.filter((c) => {
+      n += (c.textContent ?? '').length
+      return n > cut
+    })
+    const hingeCaret = document.createElement('span')
+    hingeCaret.className = 'hinge-caret'
+    hingeCaret.setAttribute('aria-hidden', 'true')
+    // The blink lives on the inner element so it never fights the reveal.
+    hingeCaret.appendChild(document.createElement('i'))
+    hinge.appendChild(hingeCaret)
+    gsap.set([...typedChars, hingeCaret], { opacity: 0 })
+    const at = 0.5 * total
+    // The cursor rides just after the last typed letter.
+    const typing = { n: 0 }
+    const type = () => {
+      const k = Math.round(typing.n)
+      typedChars.forEach((c, i) => (c.style.opacity = i < k ? '1' : '0'))
+      const anchor = typedChars[k - 1]
+      if (anchor) anchor.after(hingeCaret)
+      else typedChars[0]?.before(hingeCaret)
+    }
+    tl.fromTo(hingeCaret, { opacity: 0 }, { opacity: 1, duration: 0.01, immediateRender: false }, at)
+    tl.fromTo(typing, { n: 0 }, { n: typedChars.length, duration: 0.25 * total, ease: 'none', immediateRender: false, onUpdate: type }, at)
   },
 }
 

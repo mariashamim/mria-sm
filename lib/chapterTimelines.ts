@@ -1,4 +1,4 @@
-import type { Chapter } from '@/content/chapters'
+import { chapters, type Chapter } from '@/content/chapters'
 import { gsap, SplitText } from '@/lib/gsap'
 import { SCENES } from '@/components/scenes/registry'
 
@@ -22,6 +22,47 @@ export function buildHeroContent(layer: HTMLElement, reduced: boolean): gsap.cor
   return tl
 }
 
+/** The year shown before this chapter's, or 0000 for the first. */
+function previousYear(chapter: Chapter): string {
+  for (let i = chapter.index - 1; i >= 0; i--) if (/^\d{4}$/.test(chapters[i].year)) return chapters[i].year
+  return '0000'
+}
+
+/**
+ * Turns a year into split-flap cells: each digit a window onto a strip that
+ * counts up from the old digit to the new one. The cell keeps its width from
+ * an invisible copy of the final digit, so the year's layout never changes;
+ * the strip moves by its own height per step (yPercent), on transform only.
+ */
+function splitFlap(year: HTMLElement, from: string, to: string) {
+  year.textContent = ''
+  return Array.from(to).map((d, i) => {
+    const a = Number(from[i] ?? 0)
+    const b = Number(d)
+    const seq: number[] = [a]
+    for (let n = a; n !== b; ) {
+      n = (n + 1) % 10
+      seq.push(n)
+    }
+    const cell = document.createElement('span')
+    // A 1 is narrow: the wider digits rolling past it are drawn narrower to fit its window.
+    cell.className = d === '1' && seq.length > 1 ? 'flap flap--narrow' : 'flap'
+    const sizer = document.createElement('span')
+    sizer.className = 'flap__sizer'
+    sizer.textContent = d
+    const strip = document.createElement('span')
+    strip.className = 'flap__strip'
+    for (const n of seq) {
+      const b2 = document.createElement('b')
+      b2.textContent = String(n)
+      strip.appendChild(b2)
+    }
+    cell.append(sizer, strip)
+    year.appendChild(cell)
+    return { strip, steps: seq.length - 1 }
+  })
+}
+
 /** Chapters where she is older than in the one before. */
 const TIME_SKIPS = new Set(['karachi', 'london', 'home', 'school', 'karsaz', 'hello', 'loves'])
 
@@ -43,8 +84,13 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
 
   // The year builds digit by digit, then drifts upward for the rest of the chapter.
   if (year && !own('year')) {
-    const split = SplitText.create(year, { type: 'chars' })
-    tl.from(split.chars, { yPercent: 45, opacity: 0, duration: 0.5, ease: 'power3.out', stagger: 0.07 }, 0)
+    // The year flips into place like a departures board, from the last year shown
+    // (for the girl who wanted to fly). Right-hand digits settle first.
+    const strips = splitFlap(year, previousYear(chapter), chapter.year)
+    strips.forEach(({ strip, steps }, i) => {
+      if (steps === 0) return
+      tl.fromTo(strip, { yPercent: 0 }, { yPercent: -100 * steps, duration: 0.42 + 0.1 * (strips.length - 1 - i) + steps * 0.02, ease: `steps(${steps})` }, 0.05 + 0.06 * (strips.length - 1 - i))
+    })
     tl.fromTo(year, { yPercent: 6 }, { yPercent: -8, duration: total }, 0)
   }
   // The Urdu word is written from the right, the way it is read.

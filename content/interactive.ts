@@ -37,3 +37,12 @@ export const MATE = {
 
 /** Karsaz: the year worked out by hand above it (born 2007, ten when she started there). */
 export const KARSAZ_SUM = ['2007', '+ 10']
+
+/**
+ * Hidden terminal commands, for the curious (not listed in help). Their words
+ * come from her own story; edit freely.
+ */
+export const SECRETS = {
+  sudoFly: ['sudo: permission denied.', 'they closed the window to the sky.', 'this one is open, though. try: cd 2024'],
+  chaiTxt: ['chai.txt: non-negotiable.', "if you're in karachi, it's on her. type chai."],
+}

@@ -7,8 +7,8 @@ import type { SceneDef } from '@/components/scenes/registry'
  * 2010, London, briefly. The sky's own snow falls behind the words; this is
  * the snow in front of them. The flakes fall on their own clock (a CSS
  * animation on each flake); the scroll owns only their container's opacity
- * and, from "It didn't stick." on, the speed they fall at, slowing until they
- * melt away. As the chapter leaves, a warm wash thaws the cold out of it.
+ * and, from the second line (the snow she remembers) on, the speed they fall
+ * at, slowing until they melt away. As the chapter leaves, a warm wash thaws the cold out of it.
  */
 
 const FLAKES = 34
@@ -59,7 +59,7 @@ const london: SceneDef = {
       for (const a of flakes) a.playbackRate = speed.rate
     }
     tl.to(snow, { autoAlpha: 1, duration: 0.4, ease: 'power1.out' }, 0)
-    // "It didn't stick." is the second line (it starts rising at 0.5 + 0.55).
+    // The second line, the snow she remembers, starts rising at 0.5 + 0.55.
     const stick = 1.05
     tl.fromTo(speed, { rate: 1 }, { rate: 0.12, duration: total - stick, ease: 'power2.out', onUpdate: apply, immediateRender: false }, stick)
     tl.to(snow, { autoAlpha: 0, y: 12, duration: total * 0.3, ease: 'power1.in' }, total * 0.7)

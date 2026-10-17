@@ -1,10 +1,10 @@
 // Contact sheet of a shots.mjs run (AT=0.05,0.5,0.95): one row per chapter, start / middle / end.
-//   node scripts/sheet.mjs <shotsDir> <width> <out.jpg> [cellWidth=360]
+//   AT=0.05,0.5,0.95 node scripts/sheet.mjs <shotsDir> <width> <out.jpg> [cellWidth=360]  (same AT as the shots)
 import sharp from 'sharp'
 import fs from 'node:fs'
 const [dir, w, out, cw = '360'] = process.argv.slice(2)
-const ids = ['hero','karachi','london','home','karsaz','sky','hello','loves','letter']
-const ats = ['05','50','95']
+const ids = ['hero','karachi','london','home','school','karsaz','sky','hello','loves','explore','letter','closing']
+const ats = (process.env.AT || '0.05,0.5,0.95').split(',').map((a) => String(Math.round(Number(a) * 100)).padStart(2, '0'))
 const CW = Number(cw)
 const meta = await sharp(`${dir}/${w}-hero-05.jpg`).metadata()
 const CH = Math.round(CW * meta.height / meta.width)

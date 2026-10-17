@@ -1,24 +1,24 @@
 'use client'
 
-import { gsap, SplitText } from '@/lib/gsap'
+import { gsap } from '@/lib/gsap'
 import EyeChart from '@/components/scenes/EyeChart'
 import { offsetIn, onResize, pointAt } from '@/components/scenes/thread'
 import type { SceneDef } from '@/components/scenes/registry'
 
 /**
- * 2023, the window closed: the climax, and the longest chapter. No year at
- * the start; one line at a time, centred and slow. The paper plane from
- * Karsaz comes in from where it left, stalls and falls. The eye chart blurs
- * as she reads down it. On "They closed the window to the sky." the screen
- * cuts to black and nothing moves; then a cursor, and the last line types
- * itself. The year comes last, and a terminal window opens out of that line,
- * landing exactly where 2024's terminal sits so the next chapter can cut in
+ * 2023, the plan changed: the longest chapter. No year at the start; one line
+ * at a time, centred and slow. The paper plane from Karsaz comes in from where
+ * it left, still flying, while she looks up at it; with the first line it
+ * stalls and falls, and the eye chart blurs as she reads down it. After the
+ * second line the screen cuts to black and nothing moves; then a cursor. The
+ * year comes last, and a terminal window opens out of that cursor, landing
+ * exactly where 2024's first program sits so the next chapter can cut in
  * around it (lib/transitions.ts).
  *
  * The thread (components/scenes/thread.ts): the plane comes in at the top
  * left, where 2017's flew out, drawing its dashed line; it stalls, falls and
  * lands at her feet. After the cut it is the one thing left in the dark; it
- * shrinks to a point, and the point rises to the start of the last line and
+ * shrinks to a point, and the point rises to where the words were and
  * becomes the cursor.
  */
 
@@ -57,6 +57,7 @@ const sky: SceneDef = {
     const year = el.querySelector<HTMLElement>('.chapter__year')
     const title = el.querySelector<HTMLElement>('.chapter__title')
     const masks = Array.from(el.querySelectorAll<HTMLElement>('.chapter__lines .mask'))
+    const linesBox = el.querySelector<HTMLElement>('.chapter__lines')
     const figs = Array.from(el.querySelectorAll<HTMLElement>('.chapter__figure > *'))
     const plane = el.querySelector<SVGGElement>('.scene__plane')
     const svg = el.querySelector<SVGSVGElement>('.scene--sky')
@@ -67,7 +68,7 @@ const sky: SceneDef = {
     const eye = el.querySelector<HTMLElement>('.eye')
     const cut = el.querySelector<HTMLElement>('.scene-cut')
     const frame = el.querySelector<HTMLElement>('.open-term')
-    if (!year || !title || masks.length < 5 || !plane || !svg || !trail || !reveal || !spark || !figBox || !cut || !frame) return
+    if (!year || !title || masks.length < 2 || !linesBox || !plane || !svg || !trail || !reveal || !spark || !figBox || !cut || !frame) return
 
     if (reduced) {
       gsap.set([year, title, ...masks, ...figs], { opacity: 1 })
@@ -80,56 +81,36 @@ const sky: SceneDef = {
     gsap.set([plane, spark], { opacity: 0 })
     if (eye) gsap.set(eye, { opacity: 0, y: 18, rotation: -1.4, '--auto-gaze': 0, '--worse': 0 })
 
-    // One line at a time, in the same place: it comes up, holds, and goes.
+    // One line at a time, in the same place: it comes up, holds, and (but the last) goes.
     const line = (i: number, at: number, hold: number) => {
       tl.fromTo(masks[i], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, at)
-      tl.to(masks[i], { opacity: 0, y: -10, duration: 0.5, ease: 'power1.in' }, at + hold)
+      if (hold > 0) tl.to(masks[i], { opacity: 0, y: -10, duration: 0.5, ease: 'power1.in' }, at + hold)
     }
 
+    // First only the plane, still flying, and her looking up at it.
     tl.fromTo(title, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0)
-
-    line(0, 0.3, 1.5) // I applied to the Air Force. GD Pilot.
-    // Each line is gone before the next one comes: one thought at a time.
-    line(1, 2.35, 1.2) // I wanted the sky.
-    // She arrives with "I wanted the sky", looking up at the plane.
-    tl.fromTo(figs, { opacity: 0, yPercent: 4 }, { opacity: 1, yPercent: 0, duration: 0.8, ease: 'power2.out' }, 2.1)
-    line(2, 4.1, 2.6) // My eyesight failed the medical test.
-    // The chart: read down it, and the whole of it slips out of focus, to the last line.
+    tl.fromTo(figs, { opacity: 0, yPercent: 4 }, { opacity: 1, yPercent: 0, duration: 0.8, ease: 'power2.out' }, 0.9)
+    // As it stalls, the first line: the medical, and the chart she could not read.
+    line(0, 2.6, 3.4)
     if (eye) {
-      tl.to(eye, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 4.3)
-      tl.to(eye, { '--auto-gaze': 1, '--worse': 1, duration: 1.8, ease: 'power1.inOut' }, 4.6)
-      tl.to(eye, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 6.8)
+      tl.to(eye, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 3.0)
+      tl.to(eye, { '--auto-gaze': 1, '--worse': 1, duration: 1.9, ease: 'power1.inOut' }, 3.3)
+      tl.to(eye, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 5.9)
     }
-    tl.to(figs, { opacity: 0.85, duration: 0.6 }, 6.7)
-
-    // "They closed the window to the sky." Then nothing: a hard cut to black, and a held beat.
-    tl.fromTo(masks[3], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 7.25)
-    const CUT = 8.5
+    line(1, 6.3, 0)
+    // Then nothing: a hard cut to black, and a held beat.
+    const CUT = 7.9
     tl.set(cut, { opacity: 1 }, CUT)
     const meta = el.querySelector<HTMLElement>('.chapter__meta')
-    tl.set([masks[3], title, ...figs, ...(meta ? [meta] : [])], { opacity: 0 }, CUT + 0.01)
+    tl.set([masks[1], title, ...figs, ...(meta ? [meta] : [])], { opacity: 0 }, CUT + 0.01)
 
-    // A cursor in the dark, then the line types itself out behind it.
-    const last = masks[4]
-    const p = last.querySelector<HTMLElement>('p')
-    if (!p) return
-    const split = SplitText.create(p, { type: 'words,chars' })
-    const chars = split.chars as HTMLElement[]
+    // A cursor in the dark, where the words were.
     const caret = document.createElement('span')
-    caret.className = 'type-caret'
+    caret.className = 'type-caret type-caret--alone'
     caret.setAttribute('aria-hidden', 'true')
-    p.appendChild(caret)
-    gsap.set(chars, { opacity: 0 })
-    const typed = { n: 0 }
-    const place = () => {
-      const k = Math.round(typed.n)
-      const c = chars[Math.max(0, k - 1)]
-      if (!c) return
-      // Characters sit inside word boxes; measure them against the line itself.
-      const o = offsetIn(c, p)
-      gsap.set(caret, { x: k === 0 ? o.x : o.x + c.offsetWidth, y: o.y })
-    }
-    tl.set(last, { opacity: 1, y: 0 }, CUT + 0.9)
+    linesBox.appendChild(caret)
+    gsap.set(caret, { opacity: 0 })
+
     // The thread, drawn in the layer's pixels: in, a stall, the fall to her feet,
     // and after the cut, the point it shrinks to rising into the cursor.
     const st = { p: 0, spin: 0, shrink: 0, dot: 0 }
@@ -149,8 +130,8 @@ const sky: SceneDef = {
       reveal.setAttribute('d', full)
       geo.stall = inLen / Math.max(1, trail.getTotalLength())
       geo.land = land
-      const c0 = offsetIn(chars[0], el)
-      geo.cursor = { x: c0.x, y: c0.y + chars[0].offsetHeight * 0.55 }
+      const c0 = offsetIn(caret, el)
+      geo.cursor = { x: c0.x + caret.offsetWidth / 2, y: c0.y + caret.offsetHeight / 2 }
     })
     const drawThread = () => {
       measureThread()
@@ -168,22 +149,20 @@ const sky: SceneDef = {
     tl.to(st, { spin: -18, duration: 0.5, ease: 'sine.inOut', onUpdate: drawThread }, 2.4)
     tl.to(st, { p: 1, duration: 1.6, ease: 'power2.in', onUpdate: drawThread }, 2.9)
     tl.to(st, { spin: 342, duration: 1.6, ease: 'power1.in', onUpdate: drawThread }, 2.9)
-    // In the dark only the fallen plane is left; it goes to a point, and the point climbs to the line.
+    // In the dark only the fallen plane is left; it goes to a point, and the point becomes the cursor.
     tl.set(trail, { opacity: 0 }, CUT + 0.01)
     tl.to(st, { shrink: 1, duration: 0.3, ease: 'power2.in', onUpdate: drawThread }, CUT + 0.45)
     tl.set(spark, { opacity: 1 }, CUT + 0.6)
     tl.set(plane, { opacity: 0 }, CUT + 0.75)
     tl.to(st, { dot: 1, duration: 0.3, ease: 'power2.inOut', onUpdate: drawThread }, CUT + 0.6)
     tl.set(spark, { opacity: 0 }, CUT + 0.9)
-    tl.fromTo(caret, { opacity: 0 }, { opacity: 1, duration: 0.01, immediateRender: false, onStart: place, onReverseComplete: place }, CUT + 0.9)
-    tl.to(chars, { opacity: 1, duration: 0.01, ease: 'none', stagger: 1.4 / chars.length }, CUT + 1.2)
-    tl.to(typed, { n: chars.length, duration: 1.4, ease: 'none', onUpdate: place }, CUT + 1.2)
+    tl.fromTo(caret, { opacity: 0 }, { opacity: 1, duration: 0.01, immediateRender: false }, CUT + 0.9)
 
     // The year, last of all.
-    const Y = CUT + 2.8
+    const Y = CUT + 1.8
     tl.fromTo(year, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out' }, Y)
 
-    // The window opens out of the line and lands on 2024's terminal.
+    // A window opens out of the cursor and lands on 2024's first program.
     const target = document.querySelector<HTMLElement>('#hello .terminal')
     const helloLayer = target?.closest<HTMLElement>('[data-layer]')
     if (!target || !helloLayer) return
@@ -198,18 +177,12 @@ const sky: SceneDef = {
       to = { x: t.x, y: t.y }
       frame.style.width = `${target.offsetWidth}px`
       frame.style.height = `${target.offsetHeight}px`
-      // The typed line's own extent, from its first and last characters.
-      const a = offsetIn(chars[0], el)
-      const z = offsetIn(chars[chars.length - 1], el)
-      const left = Math.min(a.x, z.x)
-      const right = Math.max(a.x + chars[0].offsetWidth, z.x + chars[chars.length - 1].offsetWidth)
-      const top = a.y
-      const bottom = z.y + chars[chars.length - 1].offsetHeight
+      const c = offsetIn(caret, el)
       from = {
-        x: left,
-        y: top,
-        sx: Math.max(0.02, (right - left) / Math.max(1, target.offsetWidth)),
-        sy: Math.max(0.02, (bottom - top) / Math.max(1, target.offsetHeight)),
+        x: c.x,
+        y: c.y,
+        sx: Math.max(0.02, caret.offsetWidth / Math.max(1, target.offsetWidth)),
+        sy: Math.max(0.02, caret.offsetHeight / Math.max(1, target.offsetHeight)),
       }
     }
     const open = { p: 0 }
@@ -227,7 +200,7 @@ const sky: SceneDef = {
     const O = Y + 0.8
     tl.fromTo(frame, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false, onStart: draw }, O)
     tl.to(open, { p: 1, duration: 0.8, ease: 'power3.inOut', onUpdate: draw }, O)
-    tl.to([last, caret], { opacity: 0, duration: 0.3, ease: 'power1.in' }, O + 0.05)
+    tl.fromTo(caret, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: 'power1.in', immediateRender: false }, O + 0.05)
     tl.to(year, { opacity: 0.35, duration: 0.6, ease: 'power1.inOut' }, O + 0.2)
     tl.to({}, { duration: 0.2 }, O + 0.8)
   },

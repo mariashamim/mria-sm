@@ -11,27 +11,21 @@ import { SCENES } from '@/components/scenes/registry'
 
 export function buildHeroContent(layer: HTMLElement, reduced: boolean): gsap.core.Timeline {
   const tl = gsap.timeline({ defaults: { ease: 'none' } })
-  const name = layer.querySelector<HTMLElement>('.hero__name')
+  const opening = layer.querySelector<HTMLElement>('.hero__opening')
   const figure = layer.querySelector<HTMLElement>('.hero__figure')
-  if (reduced) {
-    if (name) gsap.set(name, { opacity: 1 })
-    return tl
-  }
-  // The name builds letter by letter behind her, she drifts, then both clear.
-  if (name) {
-    gsap.set(name, { opacity: 1 })
-    const split = SplitText.create(name, { type: 'chars' })
-    tl.from(split.chars, { yPercent: 60, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08 }, 0.05)
-  }
+  if (reduced) return tl
+  // Her words are already there (the entrance brings them, Hero.tsx); she looks up,
+  // the words drift up and away first, then the roof and she clear.
+  if (opening) tl.to(opening, { yPercent: -18, duration: 1.4 }, 0)
   if (figure) tl.to(figure, { yPercent: -6, duration: 1.4 }, 0)
   tl.to({}, { duration: 0.3 })
-  const exit = [name, figure].filter(Boolean) as HTMLElement[]
+  const exit = [opening, figure].filter(Boolean) as HTMLElement[]
   if (exit.length) tl.to(exit, { opacity: 0, yPercent: '-=14', duration: 0.6, ease: 'power1.in' })
   return tl
 }
 
-/** Chapters where she is older than in the one before (2, 3, 8, 16, 17, then now). */
-const TIME_SKIPS = new Set(['karachi', 'london', 'home', 'karsaz', 'hello', 'loves'])
+/** Chapters where she is older than in the one before. */
+const TIME_SKIPS = new Set(['karachi', 'london', 'home', 'school', 'karsaz', 'hello', 'loves'])
 
 export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduced: boolean): gsap.core.Timeline {
   const tl = gsap.timeline({ defaults: { ease: 'none' } })

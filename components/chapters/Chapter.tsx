@@ -19,22 +19,30 @@ export default function Chapter({ chapter }: Props) {
   return (
     <section id={chapter.id} data-layer={chapter.id} className="chapter" data-ui={chapter.ui} aria-labelledby={`${chapter.id}-title`}>
       {Scene && <Scene />}
-      <div className="chapter__urdu" aria-hidden="true" lang="ur">
-        {chapter.urdu}
-      </div>
+      {chapter.urdu && (
+        <div className="chapter__urdu" aria-hidden="true" lang="ur">
+          {chapter.urdu}
+        </div>
+      )}
       <div className="chapter__inner">
         <p className="chapter__meta">
           <span>{String(chapter.index).padStart(2, '0')}</span>
-          <span aria-hidden="true"> · </span>
-          <span lang="ur">{chapter.urdu}</span>
-          <span aria-hidden="true"> · </span>
-          <span>{chapter.urduMeaning}</span>
+          {chapter.urdu && (
+            <>
+              <span aria-hidden="true"> · </span>
+              <span lang="ur">{chapter.urdu}</span>
+              <span aria-hidden="true"> · </span>
+              <span>{chapter.urduMeaning}</span>
+            </>
+          )}
         </p>
         {YearNote && <YearNote />}
         {/* The year is decoration; the title is the section's heading. */}
-        <div className="chapter__year" aria-hidden="true">
-          {chapter.year}
-        </div>
+        {chapter.year && (
+          <div className="chapter__year" aria-hidden="true">
+            {chapter.year}
+          </div>
+        )}
         <h2 id={`${chapter.id}-title`} className="chapter__title">
           {chapter.title}
         </h2>

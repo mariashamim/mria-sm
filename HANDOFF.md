@@ -202,12 +202,50 @@ are not to change.
 - Her issue 4 ("the rooftop never returns") is half true: the city strip
   comes back after Hello, World; the roof and Maria do not.
 
+## Approved copy and type system v2 (branch `story-copy`, 17 Oct 2026)
+
+Maria supplied the final copy for every section, word for word, and asked
+for one typography system. Not merged to `main`, not deployed.
+
+- **Twelve sections** (`content/chapters.ts`): Opening (hero), Karachi
+  August 2007, London 2010, Back to Karachi 2011, School years (new, uses
+  the previously unused `pose-cityschool` render), Bahria College Karsaz,
+  The plan changed (2023), Bahria University 2024, Outside the classroom,
+  Explore (new: the interactive terminal and Sudoku moved here from 2024),
+  A letter, Closing (new: the roof at sunrise, Maria standing again). Her
+  section names are the headings; Opening and Closing headings are hidden.
+  Urdu words she approved for the new ones: سبق lesson, تلاش exploring,
+  سفر journey. `year` and `urdu` are optional now.
+- **2023** has two lines: the plane flies, stalls and falls with the first,
+  the chart blurs, the cut to black comes after the second, and the point
+  the plane shrinks to becomes a lone cursor that opens the window onto
+  2024's first program (which still prints Hello, World, no prompt).
+- **Type system v2** (tokens at the end of `globals.css`, fonts in
+  `app/layout.tsx`): Big Shoulders years at one size everywhere
+  (`--t-year-size`; London is no longer smaller), Cormorant Garamond 500+
+  italic headings, upright for reflective lines (2023, 2024's terminal line,
+  the Explore invitation), DM Sans body, Caveat for the letter in ink blue on
+  rules that sit under every line with a blank rule between paragraphs, Plex
+  Mono for labels, menu numbers, buttons, the terminal. Fraunces is gone;
+  `--font-serif-stack` now points at Cormorant. The menu lists section names
+  in Cormorant italic, sentence case.
+- **Letter on phones**: the card covers the desk until the second half is
+  written, then lifts by 36vh as you scroll (`--lift`, through `top`).
+  verify.mjs therefore reports the letter's top above the screen at the end
+  on phones; that is the intended lift.
+- **verify.mjs**: 42/43. The responsive scan's remaining items are the old
+  18px chess squares under 360px, 2024's terminal 10px over at 320×568, and
+  the letter lift above.
+- **Screen-by-screen transitions brief** (ink bleed, CRT, fly-through, type
+  as you scroll, chai steam, envelope letter; references in `reference/`):
+  only screen 1 was built (constellations between the shader's own stars);
+  it is parked in `git stash` "screen 1: constellations (awaiting review)",
+  made before this copy pass, so it needs re-applying to the new hero.
+  Maria will decide later. Screens 2 to 9 not started.
+
 ## Half-done / waiting on Maria
 
-- **Her own copy.** 2011 lines, Karsaz lines, the letter, the hero title and
-  the site description are still my drafts. Judges mark "AI slop"; she must
-  rewrite these in her voice. 2007, "The window closed", Hello World and
-  "What I love" lines are hers.
+- **Her own copy.** Done: every section now uses her approved copy.
 - **pose-karachi render is low-res** (1024px source → 271×492 cut-out).
   She should re-save the green-background render from Gemini at full size
   to `public/_raw/pose-karachi.jpeg`, then `node scripts/cutout.mjs

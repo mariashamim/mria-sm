@@ -3081,3 +3081,668 @@ html[data-ui="ink"] {
     margin-top: 8px;
   }
 }
+
+/* ═══════════════════════ the approved copy (17 Oct 2026) ═══════════════════════
+   Twelve sections: the opening speaks, School years, Explore and the closing
+   are new. Layout only here; the type system comes after. */
+
+/* The opening: her first words over the sky, beside her, instead of the name. */
+.hero__opening {
+  position: absolute;
+  left: var(--gutter);
+  top: clamp(96px, 17vh, 180px);
+  z-index: 3;
+  width: min(34rem, 36vw);
+  will-change: transform, opacity;
+}
+.hero__opening-in {
+  will-change: transform, opacity;
+}
+.hero__lead {
+  margin: 0;
+}
+.hero__intro {
+  margin: 0.8em 0 0;
+}
+@media (max-width: 900px) {
+  .hero__opening {
+    right: var(--gutter);
+    top: clamp(76px, 11vh, 120px);
+    width: auto;
+  }
+}
+/* The cue is her copy now: keep its case. */
+.hero__cue {
+  text-transform: none;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+/* First frame: her words wait for the entrance like Maria does. */
+.hero__opening-in {
+  opacity: 0;
+  visibility: hidden;
+}
+.stage--static .hero__opening-in {
+  opacity: 1;
+  visibility: visible;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__opening-in {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* School years: she walks in from the left, the words on the right. */
+@media (min-width: 901px) {
+  #school .chapter__figure {
+    right: auto;
+    left: 10vw;
+    width: 26vw;
+  }
+  #school .chapter__inner {
+    justify-self: end;
+    width: min(560px, 40vw);
+    margin-inline: 0 clamp(64px, 6vw, 110px);
+  }
+}
+
+/* 2023: the lone cursor sits where the words were. */
+#sky .chapter__lines {
+  position: relative;
+}
+.type-caret--alone {
+  left: 50%;
+  top: 0.05em;
+  translate: -50% 0;
+}
+
+/* Explore: the invitation, then the terminal right under it, together in the middle. */
+#explore {
+  justify-items: center;
+}
+#explore .chapter__inner {
+  width: min(600px, 100%);
+}
+#explore .terminal {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+  order: 1;
+  width: min(600px, 100%);
+  margin-top: clamp(16px, 3vh, 28px);
+}
+
+/* The closing: she stands on the roof again at sunrise; the words above the city. */
+#closing .chapter__title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+#closing .chapter__inner {
+  align-self: start;
+  margin-top: 8vh;
+}
+.closing__roof {
+  position: absolute;
+  right: 18vw;
+  bottom: 7vh;
+  z-index: 2;
+  height: clamp(240px, 50vh, 620px);
+  aspect-ratio: 672 / 1218;
+  pointer-events: none;
+}
+.closing__roof .avatar {
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 900px) {
+  .closing__roof {
+    right: 50%;
+    translate: 50% 0;
+    bottom: 2vh;
+    height: 38vh;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .closing__roof {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    translate: none;
+  }
+}
+/* The cursor waits, hidden, for the dark. */
+.type-caret--alone {
+  opacity: 0;
+}
+/* 2023's lines are longer now: wider, a little smaller, and higher, clear of her. */
+#sky .chapter__lines {
+  max-width: min(30ch, 100%);
+  font-size: clamp(24px, min(3vw, 4.4vh), 46px);
+}
+@media (min-width: 901px) {
+  #sky .chapter__inner {
+    margin-top: 7vh;
+  }
+  #sky .chapter__figure {
+    height: 40vh;
+  }
+}
+/* The closing's words sit in the morning sky, above the roof. */
+#closing {
+  align-content: start;
+}
+#closing .chapter__inner {
+  margin-top: 6vh;
+}
+
+/* ═══════════════════════ type system v2 (17 Oct 2026) ═══════════════════════
+   One system for the whole site, as tokens.
+     Big Shoulders       the years (unchanged: the site's identity)
+     Cormorant Garamond  headings and reflective lines (500+; lighter weights
+                         break up over the bright skies)
+     DM Sans             body and supporting copy (optical sizes on)
+     IBM Plex Mono       navigation, numbers, labels, buttons, the terminal
+     Caveat              the letter, in her hand (it will move into the envelope)
+     Gulzar              every Urdu word (unchanged)
+   Rolled out to the opening, 2007 and the letter first, for review. */
+:root {
+  --font-head-stack: var(--font-head), "Cormorant", "Iowan Old Style", Georgia, serif;
+  --font-sans-stack: var(--font-sans), "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-hand-stack: var(--font-hand), "Segoe Print", "Bradley Hand", cursive;
+
+  /* Opening: a question in large italic, then who is asking in plain body. */
+  --t-opening-size: clamp(42px, min(6vw, 9vh), 92px);
+  --t-opening-lh: 0.98;
+  --t-opening-track: -0.012em;
+
+  /* Section headings: italic, never thin. */
+  --t-head-size: clamp(30px, min(4vw, 6.4vh), 58px);
+  --t-head-lh: 1.04;
+  --t-head-weight: 500;
+  --t-head-track: -0.005em;
+
+  /* Reflective lines: upright Cormorant, a step below a heading. */
+  --t-reflect-size: clamp(24px, min(2.8vw, 4.4vh), 42px);
+  --t-reflect-lh: 1.2;
+
+  /* Body and supporting copy. */
+  --t-body-size: clamp(16px, 0.95vw + 0.5vh, 19px);
+  --t-body-lh: 1.6;
+  --t-body-weight: 400;
+  --t-body-measure: 38ch;
+
+  /* The letter, handwritten. Caveat runs small, so it sits larger than body. */
+  --t-letter-size: clamp(20px, min(1.75vw, 2.55vh), 27px);
+  --t-letter-lh: 1.42;
+  --t-letter-ink: #26375f;
+
+  /* Labels, navigation, captions, buttons, the terminal: Plex Mono. */
+  --t-label-size: 11px;
+  --t-label-track: 0.16em;
+  --t-button-size: 12px;
+  --t-button-track: 0.08em;
+  --t-terminal-size: 13px;
+  --t-terminal-lh: 1.5;
+  --t-caption-size: 11px;
+}
+
+/* ── The opening ── */
+.hero__lead {
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--t-opening-size);
+  line-height: var(--t-opening-lh);
+  letter-spacing: var(--t-opening-track);
+  color: var(--fg);
+  text-wrap: balance;
+  text-shadow: 0 2px 24px rgba(5, 8, 30, 0.45);
+}
+.hero__intro {
+  margin-top: clamp(14px, 2.4vh, 26px);
+  max-width: 30ch;
+  font-family: var(--font-sans-stack);
+  font-optical-sizing: auto;
+  font-weight: var(--t-body-weight);
+  font-size: var(--t-body-size);
+  line-height: var(--t-body-lh);
+  color: color-mix(in oklab, var(--fg) 86%, transparent);
+  text-shadow: 0 1px 14px rgba(5, 8, 30, 0.55);
+}
+.hero__opening {
+  width: min(32rem, 38vw);
+}
+.hero__cue {
+  font-family: var(--font-mono-stack);
+  font-size: var(--t-button-size);
+  letter-spacing: var(--t-button-track);
+}
+@media (max-width: 900px) {
+  .hero__opening {
+    width: auto;
+  }
+  .hero__intro {
+    max-width: 34ch;
+  }
+}
+
+/* ── A timeline year: 2007 ── */
+#karachi .chapter__meta {
+  font-family: var(--font-mono-stack);
+  font-size: var(--t-label-size);
+  letter-spacing: var(--t-label-track);
+}
+#karachi .chapter__title {
+  margin-top: 0.12em;
+  max-width: 20ch;
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: var(--t-head-weight);
+  font-variation-settings: normal;
+  font-size: var(--t-head-size);
+  line-height: var(--t-head-lh);
+  letter-spacing: var(--t-head-track);
+}
+#karachi .chapter__lines {
+  margin-top: clamp(14px, 2.6vh, 28px);
+  max-width: var(--t-body-measure);
+  gap: 0.55em;
+  font-family: var(--font-sans-stack);
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: var(--t-body-weight);
+  font-variation-settings: normal;
+  font-size: var(--t-body-size);
+  line-height: var(--t-body-lh);
+}
+
+/* ── The letter: her hand on ruled paper, a blank line between paragraphs ── */
+#letter .chapter__inner {
+  --rule: calc(var(--t-letter-size) * var(--t-letter-lh));
+  width: min(620px, 100%);
+  color: var(--t-letter-ink);
+  --fg: var(--t-letter-ink);
+  --fg-dim: rgba(38, 55, 95, 0.62);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - 1px), rgba(38, 55, 95, 0.1) calc(var(--rule) - 1px) var(--rule));
+  background-position: 0 calc(clamp(14px, 2.6vh, 32px) + var(--rule) * 0.2);
+}
+#letter .chapter__meta {
+  font-family: var(--font-mono-stack);
+  font-size: var(--t-label-size);
+  letter-spacing: var(--t-label-track);
+}
+#letter .chapter__title {
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: var(--t-head-weight);
+  font-variation-settings: normal;
+  font-size: clamp(26px, min(3vw, 4.6vh), 40px);
+  line-height: 1.1;
+}
+#letter .chapter__lines {
+  margin-top: clamp(8px, 1.6vh, 18px);
+  max-width: none;
+  gap: calc(var(--rule) * 0.5);
+  font-family: var(--font-hand-stack);
+  font-style: normal;
+  font-weight: 500;
+  font-variation-settings: normal;
+  font-size: var(--t-letter-size);
+  line-height: var(--t-letter-lh);
+}
+/* The salutation and the sign-off breathe a little more. */
+#letter .chapter__lines .mask:first-child {
+  margin-bottom: calc(var(--rule) * 0.15);
+}
+#letter .chapter__lines .mask:last-child p {
+  font-weight: 600;
+}
+#letter .chapter__ps {
+  margin-top: calc(var(--rule) * 0.6);
+  font-family: var(--font-hand-stack);
+  font-weight: 500;
+  font-size: calc(var(--t-letter-size) * 0.92);
+  line-height: var(--t-letter-lh);
+}
+#letter .doors a {
+  font-family: var(--font-mono-stack);
+  font-size: var(--t-button-size);
+  letter-spacing: var(--t-button-track);
+}
+@media (max-width: 900px) {
+  :root {
+    --t-letter-size: clamp(19px, 5.2vw, 22px);
+  }
+  #letter .chapter__inner {
+    background-image: none;
+  }
+  #letter .chapter__lines {
+    gap: calc(var(--rule) * 0.32);
+  }
+}
+@media (max-height: 600px) {
+  :root {
+    --t-letter-size: 17px;
+  }
+}
+/* The rules belong to the writing, not the card: one rule per line of her hand,
+   and a blank rule between paragraphs, so every line sits on its rule. */
+#letter .chapter__inner {
+  background-image: none;
+}
+#letter .chapter__lines,
+#letter .chapter__ps > p {
+  background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--rule) - 1px), rgba(38, 55, 95, 0.13) calc(var(--rule) - 1px) var(--rule));
+}
+#letter .chapter__lines {
+  gap: var(--rule);
+}
+#letter .chapter__lines .mask:first-child {
+  margin-bottom: 0;
+}
+#letter .chapter__ps {
+  margin-top: var(--rule);
+  font-size: var(--t-letter-size);
+}
+#letter .chapter__ps > p {
+  margin: 0;
+}
+:root {
+  --t-letter-size: clamp(18px, min(1.7vw, 2.4vh), 25px);
+}
+@media (max-width: 900px) {
+  :root {
+    --t-letter-size: clamp(17.5px, 4.9vw, 21px);
+  }
+  #letter .chapter__lines {
+    gap: var(--rule);
+  }
+}
+@media (max-height: 600px) {
+  :root {
+    --t-letter-size: 16px;
+  }
+}
+
+/* ═══════════════════════ type system v2: the whole site (17 Oct 2026) ═══════════════════════
+   The tokens above, everywhere. Fraunces is gone: anything still asking for
+   the old serif gets Cormorant, anything asking for the old body gets DM Sans. */
+:root {
+  --font-serif-stack: var(--font-head-stack);
+  --font-body-stack: var(--font-sans-stack);
+  /* Every timeline year at one size, so the years read as one hierarchy. */
+  --t-year-size: clamp(104px, min(24vw, 33vh), 380px);
+}
+body {
+  font-family: var(--font-sans-stack);
+  font-optical-sizing: auto;
+  font-variation-settings: normal;
+}
+
+/* ── Every section: label, year, heading, body ── */
+.chapter__meta {
+  font-family: var(--font-mono-stack);
+  font-size: var(--t-label-size);
+  letter-spacing: var(--t-label-track);
+}
+#karachi .chapter__year,
+#london .chapter__year,
+#home .chapter__year,
+#karsaz .chapter__year,
+#hello .chapter__year {
+  font-size: var(--t-year-size);
+}
+.chapter__title {
+  margin-top: 0.12em;
+  max-width: 20ch;
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: var(--t-head-weight);
+  font-variation-settings: normal;
+  font-size: var(--t-head-size);
+  line-height: var(--t-head-lh);
+  letter-spacing: var(--t-head-track);
+}
+.chapter__lines {
+  margin-top: clamp(14px, 2.6vh, 28px);
+  max-width: var(--t-body-measure);
+  gap: 0.55em;
+  font-family: var(--font-sans-stack);
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: var(--t-body-weight);
+  font-variation-settings: normal;
+  font-size: var(--t-body-size);
+  line-height: var(--t-body-lh);
+}
+#home .chapter__title {
+  margin-left: auto;
+}
+
+/* ── The plan changed: weight from size and stillness, upright, no flourish ── */
+#sky .chapter__title {
+  font-size: clamp(22px, min(2.4vw, 3.6vh), 32px);
+  max-width: none;
+}
+#sky .chapter__lines {
+  max-width: min(28ch, 100%);
+  font-family: var(--font-head-stack);
+  font-style: normal;
+  font-weight: 500;
+  font-size: var(--t-reflect-size);
+  line-height: var(--t-reflect-lh);
+  letter-spacing: 0;
+  color: color-mix(in oklab, var(--fg) 94%, transparent);
+}
+
+/* ── 2024: the terminal line, set apart in the reflective voice ── */
+#hello .chapter__lines .mask:last-child {
+  margin-top: 0.35em;
+}
+#hello .chapter__lines .mask:last-child p {
+  font-family: var(--font-head-stack);
+  font-style: normal;
+  font-weight: 600;
+  font-size: clamp(21px, min(2vw, 3.2vh), 30px);
+  line-height: 1.25;
+  max-width: 26ch;
+}
+
+/* ── Outside the classroom: lighter, the loves on stickers ── */
+#loves .chapter__lines p {
+  font-family: var(--font-sans-stack);
+  font-weight: 500;
+  font-size: clamp(14px, 0.85vw + 0.4vh, 17px);
+  line-height: 1.4;
+  letter-spacing: 0.005em;
+}
+#loves .chapter__lines .mask:first-child p {
+  font-weight: 600;
+}
+
+/* ── Explore: the invitation in her voice, the instructions plain ── */
+#explore .chapter__lines .mask:first-child p {
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--t-reflect-size);
+  line-height: var(--t-reflect-lh);
+}
+#explore .chapter__lines {
+  max-width: 44ch;
+}
+
+/* ── The closing: centred, the opening's voice again, then a sign-off ── */
+#closing .chapter__inner {
+  justify-self: center;
+  display: grid;
+  justify-items: center;
+  width: min(40rem, 100%);
+  margin-inline: auto;
+  text-align: center;
+}
+#closing .chapter__lines {
+  max-width: 34ch;
+  justify-items: center;
+}
+#closing .chapter__lines .mask:first-child p {
+  margin-bottom: 0.2em;
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: 500;
+  font-size: var(--t-opening-size);
+  line-height: var(--t-opening-lh);
+  letter-spacing: var(--t-opening-track);
+  text-wrap: balance;
+}
+#closing .chapter__lines .mask:last-child {
+  margin-top: 0.9em;
+}
+#closing .chapter__lines .mask:last-child p {
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(22px, min(2.2vw, 3.4vh), 32px);
+}
+
+/* ── Karsaz: the sum is worked out in her hand ── */
+.sum {
+  font-family: var(--font-hand-stack);
+  font-style: normal;
+  font-weight: 500;
+  font-variation-settings: normal;
+  font-size: clamp(20px, min(2.2vw, 3.2vh), 30px);
+}
+
+/* ── Captions, buttons, navigation ── */
+.eye__caption {
+  font-family: var(--font-sans-stack);
+  font-style: italic;
+  font-size: 12px;
+}
+.doors a,
+.terminal__chips button,
+.terminal__sudoku b,
+.hero__cue,
+.topbar__menu {
+  font-family: var(--font-mono-stack);
+  letter-spacing: var(--t-button-track);
+}
+.terminal {
+  font-size: var(--t-terminal-size);
+  line-height: var(--t-terminal-lh);
+}
+.terminal__sudoku small {
+  font-family: var(--font-sans-stack);
+  font-size: 12px;
+  letter-spacing: 0;
+}
+/* The menu lists twelve sections now: their names in the heading voice, sentence case. */
+.menu__list button {
+  padding: clamp(6px, 1.1vh, 12px) 0;
+}
+.menu__title {
+  font-family: var(--font-head-stack);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(22px, min(3vw, 3.6vh), 40px);
+  line-height: 1.05;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.menu__urdu {
+  font-size: clamp(17px, min(2vw, 2.6vh), 26px);
+  line-height: 1.4;
+}
+
+/* ── The letter on phones: the card lifts off the desk once it is written ── */
+@media (max-width: 900px) {
+  #letter .chapter__inner {
+    position: relative;
+    z-index: 3;
+    translate: 0 calc(var(--lift, 0) * -36vh);
+  }
+  #letter .chapter__figure {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 1vh;
+    z-index: 1;
+    height: 36vh;
+    margin: 0;
+    grid-row: auto;
+    justify-content: center;
+  }
+  #letter .chapter__fig {
+    height: 100%;
+  }
+  #loves .chapter__lines p {
+    font-size: 14px;
+  }
+  #explore .chapter__lines .mask:first-child p {
+    font-size: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #letter .chapter__inner {
+    translate: none;
+  }
+  #letter .chapter__figure {
+    position: relative;
+    bottom: auto;
+  }
+}
+/* GSAP writes an inline `translate: none` on whatever it moves, so elements it
+   animates take their CSS offsets through `top` (or margins) instead. */
+.hero__figure {
+  translate: none;
+  top: calc(var(--look) * 10vh);
+}
+@media (max-width: 900px) {
+  #letter .chapter__inner {
+    translate: none;
+    top: calc(var(--lift, 0) * -36vh);
+  }
+  .closing__roof {
+    right: 0;
+    left: 0;
+    translate: none;
+    margin-inline: auto;
+  }
+  /* The closing on phones: smaller, higher, and lifted off the city behind it. */
+  #closing .chapter__inner {
+    margin-top: 1vh;
+  }
+  #closing .chapter__lines .mask:first-child p {
+    font-size: clamp(32px, 9vw, 40px);
+  }
+  #closing .chapter__lines {
+    font-size: 15px;
+    text-shadow: 0 0 14px rgba(255, 238, 220, 0.85), 0 0 2px rgba(255, 238, 220, 0.9);
+  }
+}
+@media (min-width: 901px) {
+  /* School years: the Urdu word goes left, over her, clear of the words on the right. */
+  #school .chapter__urdu {
+    right: auto;
+    left: var(--gutter);
+  }
+}
+@media (max-width: 900px) {
+  #home .chapter__title {
+    margin-left: 0;
+  }
+}
+/* Short phones: her hand scales with the height as well, so the card stays a card. */
+@media (max-width: 900px) {
+  :root {
+    --t-letter-size: clamp(15.5px, min(4.9vw, 2.45vh), 21px);
+  }
+}

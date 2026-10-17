@@ -8,6 +8,7 @@ import home from '@/components/scenes/Home'
 import karsaz from '@/components/scenes/Karsaz'
 import sky from '@/components/scenes/Sky'
 import letter from '@/components/scenes/Letter'
+import closing from '@/components/scenes/Closing'
 import TerminalPrompt from '@/components/scenes/TerminalPrompt'
 import MateInOne from '@/components/scenes/MateInOne'
 
@@ -62,7 +63,6 @@ function CodeStars() {
 }
 
 function HelloScene() {
-  const openSudoku = useUI((s) => s.setSudokuOpen)
   return (
     <>
     <div className="scene-dark" aria-hidden="true" />
@@ -81,6 +81,22 @@ function HelloScene() {
         </div>
         <div className="terminal__line terminal__out">Hello, World</div>
       </div>
+    </div>
+    </>
+  )
+}
+
+/* ───────────────────────── Explore: the terminal and Sudoku ───────────────────────── */
+
+/** The prompt that answers, and the Sudoku, in a window of their own under her invitation. */
+function ExploreScene() {
+  const openSudoku = useUI((s) => s.setSudokuOpen)
+  return (
+    <div className="terminal terminal--explore" aria-label="A terminal you can type into">
+      <div className="terminal__bar" aria-hidden="true">
+        <span>C:\MARIA</span>
+        <span>80 × 25</span>
+      </div>
       <TerminalPrompt />
       <button type="button" className="terminal__sudoku" onClick={() => openSudoku(true)} data-hover>
         <span className="terminal__sudoku-label">
@@ -89,8 +105,21 @@ function HelloScene() {
         </span>
       </button>
     </div>
-    </>
   )
+}
+
+const explore: SceneDef = {
+  Scene: ExploreScene,
+  build: ({ tl, el, reduced }) => {
+    const term = el.querySelector<HTMLElement>('.terminal')
+    if (!term) return
+    if (reduced) {
+      gsap.set(term, { opacity: 1 })
+      return
+    }
+    // Right after the invitation to try it (the second line rises at 1.05).
+    tl.fromTo(term, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 1.3)
+  },
 }
 
 const hello: SceneDef = {
@@ -100,24 +129,22 @@ const hello: SceneDef = {
     const typed = el.querySelector<HTMLElement>('.terminal__typed')
     const caret = el.querySelector<HTMLElement>('.terminal__caret')
     const out = el.querySelector<HTMLElement>('.terminal__body .terminal__out')
-    const live = el.querySelector<HTMLElement>('.terminal__live')
-    const sudoku = el.querySelector<HTMLElement>('.terminal__sudoku')
     const dark = el.querySelector<HTMLElement>('.scene-dark')
     const warm = el.querySelector<HTMLElement>('.scene-warm')
     const glyphs = Array.from(el.querySelectorAll<HTMLElement>('.glyph'))
     const dots = Array.from(el.querySelectorAll<HTMLElement>('.glyph__dot'))
     const letters = Array.from(el.querySelectorAll<HTMLElement>('.glyph__ch'))
-    if (!term || !typed || !out || !sudoku || !caret || !live || !dark || !warm) return
+    if (!term || !typed || !out || !caret || !dark || !warm) return
     if (reduced) {
       typed.textContent = CODE
-      gsap.set([term, out, live, sudoku], { opacity: 1 })
+      gsap.set([term, out], { opacity: 1 })
       gsap.set([dark, ...glyphs], { opacity: 0 })
       gsap.set(warm, { opacity: 1 })
       return
     }
     // The window 2023 opened is already here, in the dark, the moment this chapter cuts in.
     gsap.set(term, { opacity: 1 })
-    gsap.set([out, live, sudoku, warm, ...glyphs, ...letters], { opacity: 0 })
+    gsap.set([out, warm, ...glyphs, ...letters], { opacity: 0 })
     gsap.set(dark, { opacity: 1 })
     gsap.set(dots, { opacity: 1 })
     const state = { n: 0 }
@@ -143,9 +170,6 @@ const hello: SceneDef = {
     }
     // Warmth comes back into the night.
     tl.to(warm, { opacity: 1, duration: 0.35 * total, ease: 'power1.inOut' }, 0.55 * total)
-    // Then the prompt is yours.
-    tl.to(live, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.6 * total)
-    tl.to(sudoku, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.7 * total)
   },
 }
 
@@ -175,4 +199,4 @@ const loves: SceneDef = {
   },
 }
 
-export const SCENES: Record<string, SceneDef> = { karachi, london, home, karsaz, sky, hello, loves, letter }
+export const SCENES: Record<string, SceneDef> = { karachi, london, home, karsaz, sky, hello, loves, explore, letter, closing }

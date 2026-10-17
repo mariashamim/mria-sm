@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Big_Shoulders, Fraunces, Gulzar, IBM_Plex_Mono } from 'next/font/google'
+import { Big_Shoulders, Caveat, Cormorant_Garamond, DM_Sans, Gulzar, IBM_Plex_Mono } from 'next/font/google'
 import './globals.css'
 import SkyCanvas from '@/components/sky/SkyCanvas'
 import SmoothScroll from '@/components/scroll/SmoothScroll'
@@ -17,12 +17,31 @@ const display = Big_Shoulders({
   display: 'block',
 })
 
-const serif = Fraunces({
+// The type system (globals.css, "type system v2"): Cormorant Garamond for headings and
+// reflective lines, DM Sans for the body, Caveat for the letter in her hand.
+const head = Cormorant_Garamond({
   subsets: ['latin'],
+  weight: ['500', '600'],
   style: ['normal', 'italic'],
-  axes: ['opsz', 'SOFT', 'WONK'],
-  variable: '--font-serif',
-  display: 'block',
+  variable: '--font-head',
+  display: 'swap',
+})
+
+const sans = DM_Sans({
+  subsets: ['latin'],
+  weight: 'variable',
+  axes: ['opsz'],
+  variable: '--font-sans',
+  display: 'swap',
+})
+
+const hand = Caveat({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-hand',
+  display: 'swap',
+  // Only the letter, near the end, uses it.
+  preload: false,
 })
 
 const urdu = Gulzar({
@@ -57,11 +76,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-ui="paper" className={`${display.variable} ${serif.variable} ${urdu.variable} ${mono.variable}`}>
+    <html lang="en" data-ui="paper" className={`${display.variable} ${head.variable} ${sans.variable} ${hand.variable} ${urdu.variable} ${mono.variable}`}>
       <body>
         {/* Without scripts: no veil, every chapter in reading order. */}
         <noscript>
-          <style>{`.intro{display:none}.stage,.stage--static{height:auto;overflow:visible}.stage .hero,.stage .chapter{position:relative;opacity:1;visibility:visible}.stage__roof,.hero__figure-in,.hero__name,.topbar,.rail{opacity:1;visibility:visible}`}</style>
+          <style>{`.intro{display:none}.stage,.stage--static{height:auto;overflow:visible}.stage .hero,.stage .chapter{position:relative;opacity:1;visibility:visible}.stage__roof,.hero__figure-in,.hero__opening-in,.topbar,.rail{opacity:1;visibility:visible}`}</style>
         </noscript>
         <SkyCanvas />
         <SmoothScroll />

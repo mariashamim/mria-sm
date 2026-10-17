@@ -183,13 +183,13 @@ await test('deep link', async () => {
   await sleep(3500)
   const active = await evalJs(`document.querySelector('.rail li.is-active button')?.textContent`)
   const title = await evalJs(`(window.__stage && window.__stage.segments.find(s => s.id === 'loves')) ? 'ok' : 'nostage'`)
-  check('#loves lands on What I love', active === 'NOW', `active ${active} (${title})`)
+  check('#loves lands on Outside the classroom', active === 'NOW', `active ${active} (${title})`)
   await load(`${SITE}/?verify=2`)
 })
 
 /* ── 3. interactive pieces ── */
 await test('terminal', async () => {
-  await evalJs(`window.__at('hello', 0.98)`)
+  await evalJs(`window.__at('explore', 0.98)`)
   await sleep(1500)
   await evalJs(`document.querySelector('#terminal-in').focus({preventScroll:true})`)
   const focused = await evalJs(`document.activeElement === document.querySelector('#terminal-in')`)
@@ -197,22 +197,22 @@ await test('terminal', async () => {
   await send('Input.insertText', { text: 'help' })
   await key('Enter', 'Enter', 13, '\r')
   await sleep(300)
-  const n = await evalJs(`document.querySelector('#hello .terminal__log').children.length`)
+  const n = await evalJs(`document.querySelector('#explore .terminal__log').children.length`)
   check('help lists the commands', n >= 9, `${n} lines`)
   await key('Enter', 'Enter', 13, '\r')
   await sleep(200)
-  const n2 = await evalJs(`document.querySelector('#hello .terminal__log').children.length`)
+  const n2 = await evalJs(`document.querySelector('#explore .terminal__log').children.length`)
   check('empty input adds nothing', n2 === n, `${n2} lines`)
   await send('Input.insertText', { text: 'frobnicate <b>x</b>' })
   await key('Enter', 'Enter', 13, '\r')
   await sleep(200)
-  const err = await evalJs(`document.querySelector('#hello .terminal__log .terminal__err')?.textContent || ''`)
-  const html = await evalJs(`!!document.querySelector('#hello .terminal__log b')`)
+  const err = await evalJs(`document.querySelector('#explore .terminal__log .terminal__err')?.textContent || ''`)
+  const html = await evalJs(`!!document.querySelector('#explore .terminal__log b')`)
   check('unknown command is reported, markup not rendered', /command not found/.test(err) && !html, err.slice(0, 60))
   await send('Input.insertText', { text: 'clear' })
   await key('Enter', 'Enter', 13, '\r')
   await sleep(200)
-  const n3 = await evalJs(`document.querySelector('#hello .terminal__log').children.length`)
+  const n3 = await evalJs(`document.querySelector('#explore .terminal__log').children.length`)
   check('clear empties the log', n3 === 0, `${n3} lines`)
   await send('Input.insertText', { text: 'cd 2007' })
   await key('Enter', 'Enter', 13, '\r')
@@ -250,9 +250,9 @@ await test('chess', async () => {
   check('again resets the puzzle', again === 'idle', again)
 })
 await test('sudoku', async () => {
-  await evalJs(`window.__at('hello', 0.98)`)
+  await evalJs(`window.__at('explore', 0.98)`)
   await sleep(1200)
-  await evalJs(`document.querySelector('#hello .terminal__sudoku').click()`)
+  await evalJs(`document.querySelector('#explore .terminal__sudoku').click()`)
   await sleep(600)
   const open = await evalJs(`!document.querySelector('.sudoku').hidden`)
   const cells = await evalJs(`document.querySelectorAll('.sudoku__cell').length`)
@@ -328,7 +328,7 @@ await test('responsive', async () => {
     [1440, 900, false],
     [1920, 1080, false],
   ]
-  const ids = ['hero', 'karachi', 'london', 'home', 'karsaz', 'sky', 'hello', 'loves', 'letter']
+  const ids = ['hero', 'karachi', 'london', 'home', 'school', 'karsaz', 'sky', 'hello', 'loves', 'explore', 'letter', 'closing']
   const problems = []
   for (const [w, h, mobile] of sizes) {
     await viewport(w, h, mobile)
@@ -345,7 +345,7 @@ await test('responsive', async () => {
           const sec=document.querySelector('#${cid}');
           const R=(el)=>el.getBoundingClientRect();
           const inside=(name, el)=>{ if(!el) return; const b=R(el); if (b.width===0) return; if (b.right > vw+1 || b.left < -1) out.push(name+' x '+Math.round(b.left)+'..'+Math.round(b.right)); if (b.bottom > vh+1) out.push(name+' bottom '+Math.round(b.bottom)+'>'+vh); if (b.top < -1) out.push(name+' top '+Math.round(b.top)); };
-          inside('inner', sec.querySelector('.chapter__inner, .hero__name'));
+          inside('inner', sec.querySelector('.chapter__inner, .hero__opening'));
           inside('lines', sec.querySelector('.chapter__lines'));
           inside('doors', sec.querySelector('.doors'));
           inside('piece', sec.querySelector('.eye, .mate, .terminal'));
@@ -371,7 +371,7 @@ await test('reduced motion', async () => {
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] })
   await send('Page.navigate', { url: `${SITE}/?verify=rm` })
   await sleep(7000)
-  const r = JSON.parse(await evalJs(`JSON.stringify({static: !!document.querySelector('.stage--static'), tall: document.documentElement.scrollHeight > innerHeight * 4, karachi: getComputedStyle(document.querySelector('#karachi')).opacity + '/' + getComputedStyle(document.querySelector('#karachi')).visibility, name: getComputedStyle(document.querySelector('.hero__name')).opacity, roof: getComputedStyle(document.querySelector('.stage__roof')).visibility, veil: !!document.querySelector('.intro__veil')})`))
+  const r = JSON.parse(await evalJs(`JSON.stringify({static: !!document.querySelector('.stage--static'), tall: document.documentElement.scrollHeight > innerHeight * 4, karachi: getComputedStyle(document.querySelector('#karachi')).opacity + '/' + getComputedStyle(document.querySelector('#karachi')).visibility, name: getComputedStyle(document.querySelector('.hero__opening-in')).opacity, roof: getComputedStyle(document.querySelector('.stage__roof')).visibility, veil: !!document.querySelector('.intro__veil')})`))
   check('reduced motion: static stage, chapters visible, no veil left', r.static && r.tall && r.karachi === '1/visible' && r.name === '1' && r.roof === 'visible' && !r.veil, JSON.stringify(r))
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: '' }] })
 })

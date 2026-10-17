@@ -58,14 +58,14 @@ export default function TerminalPrompt() {
         say(
           chapters
             .filter((c) => c.id !== 'hero')
-            .map((c) => (c.year === 'NOW' ? c.id : c.year) + '/')
+            .map((c) => (c.year && c.year !== 'NOW' ? c.year : c.id) + '/')
             .filter((v, i, a) => a.indexOf(v) === i)
             .join('  ') + '  letter.txt',
         )
         break
       case 'cd': {
         const arg = rest[0] ?? ''
-        const target = chapters.find((c) => c.id !== 'hero' && (c.id === arg || c.year.toLowerCase() === arg))
+        const target = chapters.find((c) => c.id !== 'hero' && (c.id === arg || (!!c.year && c.year.toLowerCase() === arg)))
         if (target) {
           say(`→ ${target.title}`)
           scrollToChapter(target.id)

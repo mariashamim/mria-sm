@@ -10,7 +10,7 @@ import Avatar from '@/components/avatar/Avatar'
 type Props = { chapter: ChapterData }
 
 /**
- * Wordless hero: Maria on the rooftop under a pre-dawn sky. The roof itself is
+ * The opening: Maria on the rooftop under a pre-dawn sky, and her first words. The roof itself is
  * the stage's persistent set (components/stage/Stage.tsx). Once the intro
  * lets her in (useUI.introDone) the far roof settles, the parapet follows, she
  * arrives, then the chrome and the scroll cue. The scroll-driven part (her
@@ -31,6 +31,7 @@ export default function Hero({ chapter }: Props) {
       const el = ref.current
       if (!el || !contextSafe) return
       const figureIn = el.querySelector<HTMLElement>('.hero__figure-in')
+      const openingIn = el.querySelector<HTMLElement>('.hero__opening-in')
       const cue = el.querySelector<HTMLElement>('.hero__cue')
       const roofs = Array.from(document.querySelectorAll<HTMLElement>('.stage__roof'))
       const roofBack = roofs.find((r) => !r.classList.contains('stage__roof--front')) ?? null
@@ -38,7 +39,7 @@ export default function Hero({ chapter }: Props) {
       if (prefersReducedMotion()) return
 
       const chrome = Array.from(document.querySelectorAll<HTMLElement>('.topbar, .rail'))
-      const arriving = [roofBack, roofFront, figureIn, ...chrome].filter(Boolean) as HTMLElement[]
+      const arriving = [roofBack, roofFront, figureIn, openingIn, ...chrome].filter(Boolean) as HTMLElement[]
       gsap.set(arriving, { autoAlpha: 0 })
       let fired = false
       const run = contextSafe(() => {
@@ -48,6 +49,8 @@ export default function Hero({ chapter }: Props) {
         if (roofBack) etl.fromTo(roofBack, { y: 36, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.4 }, 0)
         if (roofFront) etl.fromTo(roofFront, { y: 54, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.4 }, 0.2)
         if (figureIn) etl.fromTo(figureIn, { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.3 }, 0.35)
+        // Her first words, as soon as she is there: the question, then who is asking.
+        if (openingIn) etl.fromTo(openingIn, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.1 }, 0.7)
         if (chrome.length) etl.fromTo(chrome, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 0.9)
         if (cue) etl.call(() => cue.classList.add('is-in'), [], 1.3)
       })
@@ -67,8 +70,17 @@ export default function Hero({ chapter }: Props) {
 
   return (
     <section ref={ref} id={chapter.id} data-layer={chapter.id} className="hero" data-ui={chapter.ui} aria-label="Maria on a Karachi rooftop before dawn">
-      {/* SplitText labels the heading and hides its split characters, so it reads as one word. */}
-      <h1 className="hero__name">Maria</h1>
+      {/* The entrance moves the inner block; the scroll timeline moves the outer one. */}
+      <div className="hero__opening">
+        <div className="hero__opening-in">
+          <h1 className="hero__lead">{chapter.lines[0]}</h1>
+          {chapter.lines.slice(1).map((line) => (
+            <p key={line} className="hero__intro">
+              {line}
+            </p>
+          ))}
+        </div>
+      </div>
       <div className="hero__figure">
         <div className="hero__figure-in">
           <Avatar
@@ -81,9 +93,11 @@ export default function Hero({ chapter }: Props) {
           />
         </div>
       </div>
-      <p className="hero__cue" aria-hidden="true">
-        <span>scroll</span>
-      </p>
+      {chapter.cue && (
+        <p className="hero__cue">
+          <span>{chapter.cue}</span>
+        </p>
+      )}
     </section>
   )
 }

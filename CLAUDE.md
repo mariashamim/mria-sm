@@ -10,7 +10,7 @@ for the current state and open items, `PLAN.md` for the original concept.
 Next.js 16.4 App Router (Turbopack), React 19, TypeScript, GSAP 3
 (ScrollTrigger, SplitText, MotionPath, `@gsap/react`), Lenis, OGL sky
 shader, three.js (intro jet only, lazy), zustand, next/font (Big Shoulders,
-Fraunces, Gulzar, IBM Plex Mono). Styling is one hand-written
+Cormorant Garamond, DM Sans, Caveat, Gulzar, IBM Plex Mono). Styling is one hand-written
 `app/globals.css`; Tailwind is installed but not used for the site's look.
 `sharp` for the cut-out script. No test framework; see Verify.
 
@@ -70,8 +70,13 @@ If a CSS change does not show up in the browser, stop the dev server,
   `fromTo`/`autoAlpha` values; never `gsap.from` onto a CSS-hidden element.
 - CSS is appended in dated, commented blocks at the end of globals.css;
   later rules win, so check for an existing rule before adding one.
-- Type: Big Shoulders for the name/years/menu, Fraunces for sentences
-  (italic titles and the letter, upright lines), Plex Mono for labels.
+- Type (tokens in the "type system v2" blocks of globals.css): Big Shoulders
+  for the years and the wordmark, Cormorant Garamond (500+) for headings and
+  reflective lines, DM Sans for body, Caveat for the letter, Plex Mono for
+  labels, navigation, buttons and the terminal, Gulzar for every Urdu word.
+- GSAP writes an inline `translate: none` on any element whose transform it
+  animates; give such elements CSS offsets through `top` or margins, never
+  the `translate` property.
 - Phones (≤900px) lay out text → piece → figure; per-chapter heights via
   `--m-fig`. Keep every target ≥24px. Test 375 and 1280 at minimum.
 - Dev handles and `__stage` exist only when `NODE_ENV !== 'production'`.

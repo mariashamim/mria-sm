@@ -12,7 +12,7 @@ const PORT = Number(process.env.CDP_PORT || 9333)
 const SITE = process.env.SITE_URL || 'http://localhost:3000'
 const OUT = path.resolve(process.argv[2] || '.shots')
 const mode = process.argv[3] || 'mobile'
-const ALL = ['hero', 'karachi', 'london', 'home', 'karsaz', 'sky', 'hello', 'loves', 'letter']
+const ALL = ['hero', 'karachi', 'london', 'home', 'school', 'karsaz', 'sky', 'hello', 'loves', 'explore', 'letter', 'closing']
 const chapters = process.argv[4] === 'all' ? ALL : (process.argv[4] || 'karachi,sky,hello,loves').split(',')
 const AT = (process.env.AT || '0.95').split(',').map(Number)
 const VIEW = process.env.VIEW ? process.env.VIEW.split("x").map(Number) : null

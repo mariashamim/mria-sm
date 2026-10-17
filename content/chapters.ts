@@ -36,7 +36,7 @@ export type Chapter = {
   ps?: string[]
 }
 
-export const RAIL_YEARS = ['2007', '2010', '2011', '2017', '2023', 'NOW'] as const
+export const RAIL_YEARS = ['2007', '2010', '2011', '2017', '2023', '2024', 'NOW'] as const
 
 export const chapters: Chapter[] = [
   {
@@ -90,7 +90,7 @@ export const chapters: Chapter[] = [
       { at: 1, stop: 3 },
     ],
     lines: [
-      'When I was three we moved to London.',
+      'When I was two, going on three, we moved to London.',
       "It didn't stick.",
       'I remember the snow more than the school.',
       'Southall sounded like home with a different accent.',
@@ -134,7 +134,7 @@ export const chapters: Chapter[] = [
       { at: 0.72, stop: 4 },
       { at: 1, stop: 5 },
     ],
-    lines: ['Bahria College Karsaz. Pre-engineering.', 'Maths, physics, and a plan:', 'I was going to fly.'],
+    lines: ['Bahria College Karsaz, from 2017.', 'Pre-engineering, maths, physics, and a plan:', 'I was going to fly.'],
     figures: [{ pose: 'pose-karsaz', alt: 'Maria at sixteen in the Karsaz uniform, a physics notebook under one arm and a paper plane raised in the other hand' }],
   },
   {
@@ -161,13 +161,13 @@ export const chapters: Chapter[] = [
       'They closed the window to the sky.',
       'So I opened a terminal window.',
     ],
-    figures: [{ pose: 'pose-sky', alt: 'Maria at eighteen in a white shirt and black trousers, seen from behind, looking up at the sky', blink: true, size: 'large' }],
+    figures: [{ pose: 'pose-sky', alt: 'Maria at sixteen in a white shirt and black trousers, seen from behind, looking up at the sky', blink: true, size: 'large' }],
   },
   {
     id: 'hello',
     index: 6,
-    rail: '2023',
-    year: '2023',
+    rail: '2024',
+    year: '2024',
     title: 'Hello, World',
     urdu: 'پہلا',
     urduMeaning: 'first',
@@ -183,7 +183,7 @@ export const chapters: Chapter[] = [
       'Two words printed across a black screen, but it felt like the warmest welcome.',
       'It did exactly what I told it to. The sky had closed its doors, but right here, I had found my ground.',
     ],
-    figures: [{ pose: 'pose-desk', alt: 'Maria at nineteen at a small wooden desk, round glasses catching the laptop light, typing', blink: true, size: 'normal' }],
+    figures: [{ pose: 'pose-desk', alt: 'Maria at seventeen at a small wooden desk, round glasses catching the laptop light, typing', blink: true, size: 'normal' }],
   },
   {
     id: 'loves',

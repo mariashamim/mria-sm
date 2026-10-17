@@ -2352,3 +2352,11 @@ html[data-ui="ink"] {
     line-height: 1.35;
   }
 }
+
+/* ═══════════════════════ pacing (17 Oct 2026) ═══════════════════════
+   The lines rise a few pixels and fade in instead of sliding up through an
+   overflow mask: a scrub can stop anywhere, and a line cut through its middle
+   read as a rendering bug. The mask stays as a wrapper but no longer clips. */
+.chapter__lines .mask {
+  overflow: visible;
+}

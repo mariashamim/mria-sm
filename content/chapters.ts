@@ -24,8 +24,13 @@ export type Chapter = {
   urduMeaning: string
   /** Which UI colour reads against this chapter's sky. */
   ui: 'ink' | 'paper'
-  /** Pinned scroll length, as a multiple of the viewport height. */
-  pin: number
+  /**
+   * How long this chapter holds the stage, in viewport heights of scroll (×0.7 on touch).
+   * The chapter's content timeline is stretched or squeezed to fill exactly this much;
+   * the forming and dissolving between chapters adds about 0.4 more. Vary it so quick
+   * and slow chapters alternate: London is brief, the window is the longest.
+   */
+  scroll: number
   /** Sky keyframes in local progress (0..1) → sky stop index (see lib/sky.ts). */
   sky: Keyframe[]
   /** Draft copy, one entry per revealed line. Maria rewrites what isn't hers. */
@@ -48,7 +53,7 @@ export const chapters: Chapter[] = [
     urdu: 'آسمان',
     urduMeaning: 'sky',
     ui: 'paper',
-    pin: 2,
+    scroll: 1.4,
     sky: [
       { at: 0, stop: 0 },
       { at: 0.55, stop: 0 },
@@ -65,7 +70,7 @@ export const chapters: Chapter[] = [
     urdu: 'گھر',
     urduMeaning: 'home',
     ui: 'ink',
-    pin: 2.5,
+    scroll: 2.2,
     sky: [
       { at: 0, stop: 1 },
       { at: 0.7, stop: 1 },
@@ -83,7 +88,7 @@ export const chapters: Chapter[] = [
     urdu: 'برف',
     urduMeaning: 'snow',
     ui: 'ink',
-    pin: 3,
+    scroll: 1.5,
     sky: [
       { at: 0, stop: 2 },
       { at: 0.72, stop: 2 },
@@ -106,7 +111,7 @@ export const chapters: Chapter[] = [
     urdu: 'دوستی',
     urduMeaning: 'friendship',
     ui: 'ink',
-    pin: 3.5,
+    scroll: 3,
     sky: [
       { at: 0, stop: 3 },
       { at: 0.72, stop: 3 },
@@ -128,7 +133,7 @@ export const chapters: Chapter[] = [
     urdu: 'حساب',
     urduMeaning: 'calculation',
     ui: 'ink',
-    pin: 3,
+    scroll: 2.2,
     sky: [
       { at: 0, stop: 4 },
       { at: 0.72, stop: 4 },
@@ -146,7 +151,7 @@ export const chapters: Chapter[] = [
     urdu: 'آسمان',
     urduMeaning: 'sky',
     ui: 'paper',
-    pin: 4.5,
+    scroll: 6.5,
     sky: [
       { at: 0, stop: 5 },
       { at: 0.3, stop: 5 },
@@ -172,7 +177,7 @@ export const chapters: Chapter[] = [
     urdu: 'پہلا',
     urduMeaning: 'first',
     ui: 'paper',
-    pin: 4,
+    scroll: 3,
     sky: [
       { at: 0, stop: 7 },
       { at: 0.75, stop: 7 },
@@ -194,7 +199,7 @@ export const chapters: Chapter[] = [
     urdu: 'چائے',
     urduMeaning: 'chai',
     ui: 'paper',
-    pin: 3.5,
+    scroll: 2.4,
     sky: [
       { at: 0, stop: 8 },
       { at: 1, stop: 8 },
@@ -217,7 +222,7 @@ export const chapters: Chapter[] = [
     urdu: 'خط',
     urduMeaning: 'letter',
     ui: 'paper',
-    pin: 4,
+    scroll: 5.5,
     sky: [
       { at: 0, stop: 8 },
       { at: 0.5, stop: 8 },

@@ -184,13 +184,15 @@ const hello: SceneDef = {
       typed.textContent = CODE.slice(0, Math.round(state.n))
     }
     render()
-    tl.to(term, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.35 * total)
-    tl.to(state, { n: CODE.length, duration: 0.36 * total, ease: 'none', onUpdate: render }, 0.42 * total)
-    tl.to(out, { opacity: 1, duration: 0.12 }, 0.8 * total)
-    tl.to(caret, { opacity: 0, duration: 0.05 }, 0.8 * total)
+    // The window is there as the chapter forms, so 2024 never opens on an empty screen,
+    // and it prints its two words as "Two words printed across a black screen" lands.
+    tl.to(term, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 0)
+    tl.to(state, { n: CODE.length, duration: 0.16 * total, ease: 'none', onUpdate: render }, 0.1 * total)
+    tl.to(out, { opacity: 1, duration: 0.12 }, 0.27 * total)
+    tl.to(caret, { opacity: 0, duration: 0.05 }, 0.27 * total)
     // Then the prompt is yours.
-    tl.to(live, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.88 * total)
-    tl.to(sudoku, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.94 * total)
+    tl.to(live, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.6 * total)
+    tl.to(sudoku, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.7 * total)
   },
 }
 

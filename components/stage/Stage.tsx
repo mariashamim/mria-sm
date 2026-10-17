@@ -40,9 +40,13 @@ function deepLink(ids: string[]): () => void {
   }
 }
 
-/** How far a layer takes to form, to dissolve, and how far into a dissolve the next layer starts forming. */
-const ENTER = 0.6
-const EXIT = 0.7
+/**
+ * How far a layer takes to form, to dissolve, and how far into a dissolve the
+ * next layer starts forming. Master time is measured in viewport heights of
+ * scroll, so these and each chapter's `scroll` (content/chapters.ts) are too.
+ */
+const ENTER = 0.45
+const EXIT = 0.55
 const OVERLAP = 0.45
 
 /**
@@ -81,14 +85,16 @@ export default function Stage({ children }: Props) {
         return deepLink(layers.map((l) => l.c.id))
       }
 
-      const totalViewports = chapters.reduce((sum, c) => sum + c.pin, 0)
       let lastActive = -1
+      // The master's length in viewports, known once every chapter is added (refreshed below).
+      let viewports = 1
       const master = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
           trigger: el,
           start: 'top top',
-          end: () => `+=${window.innerHeight * totalViewports * (touch ? 0.7 : 1)}`,
+          // One unit of master time is one viewport of scroll (a little less on touch).
+          end: () => `+=${window.innerHeight * viewports * (touch ? 0.7 : 1)}`,
           pin: true,
           scrub: touch ? 0.5 : 1,
           anticipatePin: 1,
@@ -102,12 +108,14 @@ export default function Stage({ children }: Props) {
         const isFirst = i === 0
         const isLast = i === layers.length - 1
         const content = c.id === 'hero' ? buildHeroContent(layer, false) : buildChapterContent(layer, c, false)
+        // The chapter's own pace: its content plays over exactly `scroll` viewports.
+        content.timeScale(content.duration() / c.scroll)
         // Forming: from slightly smaller and softer, like something coming into focus.
         if (isFirst) master.set(layer, { autoAlpha: 1, scale: 1, filter: 'blur(0px)' }, 0)
         else master.fromTo(layer, { autoAlpha: 0, scale: 0.94, filter: 'blur(8px)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: ENTER, ease: 'power2.out' }, t)
         const bodyStart = isFirst ? 0 : t + ENTER * 0.35
         master.add(content, bodyStart)
-        const bodyEnd = bodyStart + content.duration()
+        const bodyEnd = bodyStart + c.scroll
         // Dissolving: toward the viewer and out of focus, while the next layer is already forming.
         if (!isLast) master.to(layer, { autoAlpha: 0, scale: 1.06, filter: 'blur(10px)', duration: EXIT, ease: 'power2.in' }, bodyEnd)
         segments.push({ id: c.id, index: c.index, start: t, bodyStart, bodyEnd, end: isLast ? bodyEnd : bodyEnd + EXIT })
@@ -134,6 +142,7 @@ export default function Stage({ children }: Props) {
       if (city && hello) master.to(city, { autoAlpha: 1, duration: ENTER, ease: 'power1.inOut' }, hello.bodyEnd + EXIT * OVERLAP)
 
       const duration = master.duration()
+      viewports = duration
       const update = (progress: number) => {
         const time = progress * duration
         setSky(skyAt(time))
@@ -147,6 +156,8 @@ export default function Stage({ children }: Props) {
           if (!first) history.replaceState(null, '', active === 0 ? `${location.pathname}${location.search}` : `#${chapters[active].id}`)
         }
       }
+      // Now that the length is known, measure the pin again (after update exists: refresh calls onUpdate).
+      master.scrollTrigger?.refresh()
       if (master.scrollTrigger) setStage(master.scrollTrigger, segments, duration)
       if (process.env.NODE_ENV !== 'production') {
         ;(window as unknown as { __stage?: unknown }).__stage = { master, segments, duration }

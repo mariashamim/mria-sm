@@ -38,7 +38,10 @@ Gulzar (Urdu), IBM Plex Mono. No tests framework; see "Verification".
   `lib/chapterTimelines.ts`): one pinned viewport for the whole story. One
   master GSAP timeline scrubbed by scroll; every chapter is an absolutely
   stacked layer that forms (autoAlpha, scale .94, blur) → plays its content
-  timeline → dissolves while the next forms (ENTER .6, EXIT .7, OVERLAP .45).
+  timeline → dissolves while the next forms (ENTER .45, EXIT .55, OVERLAP .45).
+  Master time is in viewport heights of scroll: each chapter's `scroll` in
+  `content/chapters.ts` is how many viewports its content takes (×0.7 on
+  touch), and its content timeline is time-scaled to fill exactly that.
   Sky colour and "active chapter" are sampled by master time (`skyAt`,
   `activeAt`). `scrollToChapter(id, {immediate})` jumps by master time.
   Dev handle: `window.__stage = { master, segments, duration }`; also
@@ -115,6 +118,31 @@ scroll lands at the stage top so the jump is retried at 60/400/1000 ms),
 responsive pass from 375px up, Lighthouse: desktop 51/100/100/100, mobile
 37/100/96/100 (JS-heavy by nature; the veil delays LCP by design).
 
+## Story-flow rework (branch `story-flow`, started 17 Oct 2026)
+
+Maria's brief: chapters felt repetitive (same layout, length and
+transition). Three phases, each committed on `story-flow` and stopped for her
+review; nothing merged to `main` or deployed. Copy, Urdu words and renders
+are not to change.
+
+- **Phase 1, pacing (done, awaiting review).** Each chapter's length is the
+  `scroll` field in `content/chapters.ts` (viewports; was `pin`, which only
+  ever set the total). Values: hero 1.4, Karachi 2.2, London 1.5 (was ~3.1),
+  Back home 3, Karsaz 2.2, the window 6.5 (longest), Hello World 3, What I
+  love 2.4, letter 5.5. Lines now fade up 18px instead of sliding out of an
+  `overflow: hidden` mask, so a stopped scrub never shows a line cut in half.
+  2024's terminal forms with the chapter and prints "Hello, World" as the
+  "Two words printed…" line lands, so the chapter no longer opens empty.
+- **Phase 2, a layout and transition per chapter:** not started.
+- **Phase 3, the thread (kite string → plane → fall → cursor), figure
+  placement, time-skip effect, narrow-screen figures:** not started.
+- Before Phase 2, check with Maria: stars "rearranging into code" and
+  "stop all background motion" touch the sky, which CLAUDE.md says not to
+  change without her asking. She asked for both in this brief; keep the
+  shader itself as is and do it in an overlay where possible.
+- Her issue 4 ("the rooftop never returns") is half true: the city strip
+  comes back after Hello, World; the roof and Maria do not.
+
 ## Half-done / waiting on Maria
 
 - **Her own copy.** 2011 lines, Karsaz lines, the letter, the hero title and
@@ -177,7 +205,9 @@ kite, keyboard focus rings, a responsive scan at 320/375/430/768/1024/1366/
 320×568 residual above. `SHOTS=1 OUT_DIR=.shots/x` saves screenshots.
 
 Other harnesses (all headless Edge over DevTools, Windows path to msedge
-hard-coded at the top of each): `scripts/shots.mjs [out] [mobile|desktop]
+hard-coded at the top of each): `AT=0.05,0.5,0.95 scripts/shots.mjs [out] [mobile|desktop] all`
+shoots start/middle/end of every chapter, `scripts/sheet.mjs` tiles them;
+`scripts/shots.mjs [out] [mobile|desktop]
 [chapters]` renders chapters (`VIEW=2560x1080`, `SITE_URL=`, `CDP_PORT=`);
 `scripts/firstframes.mjs` screenshots the first seconds of a load (test
 against `npx next build && npx next start -p 3001` with
@@ -193,7 +223,8 @@ on `--headless=new`. `.shots/` is gitignored.
 1. Get Maria's rewrites of the 2011, Karsaz and letter copy and the hero
    title/description; paste them into `content/chapters.ts` (lines arrays)
    and `app/layout.tsx`. Keep line counts similar: chapter timing is
-   `1.2 + lines × 0.55 + 1.2`, and the Karsaz plane leaves on the last line.
+   `1.2 + lines × 0.55 + 1.2` (internal proportions; the chapter's `scroll`
+   sets how long it really takes), and the Karsaz plane leaves on the last line.
 2. Resolve the three chronology questions with her, then align `PLAN.md`.
 3. Full-size pose-karachi render, re-cut, re-check the string anchor.
 4. Her real-phone pass; fix whatever she reports.

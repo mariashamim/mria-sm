@@ -1,7 +1,8 @@
 // Headless Edge over the DevTools protocol: load the dev site (next dev on :3000),
 // skip the intro, park the stage on each chapter, log the boxes and save a
 // screenshot per chapter. Works while the browser pane is blocked by popups.
-//   node scripts/shots.mjs [outDir=.shots] [mobile|desktop] [chapter,chapter,...]
+//   node scripts/shots.mjs [outDir=.shots] [mobile|desktop] [chapter,chapter,...|all]
+// AT=0.05,0.5,0.95 parks each chapter at those points of its own content (default 0.95).
 import { spawn } from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
@@ -11,7 +12,9 @@ const PORT = Number(process.env.CDP_PORT || 9333)
 const SITE = process.env.SITE_URL || 'http://localhost:3000'
 const OUT = path.resolve(process.argv[2] || '.shots')
 const mode = process.argv[3] || 'mobile'
-const chapters = (process.argv[4] || 'karachi,sky,hello,loves').split(',')
+const ALL = ['hero', 'karachi', 'london', 'home', 'karsaz', 'sky', 'hello', 'loves', 'letter']
+const chapters = process.argv[4] === 'all' ? ALL : (process.argv[4] || 'karachi,sky,hello,loves').split(',')
+const AT = (process.env.AT || '0.95').split(',').map(Number)
 const VIEW = process.env.VIEW ? process.env.VIEW.split("x").map(Number) : null
 const W = VIEW ? VIEW[0] : mode === "mobile" ? 375 : 1280
 const H = VIEW ? VIEW[1] : mode === "mobile" ? 812 : 800
@@ -89,17 +92,17 @@ for (let i = 0; i < 20; i++) {
 }
 console.log('figures loaded:', await evalJs(`[...document.querySelectorAll('.chapter__fig img')].map(i => i.complete && i.naturalWidth > 0).join(',')`))
 const R = `(el)=>{if(!el) return null; const r=el.getBoundingClientRect(); return [Math.round(r.left),Math.round(r.top),Math.round(r.right),Math.round(r.bottom)]}`
-for (const c of chapters) {
-  await evalJs(`window.__at('${c}', 0.95); 'go'`)
+for (const c of chapters) for (const at of AT) {
+  await evalJs(`window.__at('${c}', ${at}); 'go'`)
   await sleep(1800)
-  await evalJs(`window.__at('${c}', 0.95); 'go'`)
+  await evalJs(`window.__at('${c}', ${at}); 'go'`)
   await sleep(400)
   const m = await evalJs(
     `(()=>{const R=${R}; const q=s=>R(document.querySelector('#${c} '+s)); return JSON.stringify({vw: innerWidth, vh: innerHeight, inner:q('.chapter__inner'), piece:q('.eye, .terminal, .mate'), fig:q('.chapter__figure'), img:q('.chapter__fig img'), kite: document.querySelector('#${c} .scene__kite')?.getAttribute('transform') ?? null, op: getComputedStyle(document.querySelector('#${c}')).opacity})})()`,
   )
-  console.log(c, m)
+  console.log(c, at, m)
   const shot = await send('Page.captureScreenshot', { format: 'jpeg', quality: 82 })
-  await fs.writeFile(`${OUT}/${mode}-${c}.jpg`, Buffer.from(shot.result.data, 'base64'))
+  await fs.writeFile(AT.length > 1 ? `${OUT}/${W}-${c}-${String(Math.round(at * 100)).padStart(2, "0")}.jpg` : `${OUT}/${mode}-${c}.jpg`, Buffer.from(shot.result.data, 'base64'))
 }
 ws.close()
 proc.kill()

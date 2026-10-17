@@ -69,7 +69,9 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
       const each = (0.62 * total) / Math.max(1, split.chars.length)
       tl.from(split.chars, { opacity: 0, duration: 0.02, stagger: { each, ease: 'none' } }, 0.55)
     } else {
-      const from: gsap.TweenVars = { yPercent: 110, opacity: 0, duration: 0.7, ease: 'power2.out', stagger: 0.55 }
+      // A short rise with a fade, never a clip: a scrub can stop anywhere, and a line
+      // half out of an overflow mask read as a rendering bug.
+      const from: gsap.TweenVars = { y: 18, opacity: 0, duration: 0.7, ease: 'power2.out', stagger: 0.55 }
       // The window chapter's lines surface out of a blur, like a thought forming.
       if (chapter.id === 'sky') from.filter = 'blur(10px)'
       tl.from(lines, from, 0.5)

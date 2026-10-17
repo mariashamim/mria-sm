@@ -49,7 +49,9 @@ If a CSS change does not show up in the browser, stop the dev server,
   each chapter is a stacked layer that forms, plays its content timeline
   (`lib/chapterTimelines.ts`), and dissolves while the next forms. Sky and
   active chapter are sampled by master time (`lib/stage.ts`).
-- Chapter timing is `1.2 + lines × 0.55 + 1.2`; scenes hook in through
+- Master time is in viewports of scroll. Each chapter's `scroll` (content/chapters.ts)
+  is its length; its content timeline (internally `1.2 + lines × 0.55 + 1.2`)
+  is time-scaled to fill it. Scenes hook in through
   `SCENES[id].build({ tl, el, total, reduced })` in
   `components/scenes/registry.tsx`.
 - Figures: `figures: [{ pose, alt, size, blink, mask }]` in chapters.ts;

@@ -120,9 +120,9 @@ const karsaz: SceneDef = {
     draw()
     // The line comes down from the sky into her hand while the year is worked out.
     tl.to(state, { into: 1, duration: 1.2, ease: 'power1.inOut', onUpdate: draw }, 0.1)
-    // The plane leaves her hand as "I was going to fly." (rising at 1.6) lands,
+    // The plane leaves her hand as the last line (the application, rising at 0.85) lands,
     // and flies the line on and off the top of the screen; the old line lets go.
-    const start = 1.75
+    const start = 1.4
     tl.set(plane, { opacity: 1 }, start)
     tl.to(state, { out: 1, duration: total - start - 0.05, ease: 'power1.in', onUpdate: draw }, start)
     tl.to(state, { fade: 0, duration: 0.7, ease: 'power1.in', onUpdate: draw }, start + 0.2)

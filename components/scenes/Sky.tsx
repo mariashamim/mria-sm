@@ -89,17 +89,17 @@ const sky: SceneDef = {
 
     // First only the plane, still flying, and her looking up at it.
     tl.fromTo(title, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0)
-    tl.fromTo(figs, { opacity: 0, yPercent: 4 }, { opacity: 1, yPercent: 0, duration: 0.8, ease: 'power2.out' }, 0.9)
+    tl.fromTo(figs, { opacity: 0, yPercent: 4 }, { opacity: 1, yPercent: 0, duration: 0.8, ease: 'power2.out' }, 0.4)
     // As it stalls, the first line: the medical, and the chart she could not read.
-    line(0, 2.6, 3.4)
+    line(0, 0.8, 3.1)
     if (eye) {
-      tl.to(eye, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 3.0)
-      tl.to(eye, { '--auto-gaze': 1, '--worse': 1, duration: 1.9, ease: 'power1.inOut' }, 3.3)
-      tl.to(eye, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 5.9)
+      tl.to(eye, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.3)
+      tl.to(eye, { '--auto-gaze': 1, '--worse': 1, duration: 1.8, ease: 'power1.inOut' }, 1.6)
+      tl.to(eye, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 3.9)
     }
-    line(1, 6.3, 0)
+    line(1, 4.2, 0)
     // Then nothing: a hard cut to black, and a held beat.
-    const CUT = 7.9
+    const CUT = 5.5
     tl.set(cut, { opacity: 1 }, CUT)
     const meta = el.querySelector<HTMLElement>('.chapter__meta')
     tl.set([masks[1], title, ...figs, ...(meta ? [meta] : [])], { opacity: 0 }, CUT + 0.01)
@@ -145,21 +145,21 @@ const sky: SceneDef = {
     drawThread()
     const stallAt = geo.stall
     tl.set(plane, { opacity: 1 }, 0.1)
-    tl.to(st, { p: stallAt, duration: 2.3, ease: 'power2.out', onUpdate: drawThread }, 0.1)
-    tl.to(st, { spin: -18, duration: 0.5, ease: 'sine.inOut', onUpdate: drawThread }, 2.4)
-    tl.to(st, { p: 1, duration: 1.6, ease: 'power2.in', onUpdate: drawThread }, 2.9)
-    tl.to(st, { spin: 342, duration: 1.6, ease: 'power1.in', onUpdate: drawThread }, 2.9)
+    tl.to(st, { p: stallAt, duration: 1.4, ease: 'power2.out', onUpdate: drawThread }, 0.1)
+    tl.to(st, { spin: -18, duration: 0.4, ease: 'sine.inOut', onUpdate: drawThread }, 1.5)
+    tl.to(st, { p: 1, duration: 1.4, ease: 'power2.in', onUpdate: drawThread }, 1.9)
+    tl.to(st, { spin: 342, duration: 1.4, ease: 'power1.in', onUpdate: drawThread }, 1.9)
     // In the dark only the fallen plane is left; it goes to a point, and the point becomes the cursor.
     tl.set(trail, { opacity: 0 }, CUT + 0.01)
-    tl.to(st, { shrink: 1, duration: 0.3, ease: 'power2.in', onUpdate: drawThread }, CUT + 0.45)
-    tl.set(spark, { opacity: 1 }, CUT + 0.6)
-    tl.set(plane, { opacity: 0 }, CUT + 0.75)
-    tl.to(st, { dot: 1, duration: 0.3, ease: 'power2.inOut', onUpdate: drawThread }, CUT + 0.6)
-    tl.set(spark, { opacity: 0 }, CUT + 0.9)
-    tl.fromTo(caret, { opacity: 0 }, { opacity: 1, duration: 0.01, immediateRender: false }, CUT + 0.9)
+    tl.to(st, { shrink: 1, duration: 0.2, ease: 'power2.in', onUpdate: drawThread }, CUT + 0.2)
+    tl.set(spark, { opacity: 1 }, CUT + 0.3)
+    tl.set(plane, { opacity: 0 }, CUT + 0.4)
+    tl.to(st, { dot: 1, duration: 0.25, ease: 'power2.inOut', onUpdate: drawThread }, CUT + 0.3)
+    tl.set(spark, { opacity: 0 }, CUT + 0.55)
+    tl.fromTo(caret, { opacity: 0 }, { opacity: 1, duration: 0.01, immediateRender: false }, CUT + 0.55)
 
     // The year, last of all.
-    const Y = CUT + 1.8
+    const Y = CUT + 0.75
     tl.fromTo(year, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'power2.out' }, Y)
 
     // A window opens out of the cursor and lands on 2024's first program.
@@ -197,11 +197,11 @@ const sky: SceneDef = {
         transformOrigin: '0 0',
       })
     }
-    const O = Y + 0.8
+    const O = Y + 0.6
     tl.fromTo(frame, { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false, onStart: draw }, O)
     tl.to(open, { p: 1, duration: 0.8, ease: 'power3.inOut', onUpdate: draw }, O)
     tl.fromTo(caret, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: 'power1.in', immediateRender: false }, O + 0.05)
-    tl.to(year, { opacity: 0.35, duration: 0.6, ease: 'power1.inOut' }, O + 0.2)
+    tl.to(year, { opacity: 0.75, duration: 0.6, ease: 'power1.inOut' }, O + 0.2)
     tl.to({}, { duration: 0.2 }, O + 0.8)
   },
 }

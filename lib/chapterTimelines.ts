@@ -14,13 +14,11 @@ export function buildHeroContent(layer: HTMLElement, reduced: boolean): gsap.cor
   const opening = layer.querySelector<HTMLElement>('.hero__opening')
   const figure = layer.querySelector<HTMLElement>('.hero__figure')
   if (reduced) return tl
-  // Her words are already there (the entrance brings them, Hero.tsx); she looks up,
-  // the words drift up and away first, then the roof and she clear.
-  if (opening) tl.to(opening, { yPercent: -18, duration: 1.4 }, 0)
+  // Her words are already there (the entrance brings them, Hero.tsx); she looks up
+  // and the words drift a little. They stay readable to the end: the layer's own
+  // exit takes them (lib/transitions.ts), so the roof never sits there empty.
+  if (opening) tl.to(opening, { yPercent: -10, duration: 1.4 }, 0)
   if (figure) tl.to(figure, { yPercent: -6, duration: 1.4 }, 0)
-  tl.to({}, { duration: 0.3 })
-  const exit = [opening, figure].filter(Boolean) as HTMLElement[]
-  if (exit.length) tl.to(exit, { opacity: 0, yPercent: '-=14', duration: 0.6, ease: 'power1.in' })
   return tl
 }
 
@@ -51,13 +49,13 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
   }
   // The Urdu word is written from the right, the way it is read.
   if (urdu && !own('urdu')) {
-    tl.fromTo(urdu, { clipPath: 'inset(-10% 0 -10% 100%)' }, { clipPath: 'inset(-10% 0 -10% 0%)', duration: 1.1, ease: 'power2.out' }, 0.15)
+    tl.fromTo(urdu, { clipPath: 'inset(-10% 0 -10% 100%)' }, { clipPath: 'inset(-10% 0 -10% 0%)', duration: 1.1, ease: 'power2.out' }, 0.1)
     tl.fromTo(urdu, { xPercent: 3 }, { xPercent: -3, duration: total }, 0)
   }
   // The title rises a word at a time.
   if (title && !own('title')) {
     const split = SplitText.create(title, { type: 'words' })
-    tl.from(split.words, { yPercent: 60, opacity: 0, duration: 0.55, ease: 'power3.out', stagger: 0.06 }, 0.2)
+    tl.from(split.words, { yPercent: 60, opacity: 0, duration: 0.55, ease: 'power3.out', stagger: 0.06 }, 0.1)
   }
   if (lines.length && !own('lines')) {
     if (chapter.id === 'letter') {
@@ -69,10 +67,10 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
     } else {
       // A short rise with a fade, never a clip: a scrub can stop anywhere, and a line
       // half out of an overflow mask read as a rendering bug.
-      const from: gsap.TweenVars = { y: 18, opacity: 0, duration: 0.7, ease: 'power2.out', stagger: 0.55 }
+      const from: gsap.TweenVars = { y: 18, opacity: 0, duration: 0.6, ease: 'power2.out', stagger: 0.55 }
       // The window chapter's lines surface out of a blur, like a thought forming.
       if (chapter.id === 'sky') from.filter = 'blur(10px)'
-      tl.from(lines, from, 0.5)
+      tl.from(lines, from, 0.3)
     }
   }
   // She is older than she was a chapter ago: the figure arrives like a photo

@@ -59,11 +59,12 @@ const london: SceneDef = {
       for (const a of flakes) a.playbackRate = speed.rate
     }
     tl.to(snow, { autoAlpha: 1, duration: 0.4, ease: 'power1.out' }, 0)
-    // The second line, the snow she remembers, starts rising at 0.5 + 0.55.
-    const stick = 1.05
+    // The second line, the snow she remembers, starts rising at 0.3 + 0.55.
+    const stick = 0.85
     tl.fromTo(speed, { rate: 1 }, { rate: 0.12, duration: total - stick, ease: 'power2.out', onUpdate: apply, immediateRender: false }, stick)
     tl.to(snow, { autoAlpha: 0, y: 12, duration: total * 0.3, ease: 'power1.in' }, total * 0.7)
-    tl.to(thaw, { opacity: 1, duration: total * 0.3 + 0.6, ease: 'power1.in' }, total * 0.72)
+    // The wash warms the frame without hiding the words.
+    tl.to(thaw, { opacity: 0.55, duration: total * 0.2 + 0.6, ease: 'power1.in' }, total * 0.82)
   },
 }
 

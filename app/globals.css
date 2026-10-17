@@ -3746,3 +3746,98 @@ body {
     --t-letter-size: clamp(15.5px, min(4.9vw, 2.45vh), 21px);
   }
 }
+
+/* ═══════════════════════ live-site fixes (17 Oct 2026) ═══════════════════════ */
+
+/* 2024: the window is the centerpiece of the black screen, centred and larger,
+   at every width. It leaves before the chapter forms (registry.tsx), so it is
+   out of the phone layout's flow and the figure takes its room. Centred with
+   inset + auto margins: GSAP owns its transform. */
+#hello .terminal {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: min(620px, calc(100% - 2 * var(--gutter)));
+  height: fit-content;
+  margin: auto;
+  font-size: clamp(14px, 1.15vw, 17px);
+  pointer-events: none;
+}
+#hello .terminal__bar {
+  padding: 10px 16px;
+}
+#hello .terminal__body {
+  padding: 18px 18px 22px;
+}
+@media (max-width: 900px) {
+  #hello {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  #hello .terminal {
+    order: 0;
+    margin: auto;
+    font-size: 14px;
+  }
+}
+
+/* Light sections (2011, School years): larger, heavier body text in full ink,
+   above the monitor's glow, with a soft light halo so it holds AA on the
+   bright sky. Same fonts as the system. */
+#home .chapter__inner,
+#school .chapter__inner {
+  z-index: 3;
+}
+#home .chapter__lines,
+#school .chapter__lines {
+  font-size: clamp(17px, 1.05vw + 0.55vh, 21px);
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--ink);
+  text-shadow: 0 0 10px rgba(255, 252, 244, 0.85), 0 0 2px rgba(255, 252, 244, 0.9);
+}
+#home .chapter__title,
+#school .chapter__title,
+#home .chapter__meta,
+#school .chapter__meta {
+  color: var(--ink);
+  text-shadow: 0 0 12px rgba(255, 252, 244, 0.8);
+}
+
+/* Outside the classroom: plain lines like every other section, no stickers. */
+#loves .chapter__lines {
+  display: grid;
+  gap: 0.55em;
+  max-width: min(var(--t-body-measure), 100%);
+}
+#loves .chapter__lines .mask {
+  display: block;
+}
+#loves .chapter__lines p,
+#loves .chapter__lines .mask:nth-child(n) p {
+  display: block;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  box-shadow: none;
+  rotate: none;
+  font-family: var(--font-sans-stack);
+  font-weight: var(--t-body-weight);
+  font-size: var(--t-body-size);
+  line-height: var(--t-body-lh);
+  letter-spacing: 0;
+}
+@media (max-width: 900px) {
+  #loves .chapter__lines p,
+  #loves .chapter__lines .mask:nth-child(n) p {
+    font-size: 15px;
+  }
+}
+/* The 2024 window, larger: the one thing on the black screen. */
+#hello .terminal {
+  width: min(760px, calc(100% - 2 * var(--gutter)));
+  font-size: clamp(14px, 1.35vw, 20px);
+}
+#hello .terminal__body {
+  min-height: 7.5em;
+}

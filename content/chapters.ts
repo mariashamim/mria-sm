@@ -171,7 +171,7 @@ export const chapters: Chapter[] = [
     urdu: 'آسمان',
     urduMeaning: 'sky',
     ui: 'paper',
-    scroll: 6,
+    scroll: 4.6,
     sky: [
       { at: 0, stop: 5 },
       { at: 0.3, stop: 5 },

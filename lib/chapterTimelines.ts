@@ -39,6 +39,7 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
   const figures = Array.from(layer.querySelectorAll<HTMLElement>('.chapter__figure > *'))
   const total = 1.2 + lines.length * 0.55 + 1.2
   const scene = SCENES[chapter.id]
+  const own = (part: 'year' | 'urdu' | 'title' | 'lines' | 'figures') => !!scene?.owns?.includes(part)
 
   if (reduced) {
     scene?.build({ tl, el: layer, total, reduced })
@@ -46,22 +47,22 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
   }
 
   // The year builds digit by digit, then drifts upward for the rest of the chapter.
-  if (year) {
+  if (year && !own('year')) {
     const split = SplitText.create(year, { type: 'chars' })
     tl.from(split.chars, { yPercent: 45, opacity: 0, duration: 0.5, ease: 'power3.out', stagger: 0.07 }, 0)
     tl.fromTo(year, { yPercent: 6 }, { yPercent: -8, duration: total }, 0)
   }
   // The Urdu word is written from the right, the way it is read.
-  if (urdu) {
+  if (urdu && !own('urdu')) {
     tl.fromTo(urdu, { clipPath: 'inset(-10% 0 -10% 100%)' }, { clipPath: 'inset(-10% 0 -10% 0%)', duration: 1.1, ease: 'power2.out' }, 0.15)
     tl.fromTo(urdu, { xPercent: 3 }, { xPercent: -3, duration: total }, 0)
   }
   // The title rises a word at a time.
-  if (title) {
+  if (title && !own('title')) {
     const split = SplitText.create(title, { type: 'words' })
     tl.from(split.words, { yPercent: 60, opacity: 0, duration: 0.55, ease: 'power3.out', stagger: 0.06 }, 0.2)
   }
-  if (lines.length) {
+  if (lines.length && !own('lines')) {
     if (chapter.id === 'letter') {
       // The letter writes itself, character by character, over most of the chapter.
       // Words wrap, chars animate: splitting into bare chars let lines break mid-word.
@@ -77,7 +78,7 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
       tl.from(lines, from, 0.5)
     }
   }
-  if (figures.length) {
+  if (figures.length && !own('figures')) {
     // Arrive a little after the title, then drift upward more slowly than the text.
     tl.fromTo(figures, { yPercent: 10, opacity: 0 }, { yPercent: 4, opacity: 1, duration: 0.8, ease: 'power2.out', stagger: 0.15 }, 0.25)
     tl.to(figures, { yPercent: -5, duration: total - 1.1 }, 1.1)

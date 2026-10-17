@@ -133,13 +133,48 @@ are not to change.
   `overflow: hidden` mask, so a stopped scrub never shows a line cut in half.
   2024's terminal forms with the chapter and prints "Hello, World" as the
   "Two words printed…" line lands, so the chapter no longer opens empty.
-- **Phase 2, a layout and transition per chapter:** not started.
+- **Phase 2, a layout and transition per chapter (done, awaiting review).**
+  Transitions live in `lib/transitions.ts` (per chapter enter/exit, only
+  transform and opacity; the old blur dissolves are gone). Scenes can take
+  over parts of the standard animation with `owns` and add a `YearNote`
+  (`components/scenes/registry.tsx`). Per chapter:
+  - Hero: the first scroll looks up (`--look` on the stage sinks the roof
+    layers and Maria by depth via CSS `translate`), then the roof sinks away.
+  - 2007: the kite climbs from her hand; lamps over the city render's real lit
+    windows (`scripts/windows.mjs` → `components/scene/windows.json`) switch on
+    one by one. String drawn in ink so it reads on the morning sky.
+  - 2010: smaller year, DOM snow in front of the text (the shader's behind),
+    slowing from "It didn't stick." via Web Animations `playbackRate`, melting
+    out; a warm wash thaws into 2011.
+  - 2011: CRT power-on entrance (`.crt-beam`), figure big on the left with
+    the monitor glow filling the frame, text right-aligned on the right,
+    flicker on both faces (CSS, masked to the render).
+  - 2017: the year written digit by digit under a worked sum, "2007 + 10"
+    (`KARSAZ_SUM` in `content/interactive.ts`, new words: ask Maria). The
+    plane leaves on "I was going to fly." and flies off the top.
+  - 2023 (`components/scenes/Sky.tsx`, scroll 8): no year at first, title and
+    one centred line at a time; the paper plane comes in, stalls and falls;
+    the eye chart (now left) blurs (`--worse`) to "Neither could I."; hard cut
+    to black on "They closed the window to the sky."; a held beat; a cursor
+    types "So I opened a terminal window."; the year appears last; a window
+    opens out of the line and lands exactly on 2024's terminal.
+  - 2024: cuts in around that terminal in the dark; Hello, World prints; 23
+    stars gather into `printf("Hello, World");` and scatter back (an overlay,
+    the shader is untouched); a warm glow returns.
+  - What I love: pops in; no year, the Urdu word is the headline; the loves
+    are stickers that pop in quickly; the board follows.
+  - Letter (`components/scenes/Letter.tsx`): a paper card, no year; the roof
+    slab comes back (not the parapet, it would cover the doors); the sky goes
+    night → pre-dawn → dawn (new stop 10 in `lib/sky.ts`, colour data only);
+    the desk fades and she stands on the roof again (pose-hero, decorative).
+  - Verified: tsc, eslint, verify.mjs 42/43 (only the old 320px residuals),
+    screenshots at 375/768/1440 and 2023 at ten points.
 - **Phase 3, the thread (kite string → plane → fall → cursor), figure
   placement, time-skip effect, narrow-screen figures:** not started.
-- Before Phase 2, check with Maria: stars "rearranging into code" and
+- Sky rules: stars "rearranging into code" and
   "stop all background motion" touch the sky, which CLAUDE.md says not to
-  change without her asking. She asked for both in this brief; keep the
-  shader itself as is and do it in an overlay where possible.
+  change without her asking. She asked for both; done as overlays (glyphs, a
+  black cut), the shader itself is unchanged.
 - Her issue 4 ("the rooftop never returns") is half true: the city strip
   comes back after Hello, World; the roof and Maria do not.
 

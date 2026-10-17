@@ -43,7 +43,7 @@ const last = (kf: Keyframe[]) => (kf.length ? kf[kf.length - 1].stop : 0)
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
 
-/** Continuous sky value in [0, 9] for a master time. */
+/** Continuous sky value in [0, 10] for a master time (see lib/sky.ts). */
 export function skyAt(time: number): number {
   for (let i = 0; i < segments.length; i++) {
     const s = segments[i]

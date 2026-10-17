@@ -151,7 +151,7 @@ export const chapters: Chapter[] = [
     urdu: 'آسمان',
     urduMeaning: 'sky',
     ui: 'paper',
-    scroll: 6.5,
+    scroll: 8,
     sky: [
       { at: 0, stop: 5 },
       { at: 0.3, stop: 5 },
@@ -225,8 +225,9 @@ export const chapters: Chapter[] = [
     scroll: 5.5,
     sky: [
       { at: 0, stop: 8 },
-      { at: 0.5, stop: 8 },
-      { at: 1, stop: 9 },
+      { at: 0.3, stop: 8 },
+      { at: 0.7, stop: 9 },
+      { at: 1, stop: 10 },
     ],
     lines: [
       'To the three-year-old in Southall,',

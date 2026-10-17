@@ -8,6 +8,7 @@ import { activateChapter, useProgress } from '@/lib/progress'
 import { activeAt, clearStage, scrollToChapter, setStage, skyAt, type Segment } from '@/lib/stage'
 import { useUI } from '@/lib/ui'
 import { buildChapterContent, buildHeroContent } from '@/lib/chapterTimelines'
+import { enterOf, exitOf } from '@/lib/transitions'
 import Rooftop from '@/components/scene/Rooftop'
 
 type Props = { children: React.ReactNode }
@@ -41,15 +42,6 @@ function deepLink(ids: string[]): () => void {
 }
 
 /**
- * How far a layer takes to form, to dissolve, and how far into a dissolve the
- * next layer starts forming. Master time is measured in viewport heights of
- * scroll, so these and each chapter's `scroll` (content/chapters.ts) are too.
- */
-const ENTER = 0.45
-const EXIT = 0.55
-const OVERLAP = 0.45
-
-/**
  * One pinned viewport for the whole story. The sky (behind) and the rooftop
  * set (inside, persistent) are the world; the hero and every chapter are
  * layers that form in place from slightly smaller and softer, hold while
@@ -57,9 +49,10 @@ const OVERLAP = 0.45
  * already forming. The page never scrolls one chapter past another: the
  * scroll only moves the master timeline.
  *
- * The rooftop keeps its views: the full set under the hero, settling into the
- * city strip for 2007, gone for London through Hello, World, and back at
- * night for the chai and the letter.
+ * The rooftop keeps its views: the full set under the hero (which first tilts
+ * up toward the sky), settling into the city strip for 2007 while its windows
+ * light, gone for London through Hello, World, the strip back at night for the
+ * chai, and the whole roof again at dawn for the letter.
  */
 export default function Stage({ children }: Props) {
   const ref = useRef<HTMLDivElement>(null)
@@ -110,16 +103,17 @@ export default function Stage({ children }: Props) {
         const content = c.id === 'hero' ? buildHeroContent(layer, false) : buildChapterContent(layer, c, false)
         // The chapter's own pace: its content plays over exactly `scroll` viewports.
         content.timeScale(content.duration() / c.scroll)
-        // Forming: from slightly smaller and softer, like something coming into focus.
-        if (isFirst) master.set(layer, { autoAlpha: 1, scale: 1, filter: 'blur(0px)' }, 0)
-        else master.fromTo(layer, { autoAlpha: 0, scale: 0.94, filter: 'blur(8px)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: ENTER, ease: 'power2.out' }, t)
-        const bodyStart = isFirst ? 0 : t + ENTER * 0.35
+        // Each chapter forms and leaves its own way (lib/transitions.ts); master time is in viewports.
+        const enter = enterOf(c.id)
+        const exit = exitOf(c.id)
+        if (isFirst) master.set(layer, { autoAlpha: 1, scale: 1 }, 0)
+        else enter.build(master, layer, t, enter.dur)
+        const bodyStart = isFirst ? 0 : t + enter.dur * enter.body
         master.add(content, bodyStart)
         const bodyEnd = bodyStart + c.scroll
-        // Dissolving: toward the viewer and out of focus, while the next layer is already forming.
-        if (!isLast) master.to(layer, { autoAlpha: 0, scale: 1.06, filter: 'blur(10px)', duration: EXIT, ease: 'power2.in' }, bodyEnd)
-        segments.push({ id: c.id, index: c.index, start: t, bodyStart, bodyEnd, end: isLast ? bodyEnd : bodyEnd + EXIT })
-        t = bodyEnd + EXIT * OVERLAP
+        if (!isLast) exit.build(master, layer, bodyEnd, exit.dur)
+        segments.push({ id: c.id, index: c.index, start: t, bodyStart, bodyEnd, end: isLast ? bodyEnd : bodyEnd + exit.dur })
+        t = bodyEnd + exit.dur * exit.lead
       })
 
       // The rooftop's views, keyed to the chapters that use them.
@@ -127,19 +121,34 @@ export default function Stage({ children }: Props) {
       const hero = seg('hero')
       const karachi = seg('karachi')
       const hello = seg('hello')
+      const letter = seg('letter')
+      const near = [el.querySelector<HTMLElement>('.stage__roof .rooftop__layer--fore'), el.querySelector<HTMLElement>('.stage__roof .rooftop__layer--parapet')].filter(
+        (n): n is HTMLElement => !!n,
+      )
+      // The first thing the scroll does is look up: the roof and Maria sink a little
+      // (CSS reads --look, by depth) and the sky opens above them, before anything leaves.
+      if (hero) master.to(el, { '--look': 1, duration: hero.bodyEnd * 0.45, ease: 'power1.inOut' }, 0)
       if (hero && karachi) {
         // The near wall and the roof slab drop out of frame and the city settles into its strip.
         const span = karachi.bodyStart - hero.bodyEnd
         master.to(el, { '--to-strip': 1, duration: span, ease: 'power2.inOut' }, hero.bodyEnd)
         // They also fade as they sink: on wide screens the sink alone left the
         // clothesline's pole peeking into the bottom right corner of every chapter.
-        const near = [el.querySelector<HTMLElement>('.stage__roof .rooftop__layer--fore'), el.querySelector<HTMLElement>('.stage__roof .rooftop__layer--parapet')].filter(
-          (n): n is HTMLElement => !!n,
-        )
         if (near.length) master.to(near, { autoAlpha: 0, duration: span * 0.7, ease: 'power1.in' }, hero.bodyEnd)
       }
-      if (city && karachi) master.to(city, { autoAlpha: 0, duration: EXIT, ease: 'power1.inOut' }, karachi.bodyEnd)
-      if (city && hello) master.to(city, { autoAlpha: 1, duration: ENTER, ease: 'power1.inOut' }, hello.bodyEnd + EXIT * OVERLAP)
+      if (city && karachi) master.to(city, { autoAlpha: 0, duration: 0.55, ease: 'power1.inOut' }, karachi.bodyEnd)
+      if (city && hello) master.to(city, { autoAlpha: 1, duration: 0.45, ease: 'power1.inOut' }, hello.bodyEnd + 0.25)
+      // The letter is read on the roof from the opening, at dawn this time: the
+      // whole set comes back up and she looks level again (lib/chapterTimelines.ts
+      // and the letter scene finish the frame).
+      if (letter) {
+        const back = letter.bodyStart + (letter.bodyEnd - letter.bodyStart) * 0.12
+        const span = (letter.bodyEnd - letter.bodyStart) * 0.3
+        master.to(el, { '--to-strip': 0, '--look': 0, duration: span, ease: 'power2.inOut' }, back)
+        // The roof slab only: the near parapet would stand in front of the card and its doors.
+        const slab = near.filter((n) => n.classList.contains('rooftop__layer--fore'))
+        if (slab.length) master.to(slab, { autoAlpha: 1, duration: span * 0.8, ease: 'power1.out' }, back + span * 0.2)
+      }
 
       const duration = master.duration()
       viewports = duration
@@ -174,7 +183,7 @@ export default function Stage({ children }: Props) {
 
   return (
     <div ref={ref} className="stage">
-      <Rooftop layers={['city', 'fore']} size="hero" className="stage__roof" />
+      <Rooftop layers={['city', 'fore']} size="hero" className="stage__roof" windows />
       <Rooftop layers={['parapet']} size="hero" className="stage__roof stage__roof--front" />
       {children}
     </div>

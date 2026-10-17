@@ -34,3 +34,6 @@ export const MATE = {
   solved: 'Checkmate.',
   cta: 'Your move: challenge me',
 }
+
+/** Karsaz: the year worked out by hand above it (born 2007, ten when she started there). */
+export const KARSAZ_SUM = ['2007', '+ 10']

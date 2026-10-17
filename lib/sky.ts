@@ -1,9 +1,10 @@
 import type { SkyKeyframe } from '@/content/chapters'
 
 /**
- * The sky is a float in [0, 9]. Whole numbers are the stops below; the shader
+ * The sky is a float in [0, 10]. Whole numbers are the stops below; the shader
  * (and the CSS fallback) blend linearly between adjacent stops.
- * Stop 9 equals stop 0 so the letter chapter returns the sky to pre-dawn.
+ * Stop 9 equals stop 0 so the letter chapter returns the sky to pre-dawn, and
+ * stop 10 equals stop 1, so it goes on into the dawn the hero ended on.
  */
 export type SkyStop = {
   name: string
@@ -21,6 +22,8 @@ export type SkyStop = {
   day: number
 }
 
+const DAWN: SkyStop = { name: 'dawn', top: '#F6E7D2', mid: '#F4B183', hor: '#E58A5A', sun: [0.5, 0.06, 0.9], sunCol: '#FFD9A0', stars: 0, snow: 0, city: 0, day: 0.55 }
+
 const PREDAWN: SkyStop = {
   name: 'predawn',
   top: '#0A0F2C',
@@ -36,7 +39,7 @@ const PREDAWN: SkyStop = {
 
 export const SKY_STOPS: SkyStop[] = [
   PREDAWN,
-  { name: 'dawn', top: '#F6E7D2', mid: '#F4B183', hor: '#E58A5A', sun: [0.5, 0.06, 0.9], sunCol: '#FFD9A0', stars: 0, snow: 0, city: 0, day: 0.55 },
+  DAWN,
   { name: 'grey', top: '#E8EBEF', mid: '#C9CED6', hor: '#9FA8B3', sun: [0.5, 0.55, 0.12], sunCol: '#FFFFFF', stars: 0, snow: 1, city: 0, day: 0.85 },
   { name: 'noon', top: '#5DB9F2', mid: '#8ED0F8', hor: '#FFFFFF', sun: [0.72, 0.92, 0.75], sunCol: '#FFF4C2', stars: 0, snow: 0, city: 0, day: 1 },
   { name: 'golden', top: '#F7B74A', mid: '#E8822E', hor: '#FFF1D6', sun: [0.8, 0.14, 1.0], sunCol: '#FFD27A', stars: 0, snow: 0, city: 0, day: 0.9 },
@@ -45,6 +48,7 @@ export const SKY_STOPS: SkyStop[] = [
   { name: 'bluehour', top: '#0E1B3F', mid: '#15306B', hor: '#1F3F7A', sun: [0.2, 0.82, 0.3], sunCol: '#CFE3FF', stars: 0.7, snow: 0, city: 0.5, day: 0.08 },
   { name: 'night', top: '#0A1230', mid: '#101C45', hor: '#2A2250', sun: [0.25, 0.86, 0.35], sunCol: '#DCE8FF', stars: 0.9, snow: 0, city: 1.0, day: 0 },
   { ...PREDAWN, name: 'predawn-return' },
+  { ...DAWN, name: 'dawn-return' },
 ]
 
 export type RGB = [number, number, number]
@@ -77,7 +81,7 @@ export type SkyUniforms = {
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const lerp3 = (a: RGB, b: RGB, t: number): RGB => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)]
 
-/** Blend the sky stops for a continuous sky value in [0, 9]. */
+/** Blend the sky stops for a continuous sky value in [0, 10]. */
 export function blendSky(s: number): SkyUniforms {
   const max = SKY_STOPS.length - 1
   const v = Math.min(Math.max(s, 0), max)

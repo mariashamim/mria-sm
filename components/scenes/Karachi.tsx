@@ -21,9 +21,10 @@ import type { SceneDef } from '@/components/scenes/registry'
 // Tuned to the render: her arm stretched up toward the top corner.
 const HAND = { x: 0.07, y: 0.14 }
 
-// Kite position as fractions of the chapter box, start → end of the chapter.
-const DESKTOP = { from: { x: 0.6, y: 0.28 }, to: { x: 0.57, y: 0.16 }, scale: 1.15 }
-const PHONE = { from: { x: 0.76, y: 0.53 }, to: { x: 0.78, y: 0.47 }, scale: 0.62 }
+// Kite position as fractions of the chapter box, start → end of the chapter:
+// it leaves from just above her hand and climbs with the scroll.
+const DESKTOP = { from: { x: 0.66, y: 0.5 }, to: { x: 0.56, y: 0.12 }, scale: 1.15 }
+const PHONE = { from: { x: 0.74, y: 0.62 }, to: { x: 0.8, y: 0.45 }, scale: 0.62 }
 
 type Wind = {
   x: number
@@ -128,6 +129,8 @@ const karachi: SceneDef = {
     // No render yet: no hand to hold the string, so the sky stays empty.
     if (!fig) return
     const wind = windOf(svg)
+    // The city's windows, on the stage's persistent skyline (components/scene/Rooftop.tsx).
+    const lamps = Array.from(el.closest('.stage')?.querySelectorAll<HTMLElement>('.stage__roof .rooftop__windows i') ?? [])
 
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t
     let climb = 0
@@ -165,6 +168,7 @@ const karachi: SceneDef = {
 
     gsap.set(svg, { opacity: 1 })
     if (reduced) {
+      gsap.set(lamps, { opacity: 1 })
       svg.pauseAnimations()
       gsap.set(string, { strokeDasharray: 1, strokeDashoffset: 0 })
       climb = 1
@@ -190,6 +194,11 @@ const karachi: SceneDef = {
     )
     tl.to(string, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0.6)
     tl.to(kite, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 1.1)
+    // Below her, the city switches on one window at a time, in no hurry.
+    if (lamps.length) {
+      const order = lamps.map((l, i) => ({ l, k: (i * 7919) % lamps.length })).sort((a, b) => a.k - b.k).map((o) => o.l)
+      tl.fromTo(order, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: 'power1.out', stagger: { each: (total - 0.6) / order.length } }, 0.4)
+    }
   },
 }
 

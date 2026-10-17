@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { chapters, type Chapter } from '@/content/chapters'
 
 type ProgressState = {
-  /** Continuous sky value in [0, 9]; see lib/sky.ts. Written per scroll frame by World.tsx. */
+  /** Continuous sky value in [0, 10]; see lib/sky.ts. Written per scroll frame by the stage. */
   sky: number
   /** Index of the chapter currently pinned / in view. */
   active: number

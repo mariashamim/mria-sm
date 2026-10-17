@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react'
 import manifestJson from '@/public/scene/manifest.json'
 import { useProgress } from '@/lib/progress'
 import { blendSky } from '@/lib/sky'
+import WINDOWS from '@/components/scene/windows.json'
 
 type Entry = { width: number; height: number }
 const manifest = manifestJson as Record<string, Entry>
@@ -22,6 +23,8 @@ type Props = {
   /** 'hero' fills the lower two thirds of the viewport; 'chapter' is a low strip behind the text. */
   size?: 'hero' | 'chapter'
   className?: string
+  /** Lamps over the city render's lit windows, for 2007 to switch on one by one (scripts/windows.mjs). */
+  windows?: boolean
 }
 
 /**
@@ -30,7 +33,7 @@ type Props = {
  * layer has a night render and a matched daylight render; their crossfade
  * follows the sky, so windows light up as evening falls.
  */
-export default function Rooftop({ layers = ['city', 'fore', 'parapet'], size = 'hero', className }: Props) {
+export default function Rooftop({ layers = ['city', 'fore', 'parapet'], size = 'hero', className, windows = false }: Props) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -61,6 +64,13 @@ export default function Rooftop({ layers = ['city', 'fore', 'parapet'], size = '
                 <source type="image/avif" srcSet={`/scene/${day}.avif`} />
                 <img src={`/scene/${day}.webp`} alt="" width={m.width} height={m.height} decoding="async" loading={size === 'hero' ? 'eager' : 'lazy'} draggable={false} />
               </picture>
+            )}
+            {windows && l === 'city' && (
+              <div className="rooftop__windows">
+                {(WINDOWS as [number, number][]).map(([x, y], i) => (
+                  <i key={i} style={{ left: `${(x * 100).toFixed(2)}%`, top: `${(y * 100).toFixed(2)}%` }} />
+                ))}
+              </div>
             )}
           </div>
         )

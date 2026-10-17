@@ -15,6 +15,7 @@ type Props = { chapter: ChapterData }
  */
 export default function Chapter({ chapter }: Props) {
   const Scene = SCENES[chapter.id]?.Scene
+  const YearNote = SCENES[chapter.id]?.YearNote
   return (
     <section id={chapter.id} data-layer={chapter.id} className="chapter" data-ui={chapter.ui} aria-labelledby={`${chapter.id}-title`}>
       {Scene && <Scene />}
@@ -29,6 +30,7 @@ export default function Chapter({ chapter }: Props) {
           <span aria-hidden="true"> · </span>
           <span>{chapter.urduMeaning}</span>
         </p>
+        {YearNote && <YearNote />}
         {/* The year is decoration; the title is the section's heading. */}
         <div className="chapter__year" aria-hidden="true">
           {chapter.year}

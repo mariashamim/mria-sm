@@ -2360,3 +2360,602 @@ html[data-ui="ink"] {
 .chapter__lines .mask {
   overflow: visible;
 }
+
+/* ═══════════════════════ story flow (17 Oct 2026) ═══════════════════════
+   Each chapter gets its own composition and its own way in and out
+   (lib/transitions.ts). Only transform and opacity move on scroll. */
+
+/* Hero: the first scroll looks up. --look (0 → 1) is tweened on the stage by
+   the master timeline; the nearer the layer, the further it sinks. `translate`
+   composes with each element's own transform, so nothing fights. */
+.stage {
+  --look: 0;
+}
+.stage__roof .rooftop__layer--city {
+  translate: 0 calc(var(--look) * 5vh);
+}
+.stage__roof .rooftop__layer--fore {
+  translate: 0 calc(var(--look) * 11vh);
+}
+.stage__roof .rooftop__layer--parapet {
+  translate: 0 calc(var(--look) * 14vh);
+}
+.hero__figure {
+  translate: 0 calc(var(--look) * 10vh);
+}
+
+/* 2007: lamps over the city render's lit windows (scripts/windows.mjs). */
+.rooftop__windows {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.rooftop__windows i {
+  position: absolute;
+  width: 0.55%;
+  height: 1.5%;
+  translate: -50% -50%;
+  border-radius: 1px;
+  background: #ffd98f;
+  box-shadow: 0 0 8px 2px rgba(255, 186, 96, 0.6);
+  opacity: 0;
+}
+
+/* 2010, London: a smaller year, snow in front of the words, and the thaw. */
+#london .chapter__year {
+  font-size: clamp(64px, min(11vw, 17vh), 170px);
+}
+.snow {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+.snow i {
+  position: absolute;
+  top: 0;
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: #fff;
+  opacity: var(--alpha);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
+  animation: flake var(--fall) linear var(--delay) infinite;
+  will-change: transform;
+}
+@keyframes flake {
+  from {
+    transform: translate3d(0, -6vh, 0);
+  }
+  to {
+    transform: translate3d(var(--drift), 106vh, 0);
+  }
+}
+.thaw {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(130% 95% at 50% 115%, rgba(255, 196, 120, 0.85), rgba(255, 170, 92, 0.35) 45%, rgba(255, 214, 160, 0) 78%);
+}
+
+/* 2011, back home: the layout breaks. She and Sharjeel take the left of the
+   frame at full size, the words move right, and the screen lights the room. */
+.crt-beam {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(to bottom, #8fe3ff 0%, #ffffff 48%, #ffffff 52%, #8fe3ff 100%);
+}
+#home .chapter__figure {
+  --glow: 0;
+}
+#home .chapter__fig {
+  position: relative;
+  z-index: 0;
+}
+/* The glow, from the monitor's lit edge (36% across, 42% down the render). */
+#home .chapter__fig::before {
+  content: "";
+  position: absolute;
+  left: 36%;
+  top: 42%;
+  z-index: -1;
+  width: 220vmax;
+  height: 220vmax;
+  translate: -50% -50%;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: var(--glow);
+  background: radial-gradient(closest-side, rgba(170, 236, 255, 0.75), rgba(125, 220, 255, 0.32) 18%, rgba(125, 220, 255, 0.1) 42%, rgba(125, 220, 255, 0) 70%);
+}
+/* The screen's flicker on both faces: light from the left, masked to the render. */
+#home .chapter__fig::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(150, 230, 255, 0) 32%, rgba(150, 230, 255, 0.95) 44%, rgba(175, 238, 255, 0.55) 100%);
+  -webkit-mask: url("/avatar/pose-home.webp") center / 100% 100% no-repeat;
+  mask: url("/avatar/pose-home.webp") center / 100% 100% no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0.16;
+  animation: screen-flicker 3.4s steps(1, end) infinite;
+}
+@keyframes screen-flicker {
+  0% {
+    opacity: 0.16;
+  }
+  6% {
+    opacity: 0.27;
+  }
+  9% {
+    opacity: 0.12;
+  }
+  31% {
+    opacity: 0.2;
+  }
+  33% {
+    opacity: 0.1;
+  }
+  58% {
+    opacity: 0.24;
+  }
+  61% {
+    opacity: 0.15;
+  }
+  84% {
+    opacity: 0.22;
+  }
+}
+@media (min-width: 901px) {
+  #home .chapter__inner {
+    justify-self: end;
+    width: min(560px, 36vw);
+    margin-inline: 0 clamp(64px, 6vw, 110px);
+    text-align: right;
+  }
+  #home .chapter__title,
+  #home .chapter__lines {
+    margin-left: auto;
+  }
+  #home .chapter__urdu {
+    right: auto;
+    left: var(--gutter);
+  }
+  #home .chapter__figure {
+    right: auto;
+    left: 0;
+    width: 52vw;
+    height: 82vh;
+    justify-content: flex-start;
+  }
+  #home .chapter__fig--wide {
+    width: 100%;
+    height: auto;
+  }
+  #home .chapter__year {
+    font-size: clamp(96px, min(15vw, 26vh), 300px);
+    white-space: nowrap;
+  }
+}
+
+/* 2017, Karsaz: the year worked out by hand above it. */
+.sum {
+  display: inline-grid;
+  justify-items: end;
+  margin: 0 0 0.3em 0.1em;
+  font-family: var(--font-serif-stack);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 36, "SOFT" 80, "WONK" 1;
+  font-size: clamp(18px, min(2vw, 3vh), 28px);
+  line-height: 1.12;
+  color: var(--fg-dim);
+}
+.sum__row {
+  display: block;
+  white-space: pre;
+}
+.sum__rule {
+  display: block;
+  width: 100%;
+  height: 2px;
+  margin-top: 0.2em;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+/* 2023, the window closed: centred, one line at a time, larger and slower.
+   The year waits for the end, in the dark, above the cut. */
+#sky .chapter__inner {
+  align-self: center;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  z-index: 2;
+}
+#sky .chapter__title {
+  max-width: none;
+  margin: 0 0 0.2em;
+  font-size: clamp(22px, 2.4vw, 34px);
+}
+#sky .chapter__lines {
+  display: grid;
+  max-width: min(22ch, 100%);
+  margin: clamp(16px, 4vh, 44px) auto 0;
+  font-size: clamp(28px, min(3.6vw, 5.6vh), 56px);
+  line-height: 1.22;
+  text-align: center;
+  gap: 0;
+}
+#sky .chapter__lines .mask {
+  grid-area: 1 / 1;
+}
+#sky .chapter__lines p {
+  position: relative;
+}
+#sky .chapter__year {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  translate: -50% 0.12em;
+  font-size: clamp(110px, min(24vw, 34vh), 380px);
+  color: var(--paper);
+  pointer-events: none;
+}
+#sky .chapter__meta {
+  margin-bottom: 1em;
+}
+@media (min-width: 901px) {
+  /* The chart on the left, across the frame from her. */
+  #sky .eye {
+    right: auto;
+    left: var(--gutter);
+    bottom: 8vh;
+  }
+  #sky .chapter__figure {
+    left: auto;
+    right: var(--gutter);
+    transform: none;
+    width: 24vw;
+    height: 72vh;
+    justify-content: flex-end;
+  }
+}
+.scene-cut {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+.type-caret {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0.5em;
+  height: 1.12em;
+  pointer-events: none;
+}
+.type-caret::before {
+  content: "";
+  position: absolute;
+  inset: 0.08em 0 0.06em 0.06em;
+  background: var(--accent-2);
+  animation: caret-blink 1.06s steps(1, end) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+/* The window that opens out of the last line; it lands on 2024's terminal. */
+.open-term {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid rgba(125, 245, 179, 0.32);
+  background: #07090f;
+  box-shadow: 0 0 0 1px #000, 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 50px rgba(125, 245, 179, 0.1);
+  font-family: var(--font-mono-stack);
+  font-size: 13px;
+  color: var(--accent-2);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+#sky .eye__row {
+  filter: blur(calc(var(--base) * 1px + max(0px, (var(--p) - var(--gaze)) * 6px) + var(--worse, 0) * 2.5px));
+}
+
+/* 2024: the dark it opens in, the stars that become code, and the warmth back. */
+.scene-dark {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #000;
+  pointer-events: none;
+}
+#hello .terminal {
+  z-index: 4;
+}
+.scene-warm {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(90% 60% at 72% 105%, rgba(255, 172, 96, 0.42), rgba(255, 140, 84, 0.14) 50%, rgba(255, 140, 84, 0) 76%);
+}
+.code-stars {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  font-family: var(--font-mono-stack);
+  font-size: clamp(14px, 2.4vw, 34px);
+  color: #f7f3ec;
+}
+.glyph {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.glyph b {
+  position: absolute;
+  top: 9%;
+  left: calc(50% + var(--i) * 0.62em);
+  width: 0.62em;
+  height: 1.3em;
+  translate: -50% 0;
+  font-weight: 500;
+  text-align: center;
+}
+.glyph__dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.85);
+}
+.glyph__ch {
+  text-shadow: 0 0 14px rgba(160, 215, 255, 0.7);
+}
+
+/* What I love: no year; the Urdu word is the headline, the loves are stickers. */
+#loves .chapter__year {
+  display: none;
+}
+#loves .chapter__urdu {
+  position: relative;
+  top: auto;
+  right: auto;
+  z-index: 1;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto -0.12em;
+  text-align: left;
+  opacity: 1;
+  color: #ffd9a0;
+  font-size: clamp(96px, min(18vw, 26vh), 280px);
+  line-height: 1.15;
+  transform-origin: 0 60%;
+}
+#loves .chapter__lines {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px 12px;
+  max-width: min(36rem, 100%);
+}
+#loves .chapter__lines .mask {
+  display: block;
+  transform-origin: 30% 70%;
+}
+#loves .chapter__lines p {
+  display: inline-block;
+  padding: 0.38em 0.75em 0.42em;
+  border-radius: 10px;
+  background: #f7f3ec;
+  color: #1c1630;
+  line-height: 1.3;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  rotate: var(--tilt, 0deg);
+}
+#loves .chapter__lines .mask:nth-child(1) p {
+  --tilt: -2.2deg;
+}
+#loves .chapter__lines .mask:nth-child(2) p {
+  --tilt: 2.5deg;
+  background: #ffd9a0;
+}
+#loves .chapter__lines .mask:nth-child(3) p {
+  --tilt: -1deg;
+  background: #c9f1dc;
+}
+#loves .chapter__lines .mask:nth-child(4) p {
+  --tilt: 1.6deg;
+  background: #ffcfdc;
+}
+#loves .chapter__lines .mask:nth-child(5) p {
+  --tilt: -2.6deg;
+  background: #d3e4ff;
+}
+
+/* The letter: a paper card on the roof, no year. */
+#letter .chapter__year {
+  display: none;
+}
+#letter .chapter__inner {
+  align-self: start;
+  margin-top: 1vh;
+  --fg: #2b2236;
+  --fg-dim: rgba(43, 34, 54, 0.66);
+  --line: rgba(43, 34, 54, 0.2);
+  width: min(620px, 100%);
+  margin-inline: 0;
+  padding: clamp(14px, 2.6vh, 32px) clamp(18px, 2.6vw, 40px) clamp(12px, 2.2vh, 26px);
+  border-radius: 3px;
+  color: var(--fg);
+  background: #f6efe2;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 calc(1.5em - 1px), rgba(70, 90, 150, 0.12) calc(1.5em - 1px) 1.5em);
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.38), 0 2px 6px rgba(0, 0, 0, 0.2);
+  will-change: transform, opacity;
+}
+#letter .chapter__urdu {
+  opacity: 0.22;
+}
+#letter .chapter__title {
+  font-size: clamp(26px, min(3.4vw, 5vh), 46px);
+}
+#letter .chapter__lines {
+  margin-top: clamp(10px, 2vh, 22px);
+  font-size: clamp(15px, min(1.55vw, 2.15vh), 21px);
+}
+#letter .chapter__ps {
+  font-size: clamp(14px, min(1.45vw, 2vh), 19px);
+}
+/* On the light morning sky the kite's string reads in ink, not paper. */
+.scene--karachi .scene__string {
+  stroke: rgba(42, 30, 40, 0.55);
+}
+.letter__roof {
+  position: absolute;
+  right: 14vw;
+  bottom: 7vh;
+  z-index: 2;
+  height: clamp(240px, 50vh, 620px);
+  aspect-ratio: 672 / 1218;
+  pointer-events: none;
+}
+.letter__roof .avatar {
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 900px) {
+  .letter__roof {
+    right: 4vw;
+    bottom: 1vh;
+    height: 24vh;
+  }
+}
+
+/* Reduced motion: the layouts stay, the moments do not. */
+@media (prefers-reduced-motion: reduce) {
+  .snow,
+  .thaw,
+  .crt-beam,
+  .scene-cut,
+  .open-term,
+  .scene-dark,
+  .code-stars,
+  .letter__roof {
+    display: none;
+  }
+  #home .chapter__fig::after,
+  .type-caret::before {
+    animation: none;
+  }
+}
+.stage--static #sky .chapter__lines {
+  gap: 0.4em;
+}
+.stage--static #sky .chapter__lines .mask {
+  grid-area: auto;
+}
+.stage--static #sky .chapter__year {
+  position: static;
+  translate: none;
+}
+#sky .chapter__lines p {
+  text-wrap: balance;
+}
+/* Phones: the Urdu headline and the stickers take less room, so the board still fits. */
+@media (max-width: 900px) {
+  #loves .chapter__urdu {
+    font-size: clamp(60px, 16vw, 110px);
+    line-height: 1.05;
+    margin-bottom: -0.2em;
+  }
+  #loves .chapter__lines {
+    gap: 6px 8px;
+    margin-top: 10px;
+  }
+  #loves .chapter__lines p {
+    padding: 0.28em 0.6em 0.32em;
+    font-size: 13.5px;
+    border-radius: 8px;
+  }
+}
+@media (min-width: 901px) and (max-width: 1120px) {
+  #home .chapter__figure {
+    width: 46vw;
+  }
+}
+@media (max-height: 600px) {
+  #letter .chapter__inner {
+    padding: 8px 12px 8px;
+  }
+  #letter .chapter__lines {
+    margin-top: 6px;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+  #letter .chapter__ps {
+    margin-top: 6px;
+    font-size: 12.5px;
+  }
+}
+@media (min-width: 901px) {
+  /* A hair in from the edge: her breathing scale must not push the render off screen. */
+  #home .chapter__figure {
+    left: 1vw;
+  }
+  /* The headline gives back height on short laptops; the stickers stay clear of her. */
+  #loves .chapter__urdu {
+    font-size: clamp(80px, min(14vw, 19vh), 240px);
+  }
+  #loves .chapter__lines {
+    max-width: min(36rem, 46vw);
+  }
+}
+@media (min-width: 901px) {
+  #home .chapter__figure {
+    width: 49vw;
+  }
+  #loves .chapter__lines {
+    max-width: min(34rem, 40vw);
+  }
+}
+@media (min-width: 901px) and (max-width: 1200px) {
+  #loves .chapter__urdu {
+    font-size: clamp(72px, min(10vw, 13vh), 120px);
+  }
+}
+@media (min-width: 901px) {
+  #loves .chapter__lines {
+    max-width: min(34rem, 38vw);
+  }
+}
+@media (min-width: 901px) and (max-width: 1200px) {
+  #loves .chapter__urdu {
+    font-size: clamp(64px, min(9vw, 11vh), 110px);
+  }
+}

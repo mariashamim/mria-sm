@@ -243,28 +243,15 @@ for one typography system. Not merged to `main`, not deployed.
   made before this copy pass, so it needs re-applying to the new hero.
   Maria will decide later. Screens 2 to 9 not started.
 
-## Live-site fixes (branch , 17 Oct 2026)
+## Live-site fixes (branch `fixes`, 17 Oct 2026)
 
 - **One section at a time**: every exit finishes before the next section
-  forms ( in ), transitions are 0.3 to 0.45
+  forms (`lead: 1` in `lib/transitions.ts`), transitions are 0.3 to 0.45
   viewports, and words start arriving as a section forms (lines at 0.3,
   title at 0.1). Only 2023 → 2024 overlaps, by design (the cut).
-- **No long empty stretches**: duration 37.77 viewports (1440x900)
-overlap samples: none
-empty stretches (viewports of scroll):
-  0.25  at 1.85–2.05  (hero)
-  0.15  at 4.5–4.6  (karachi)
-  0.40  at 6.35–6.7  (london)
-  0.20  at 9.35–9.5  (home)
-  0.15  at 11.9–12  (school)
-  0.30  at 14.65–14.9  (karsaz)
-  0.45  at 17.8–18.2  (sky)
-  0.10  at 23.05–23.1  (hello)
-  0.25  at 25.75–25.95  (loves)
-  0.30  at 28.55–28.8  (explore)
-  0.25  at 34.85–35.05  (letter)
-segments: hero 0 0 1.6 | karachi 1.95 2.03 4.23 | london 4.53 4.59 6.19 | home 6.49 6.67 9.07 | school 9.37 9.44 11.64 | karsaz 11.94 12.02 14.42 | sky 14.72 14.77 19.37 | hello 19.37 19.37 22.77 | loves 23.07 23.1 25.5 | explore 25.8 25.87 28.27 | letter 28.57 28.61 34.61 | closing 34.91 34.98 37.77 walks the whole story
-  and prints overlaps and stretches with nothing readable. After the fix: no
+- **No long empty stretches**: `node scripts/gaps.mjs` (needs the dev server;
+  `SITE_URL=` to point it elsewhere) walks the whole story and prints
+  overlaps and stretches with nothing readable. After the fix: no
   overlaps; at most 0.25 to 0.4 of a viewport between sections, and 0.45 for
   2023's dark beat. The opening no longer empties itself before leaving;
   2023 starts its first line with the plane (scroll 4.6, was 6).

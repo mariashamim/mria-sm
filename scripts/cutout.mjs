@@ -42,6 +42,11 @@ const OVERRIDES = {
   // Gemini's day edit of the skyline pasted a ghost copy across the top 30%;
   // paint that band background-green before keying so it disappears.
   'city-skyline-day': { fillTop: 0.297 },
+  // Clouds and a dusk airfield: soft, semi-transparent edges, and nothing in them is green.
+  'cloud-1': { keyLo: 10, keyHi: 60, despillAll: true, noUnmix: true },
+  'cloud-2': { keyLo: 10, keyHi: 60, despillAll: true, noUnmix: true },
+  'cloud-3': { keyLo: 10, keyHi: 60, despillAll: true, noUnmix: true },
+  'airfield-strip': { keyLo: 10, keyHi: 60, despillAll: true, noUnmix: true },
 }
 
 const argFilter = args.find((a, i) => !a.startsWith('--') && (i === 0 || !args[i - 1].startsWith('--'))) || null

@@ -38,6 +38,11 @@ function SkyScene() {
           <path d="M-29 0 L-40 13 L-25 3 Z" opacity="0.55" />
         </g>
       </svg>
+      {/* The place she wanted to go: a distant runway at dusk, under the falling plane. */}
+      <picture className="sky-airfield">
+        <source type="image/avif" srcSet="/scene/airfield-strip.avif" />
+        <img src="/scene/airfield-strip.webp" alt="" width={2400} height={247} loading="lazy" decoding="async" draggable={false} />
+      </picture>
       <EyeChart />
       <div className="scene-cut" aria-hidden="true" />
       <div className="open-term" aria-hidden="true">
@@ -87,6 +92,9 @@ const sky: SceneDef = {
       if (hold > 0) tl.to(masks[i], { opacity: 0, y: -10, duration: 0.5, ease: 'power1.in' }, at + hold)
     }
 
+    // The airfield drifts a touch slower than everything else, far away.
+    const field = el.querySelector<HTMLElement>('.sky-airfield')
+    if (field) tl.fromTo(field, { yPercent: 8, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.2, ease: 'power2.out' }, 0)
     // First only the plane, still flying, and her looking up at it.
     tl.fromTo(title, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0)
     tl.fromTo(figs, { opacity: 0, yPercent: 4 }, { opacity: 1, yPercent: 0, duration: 0.8, ease: 'power2.out' }, 0.4)

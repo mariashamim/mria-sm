@@ -28,5 +28,29 @@
     "height": 897,
     "webp": 146,
     "avif": 79
+  },
+  "airfield-strip": {
+    "width": 2400,
+    "height": 247,
+    "webp": 57,
+    "avif": 35
+  },
+  "cloud-1": {
+    "width": 2400,
+    "height": 842,
+    "webp": 106,
+    "avif": 47
+  },
+  "cloud-2": {
+    "width": 1549,
+    "height": 1437,
+    "webp": 82,
+    "avif": 40
+  },
+  "cloud-3": {
+    "width": 1266,
+    "height": 819,
+    "webp": 74,
+    "avif": 35
   }
 }

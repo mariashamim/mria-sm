@@ -305,6 +305,25 @@ sections, nothing copied from the competitor.
   (closing pose, London rooftop strip, cloud cut-outs, airfield strip, a
   London reaction pose, paper textures). None generated yet.
 
+## New renders, round 2 (branch `assets`, 17 Oct 2026)
+
+From `docs/asset-brief.md`, Maria generated four of the six; all are integrated.
+
+- **Closing**: Gemini returned a full sunrise scene (not a green-screen
+  figure), used as the closing's scene: `public/scene/closing-sunrise*`
+  (2400 and 1200 wide, avif and webp; a blink copy flashes every 6.2 s). It
+  sits as a band fading up into the dawn sky so the words stay on clear sky.
+  The stage no longer brings the roof back for the closing; the city strip
+  leaves behind the letter's room.
+- **London catch** (`pose-london-catch`, cut out): laid over her figure for a
+  moment when a snowflake is tapped.
+- **Airfield** (`public/scene/airfield-strip`): 2023's horizon, under the cut.
+- **Clouds** (`public/scene/cloud-1..3`): drawn in the fly-through in place of
+  the soft puffs. Clouds and airfield are keyed with `despillAll`
+  (`scripts/cutout.mjs` overrides) to remove the green on their soft edges.
+- Still to generate: the London rooftop strip and the paper textures.
+  Originals live in `public/_raw` and `public/_raw/scene` (not committed).
+
 ## Half-done / waiting on Maria
 
 - **Her own copy.** Done: every section now uses her approved copy.

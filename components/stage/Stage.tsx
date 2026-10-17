@@ -54,7 +54,7 @@ function deepLink(ids: string[]): () => void {
  * The rooftop keeps its views: the full set under the hero (which first tilts
  * up toward the sky), settling into the city strip for 2007 while its windows
  * light, gone for London through Hello, World, the strip back at night for the
- * chai, and the whole roof again at dawn for the letter.
+ * chai; the letter has its own room and the closing its own sunrise rooftop.
  */
 export default function Stage({ children }: Props) {
   const ref = useRef<HTMLDivElement>(null)
@@ -147,15 +147,9 @@ export default function Stage({ children }: Props) {
       // The letter is read on the roof from the opening, at dawn this time: the
       // whole set comes back up and she looks level again (lib/chapterTimelines.ts
       // and the letter scene finish the frame).
-      if (letter) {
-        // Behind the letter's room, near its end, so the closing opens on the roof.
-        const back = letter.bodyStart + (letter.bodyEnd - letter.bodyStart) * 0.8
-        const span = (letter.bodyEnd - letter.bodyStart) * 0.15
-        master.to(el, { '--to-strip': 0, '--look': 0, duration: span, ease: 'power2.inOut' }, back)
-        // The roof slab only: the near parapet would stand in front of the card and its doors.
-        const slab = near.filter((n) => n.classList.contains('rooftop__layer--fore'))
-        if (slab.length) master.to(slab, { autoAlpha: 1, duration: span * 0.8, ease: 'power1.out' }, back + span * 0.2)
-      }
+      // The closing brings its own rooftop at sunrise (components/scenes/Closing.tsx):
+      // the city strip leaves behind the letter's room so it never shows through.
+      if (letter && city) master.to(city, { autoAlpha: 0, duration: 0.3, ease: 'power1.inOut' }, letter.bodyEnd - 0.4)
 
       const duration = master.duration()
       viewports = duration

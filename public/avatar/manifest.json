@@ -82,5 +82,11 @@
     "height": 492,
     "webp": 20,
     "avif": 16
+  },
+  "pose-london-catch": {
+    "width": 782,
+    "height": 1600,
+    "webp": 124,
+    "avif": 66
   }
 }

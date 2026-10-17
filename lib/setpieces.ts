@@ -139,7 +139,14 @@ export function buildFly(master: gsap.core.Timeline, stage: HTMLElement, at: num
   const g = cv?.getContext('2d')
   if (!cv || !g) return
   const light = lite()
-  const P = Array.from({ length: light ? 46 : 90 }, (_, i) => ({ x: rnd(i, 1) * 2 - 1, y: rnd(i, 2) * 1.5 - 0.75, z: 0.1 + rnd(i, 3) * 1.5, s: 0.6 + rnd(i, 4) * 0.8 }))
+  const P = Array.from({ length: light ? 26 : 44 }, (_, i) => ({ x: rnd(i, 1) * 2 - 1, y: rnd(i, 2) * 1.5 - 0.75, z: 0.1 + rnd(i, 3) * 1.5, s: 0.6 + rnd(i, 4) * 0.8, k: i % 3, flip: rnd(i, 8) > 0.5 }))
+  // The three rendered clouds (public/scene/cloud-*), loaded once; soft puffs stand in until they arrive.
+  const clouds = [1, 2, 3].map((n) => {
+    const img = new Image()
+    img.decoding = 'async'
+    img.src = `/scene/cloud-${n}.webp`
+    return img
+  })
   let W = 0
   let H = 0
   let key = ''
@@ -215,6 +222,18 @@ export function buildFly(master: gsap.core.Timeline, stage: HTMLElement, at: num
         const r = Math.min(700, (70 * p.s) / z)
         const a = env * clamp((1.66 - z) / 0.7) * 0.5
         if (a <= 0) continue
+        const img = clouds[p.k]
+        if (img.complete && img.naturalWidth) {
+          const cw = r * 2.6
+          const ch = (cw * img.naturalHeight) / img.naturalWidth
+          g.globalAlpha = Math.min(1, a * 1.7)
+          g.save()
+          g.translate(X, Y)
+          if (p.flip) g.scale(-1, 1)
+          g.drawImage(img, -cw / 2, -ch / 2, cw, ch)
+          g.restore()
+          continue
+        }
         const gr = g.createRadialGradient(X, Y, 0, X, Y, r)
         gr.addColorStop(0, `rgba(255,255,255,${a})`)
         gr.addColorStop(1, 'rgba(255,255,255,0)')

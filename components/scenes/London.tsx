@@ -22,14 +22,25 @@ const rand = (i: number, k: number) => {
 
 /**
  * Tap (or click) a falling snowflake and it melts with a tiny soft fade, then
- * quietly comes back. Only while London is on stage; the nearest flake within
- * a finger's width counts, since the flakes themselves are a few pixels.
+ * quietly comes back; for a moment she looks down at a snowflake on her mitten
+ * (pose-london-catch, laid over her figure). Only while London is on stage;
+ * the nearest flake within a finger's width counts, the flakes are tiny.
  */
 function useMelt(ref: React.RefObject<HTMLDivElement | null>) {
   useEffect(() => {
     const snow = ref.current
     const index = chapterById('london')?.index ?? -1
     if (!snow || prefersReducedMotion()) return
+    const fig = snow.closest('[data-layer]')?.querySelector<HTMLElement>('.chapter__fig')
+    const base = fig?.querySelector<HTMLElement>('.avatar')
+    let catcher: HTMLElement | null = null
+    if (fig) {
+      catcher = document.createElement('picture')
+      catcher.className = 'london-catch'
+      catcher.setAttribute('aria-hidden', 'true')
+      catcher.innerHTML = '<source type="image/avif" srcset="/avatar/pose-london-catch.avif"><img src="/avatar/pose-london-catch.webp" alt="" width="782" height="1600" decoding="async" loading="lazy" draggable="false">'
+      fig.appendChild(catcher)
+    }
     const onDown = (e: PointerEvent) => {
       if (useProgress.getState().active !== index) return
       let best: HTMLElement | null = null
@@ -53,9 +64,18 @@ function useMelt(ref: React.RefObject<HTMLDivElement | null>) {
         { duration: 2600, easing: 'ease-out' },
       )
       melt.id = 'melt'
+      // She notices: the catch pose for a moment, then back.
+      if (catcher && base && !catcher.getAnimations().length) {
+        const look = [{ opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.78 }, { opacity: 0 }]
+        catcher.animate(look, { duration: 2400, easing: 'ease-in-out' })
+        base.animate(look.map((k) => ({ ...k, opacity: 1 - k.opacity })), { duration: 2400, easing: 'ease-in-out' })
+      }
     }
     window.addEventListener('pointerdown', onDown)
-    return () => window.removeEventListener('pointerdown', onDown)
+    return () => {
+      window.removeEventListener('pointerdown', onDown)
+      catcher?.remove()
+    }
   }, [ref])
 }
 

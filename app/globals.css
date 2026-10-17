@@ -4456,3 +4456,146 @@ body {
     max-height: calc(100vh - 76px);
   }
 }
+
+/* ═══════════════════════ new renders (17 Oct 2026) ═══════════════════════ */
+
+/* The closing scene: full bleed behind the closing words; her at about 62%
+   across, kept in frame on phones. The blink is the same frame, eyes closed,
+   shown for a moment every few seconds. */
+.closing__roof {
+  display: none;
+}
+.closing__scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+.closing__scene picture,
+.closing__scene img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 60%;
+}
+.closing__blink {
+  opacity: 0;
+  animation: scene-blink 6.2s steps(1, end) infinite 2s;
+}
+@keyframes scene-blink {
+  0% {
+    opacity: 0;
+  }
+  96% {
+    opacity: 1;
+  }
+  98.5% {
+    opacity: 0;
+  }
+}
+#closing .chapter__inner {
+  z-index: 2;
+}
+#closing .chapter__lines,
+#closing .chapter__meta {
+  text-shadow: 0 0 18px rgba(255, 240, 222, 0.9), 0 0 2px rgba(255, 240, 222, 0.9);
+}
+@media (prefers-reduced-motion: reduce) {
+  .closing__blink {
+    animation: none;
+  }
+}
+
+/* 2023: the airfield along the bottom, behind her, under the cut to black. */
+.sky-airfield {
+  position: absolute;
+  left: -6%;
+  right: -6%;
+  bottom: 0;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.sky-airfield img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 15vh;
+  object-fit: cover;
+  object-position: 50% 100%;
+}
+
+/* London: the catch pose laid over her figure, shown for a moment on a tap. */
+.london-catch {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.london-catch img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 50% 100%;
+}
+#london .chapter__fig {
+  position: relative;
+}
+/* The closing words sit in the clear morning sky, never over her. Desktop:
+   the left of the frame, where the sky is open above the tanks. */
+@media (min-width: 901px) {
+  #closing .chapter__inner {
+    justify-self: start;
+    justify-items: start;
+    width: min(34rem, 44vw);
+    margin-inline: 0;
+    margin-top: 4vh;
+    text-align: left;
+  }
+  #closing .chapter__lines {
+    justify-items: start;
+  }
+}
+/* Phones: the scene is a band along the bottom, fading up into the dawn sky,
+   and the words stand in the open sky above it. */
+@media (max-width: 900px) {
+  .closing__scene {
+    top: auto;
+    height: 56vh;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 14%);
+  }
+  .closing__scene picture,
+  .closing__scene img {
+    object-position: 64% 18%;
+  }
+}
+@media (min-width: 901px) {
+  /* Desktop too: the scene is a band fading up into the dawn sky; the words above it. */
+  .closing__scene {
+    top: auto;
+    height: 66vh;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
+  }
+  .closing__scene picture,
+  .closing__scene img {
+    object-position: 62% 22%;
+  }
+  #closing .chapter__inner {
+    margin-top: 0;
+    width: min(46rem, 60vw);
+  }
+  #closing .chapter__lines .mask:first-child p {
+    font-size: clamp(40px, min(4.6vw, 7vh), 80px);
+  }
+  #closing .chapter__lines {
+    max-width: 46ch;
+  }
+}

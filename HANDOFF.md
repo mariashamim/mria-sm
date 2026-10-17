@@ -169,8 +169,32 @@ are not to change.
     the desk fades and she stands on the roof again (pose-hero, decorative).
   - Verified: tsc, eslint, verify.mjs 42/43 (only the old 320px residuals),
     screenshots at 375/768/1440 and 2023 at ten points.
-- **Phase 3, the thread (kite string → plane → fall → cursor), figure
-  placement, time-skip effect, narrow-screen figures:** not started.
+- **Phase 3, continuity and character (done, awaiting review).**
+  - The thread (`components/scenes/thread.ts`, all drawn in each layer's
+    pixels from her real hand and the real words): at the end of 2007 the
+    string slips from her hand and the kite climbs off the top right; 2017
+    opens with a dashed line coming down from the top right into her hand,
+    and the plane flies it out the top left (`components/scenes/Karsaz.tsx`);
+    2023's plane comes in at the top left drawing the same dashed line,
+    stalls, falls and lands at her feet; after the cut it is the only thing
+    in the dark, shrinks to a point, and the point rises to the start of the
+    last line and becomes the cursor. London and 2011 carry no thread.
+  - Time-skip: where she is older than the chapter before (2007, 2010, 2011,
+    2017, 2024, What I love) her figure box flickers in and gives a small
+    polaroid shake (`TIME_SKIPS` in `lib/chapterTimelines.ts`).
+  - Placement (desktop): 2007 right; London small and further in; 2011 large
+    left; 2017 taller and closer; 2023 small, centred under the line; 2024
+    right at the desk; loves right; the letter at the desk, then on the roof.
+  - Phones: 2024 and the letter put her centred in whatever height is left
+    under the words (last grid row) instead of a corner. 2024 is still only
+    ~17vh tall at 375×812: the lines and the terminal take the rest.
+  - Verified: tsc, eslint, verify.mjs 42/43 (only the old 320px residuals),
+    screenshots at 375/768/1440, 2023 at six points, the kite release.
+- Temporary, not committed: `next.config.ts` reads `NEXT_DIST_DIR` and
+  `.claude/launch.json` has a `dev-alt` server on :3005, so a second
+  `next dev` could run while another session's server held :3000 with stale
+  CSS. `git checkout next.config.ts .claude/launch.json tsconfig.json` and
+  delete `.next-alt/` to undo.
 - Sky rules: stars "rearranging into code" and
   "stop all background motion" touch the sky, which CLAUDE.md says not to
   change without her asking. She asked for both; done as overlays (glyphs, a

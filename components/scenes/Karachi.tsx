@@ -134,6 +134,9 @@ const karachi: SceneDef = {
 
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t
     let climb = 0
+    // At the very end the string slips from her hand and the kite goes, up and off
+    // the top right: where the thread comes back down from in 2017 (Karsaz.tsx).
+    let release = 0
     const render = () => {
       const box = svg.getBoundingClientRect()
       if (box.width === 0) return
@@ -148,8 +151,9 @@ const karachi: SceneDef = {
       // On phones she is mirrored (CSS) so her kite arm points up-right, beside the short last line.
       const hx = (f.left - box.left) * k + f.width * k * (phone ? 1 - HAND.x : HAND.x)
       const hy = (f.top - box.top) * k + f.height * k * HAND.y
-      const bx = lerp(spec.from.x, spec.to.x, climb) * w
-      const by = lerp(spec.from.y, spec.to.y, climb) * h
+      const gone = release * release
+      const bx = lerp(lerp(spec.from.x, spec.to.x, climb), 1.08, gone) * w
+      const by = lerp(lerp(spec.from.y, spec.to.y, climb), -0.18, gone) * h
       wind.base = { x: bx, y: by, max: Math.min(w, h) * (phone ? 0.08 : 0.14) }
       const kx = bx + wind.x
       const ky = by + wind.y
@@ -162,7 +166,10 @@ const karachi: SceneDef = {
       const dist = Math.hypot(dx, dy)
       const cx = (hx + kx) / 2 + dist * 0.05
       const cy = (hy + ky) / 2 + dist * 0.14
-      string.setAttribute('d', `M${hx.toFixed(1)} ${hy.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${kx.toFixed(1)} ${ky.toFixed(1)}`)
+      // Once let go, the loose end trails the kite instead of her hand.
+      const sx = lerp(hx, kx, release * 0.8)
+      const sy = lerp(hy, ky, release * 0.8) + release * dist * 0.08
+      string.setAttribute('d', `M${sx.toFixed(1)} ${sy.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${kx.toFixed(1)} ${ky.toFixed(1)}`)
     }
     wind.render = render
 
@@ -194,6 +201,20 @@ const karachi: SceneDef = {
     )
     tl.to(string, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0.6)
     tl.to(kite, { opacity: 1, duration: 0.4, ease: 'power2.out' }, 1.1)
+    const letGo = { r: 0 }
+    tl.to(
+      letGo,
+      {
+        r: 1,
+        duration: 0.9,
+        ease: 'power1.in',
+        onUpdate: () => {
+          release = letGo.r
+          render()
+        },
+      },
+      total - 0.3,
+    )
     // Below her, the city switches on one window at a time, in no hurry.
     if (lamps.length) {
       const order = lamps.map((l, i) => ({ l, k: (i * 7919) % lamps.length })).sort((a, b) => a.k - b.k).map((o) => o.l)

@@ -1,11 +1,11 @@
 'use client'
 
-import { gsap, SplitText } from '@/lib/gsap'
-import { KARSAZ_SUM } from '@/content/interactive'
+import { gsap } from '@/lib/gsap'
 import { useUI } from '@/lib/ui'
 import karachi from '@/components/scenes/Karachi'
 import london from '@/components/scenes/London'
 import home from '@/components/scenes/Home'
+import karsaz from '@/components/scenes/Karsaz'
 import sky from '@/components/scenes/Sky'
 import letter from '@/components/scenes/Letter'
 import TerminalPrompt from '@/components/scenes/TerminalPrompt'
@@ -28,86 +28,6 @@ export type SceneDef = {
   owns?: ScenePart[]
   /** Rendered inside the chapter's text column, just above the year. */
   YearNote?: () => React.JSX.Element
-}
-
-/* ───────────────────────── Karsaz: the paper plane ───────────────────────── */
-
-// From Maria's raised hand (she stands at the right) up and away across the year.
-const PLANE_PATH = 'M1012 404 C 930 330, 830 262, 700 236 C 560 208, 430 160, 310 96 C 230 54, 150 22, 40 -30'
-
-function KarsazScene() {
-  return (
-    <svg className="scene scene--karsaz" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <defs>
-        <mask id="karsaz-trail-mask" maskUnits="userSpaceOnUse" x="-100" y="-200" width="1640" height="1200">
-          <path className="scene__reveal" d={PLANE_PATH} pathLength={1} stroke="#fff" strokeWidth="12" fill="none" />
-        </mask>
-      </defs>
-      <path className="scene__trail" d={PLANE_PATH} fill="none" strokeWidth="2" strokeDasharray="6 12" strokeLinecap="round" mask="url(#karsaz-trail-mask)" />
-      <g className="scene__plane">
-        <path d="M0 0 L-40 13 L-29 0 L-40 -13 Z" />
-        <path d="M-29 0 L-40 13 L-25 3 Z" opacity="0.55" />
-      </g>
-    </svg>
-  )
-}
-
-/** The working above the year, in pencil: 2007, plus ten, a rule, and then the answer. */
-function KarsazSum() {
-  return (
-    <div className="sum" aria-hidden="true">
-      {KARSAZ_SUM.map((row) => (
-        <span key={row} className="sum__row">
-          {row}
-        </span>
-      ))}
-      <span className="sum__rule" />
-    </div>
-  )
-}
-
-const karsaz: SceneDef = {
-  Scene: KarsazScene,
-  YearNote: KarsazSum,
-  owns: ['year'],
-  build: ({ tl, el, total, reduced }) => {
-    const rows = Array.from(el.querySelectorAll<HTMLElement>('.sum__row'))
-    const rule = el.querySelector<HTMLElement>('.sum__rule')
-    const year = el.querySelector<HTMLElement>('.chapter__year')
-    if (reduced) {
-      gsap.set([...rows, rule], { opacity: 1, scaleX: 1 })
-    } else if (year && rule) {
-      // Worked by hand: the sum is written, ruled off, and the year is written
-      // under it digit by digit, each one drawn left to right like a pen stroke.
-      gsap.set(rows, { opacity: 0, x: -6 })
-      gsap.set(rule, { scaleX: 0, transformOrigin: '0 50%' })
-      tl.to(rows, { opacity: 1, x: 0, duration: 0.3, ease: 'power1.out', stagger: 0.25 }, 0)
-      tl.to(rule, { scaleX: 1, duration: 0.3, ease: 'power2.inOut' }, 0.5)
-      const split = SplitText.create(year, { type: 'chars' })
-      tl.fromTo(split.chars, { clipPath: 'inset(-10% 100% -10% 0)' }, { clipPath: 'inset(-10% 0% -10% 0)', duration: 0.22, ease: 'power1.inOut', stagger: 0.2 }, 0.75)
-      tl.fromTo(year, { yPercent: 0 }, { yPercent: -6, duration: total, ease: 'none' }, 0.75)
-    }
-    const svg = el.querySelector<SVGSVGElement>('.scene--karsaz')
-    if (!svg) return
-    const reveal = svg.querySelector<SVGPathElement>('.scene__reveal')
-    const trail = svg.querySelector<SVGPathElement>('.scene__trail')
-    const plane = svg.querySelector<SVGGElement>('.scene__plane')
-    if (!reveal || !trail || !plane) return
-    gsap.set(reveal, { strokeDasharray: 1, strokeDashoffset: 1 })
-    gsap.set(plane, { opacity: 0, x: 1012, y: 404 })
-    if (reduced) {
-      gsap.set(reveal, { strokeDashoffset: 0 })
-      return
-    }
-    // The plane leaves her hand as the last line ("I was going to fly.", rising at 1.6)
-    // lands, and flies the dashed path off the top of the screen, on into 2023.
-    const start = 1.75
-    const dur = total - start - 0.05
-    tl.to(plane, { opacity: 1, duration: 0.12 }, start)
-    tl.to(plane, { motionPath: { path: trail, align: trail, alignOrigin: [0.5, 0.5], autoRotate: true }, duration: dur, ease: 'power1.in' }, start)
-    tl.to(reveal, { strokeDashoffset: 0, duration: dur, ease: 'power1.in' }, start)
-    tl.to(plane, { opacity: 0, duration: 0.1 }, start + dur - 0.08)
-  },
 }
 
 /* ───────────────────────── Hello, World: the terminal ───────────────────────── */

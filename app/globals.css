@@ -2959,3 +2959,125 @@ html[data-ui="ink"] {
     font-size: clamp(64px, min(9vw, 11vh), 110px);
   }
 }
+
+/* ═══════════════════════ continuity and character (17 Oct 2026) ═══════════════════════
+   She no longer always stands bottom right: each chapter places and sizes
+   her for what it is about. The thread (components/scenes/thread.ts) is drawn
+   in each layer's pixels. */
+
+/* The thread in 2023: above the cut, so the fallen plane and its point stay in the dark. */
+#sky .scene--sky {
+  z-index: 2;
+}
+.scene--sky .scene__trail {
+  stroke: var(--paper);
+  opacity: 0.4;
+}
+.scene--sky .scene__plane path {
+  fill: #fff;
+}
+.scene__spark {
+  fill: var(--accent-2);
+  opacity: 0;
+  filter: drop-shadow(0 0 6px var(--accent-2));
+}
+.scene--karsaz .scene__trail--in {
+  opacity: 0.45;
+}
+
+@media (min-width: 901px) {
+  /* London: small and further off, as brief as the stay. */
+  #london .chapter__figure {
+    right: 20vw;
+    width: 24vw;
+    height: 56vh;
+  }
+  /* Karsaz: closer and taller, the plan in her raised hand. */
+  #karsaz .chapter__figure {
+    right: 8vw;
+    height: 88vh;
+  }
+  #karsaz .chapter__fig {
+    height: 92%;
+  }
+  /* 2023: small, centred under the words, looking up at them. */
+  #sky .chapter__inner {
+    align-self: start;
+    margin-top: 12vh;
+  }
+  #sky .chapter__figure {
+    left: 50%;
+    right: auto;
+    translate: -50% 0;
+    width: 22vw;
+    height: 44vh;
+    justify-content: center;
+  }
+  #sky .chapter__fig--large {
+    height: 100%;
+  }
+}
+
+/* Phones: 2024 and the letter give her all the room under the words instead
+   of a corner: the figure takes the last grid row, whatever height is left. */
+@media (max-width: 900px) {
+  #hello {
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+  #hello .chapter__figure {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    margin: 1.5vh 0 0;
+    justify-content: center;
+  }
+  #hello .chapter__fig {
+    height: 100%;
+  }
+  #letter {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  #letter .chapter__inner {
+    grid-row: 1;
+  }
+  #letter .chapter__figure,
+  .letter__roof {
+    grid-row: 2;
+    grid-column: 1;
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    height: 100%;
+    min-height: 0;
+    margin-top: 1.5vh;
+    justify-self: center;
+  }
+  #letter .chapter__figure {
+    width: 100%;
+    justify-content: center;
+  }
+  #letter .chapter__fig {
+    height: 100%;
+  }
+}
+@media (min-width: 901px) {
+  /* The line sits high so she can stand under it, small, in the middle. */
+  #sky {
+    align-content: start;
+  }
+}
+@media (max-width: 900px) {
+  /* 2024 on phones: a smaller year buys her the height. */
+  #hello .chapter__year {
+    font-size: clamp(52px, 15vw, 76px);
+  }
+  #hello .terminal {
+    margin-top: 8px;
+  }
+}

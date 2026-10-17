@@ -30,6 +30,9 @@ export function buildHeroContent(layer: HTMLElement, reduced: boolean): gsap.cor
   return tl
 }
 
+/** Chapters where she is older than in the one before (2, 3, 8, 16, 17, then now). */
+const TIME_SKIPS = new Set(['karachi', 'london', 'home', 'karsaz', 'hello', 'loves'])
+
 export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduced: boolean): gsap.core.Timeline {
   const tl = gsap.timeline({ defaults: { ease: 'none' } })
   const year = layer.querySelector<HTMLElement>('.chapter__year')
@@ -77,6 +80,14 @@ export function buildChapterContent(layer: HTMLElement, chapter: Chapter, reduce
       if (chapter.id === 'sky') from.filter = 'blur(10px)'
       tl.from(lines, from, 0.5)
     }
+  }
+  // She is older than she was a chapter ago: the figure arrives like a photo
+  // taken years later, a quick flicker and a small polaroid shake, on its box
+  // (the generic tweens below move the figures inside it).
+  const box = layer.querySelector<HTMLElement>('.chapter__figure')
+  if (box && TIME_SKIPS.has(chapter.id)) {
+    tl.to(box, { keyframes: { opacity: [0, 1, 0.2, 1, 0.55, 1] }, duration: 0.45, ease: 'none' }, 0.25)
+    tl.fromTo(box, { rotation: -5, scale: 1.06 }, { rotation: 0, scale: 1, duration: 0.6, ease: 'elastic.out(1, 0.45)' }, 0.25)
   }
   if (figures.length && !own('figures')) {
     // Arrive a little after the title, then drift upward more slowly than the text.
